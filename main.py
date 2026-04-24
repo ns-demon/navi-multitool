@@ -1,0 +1,190 @@
+import sys, time, subprocess, json, os, threading
+
+def _init():
+    try: import pystyle, requests, selenium, dns.resolver, bs4
+    except: subprocess.check_call([sys.executable, "-m", "pip", "install", "pystyle", "requests", "selenium", "dnspython", "beautifulsoup4", "-q"])
+
+_init()
+
+from core.display import Colors, Colorate, System, boot_anim, print_banner, menu_opts, get_inpt, init_os, get_config, Theme, matrix_effect
+from modules.discord_tools import webhook_spam, webhook_delete, id_to_token, pfp_lookup, banner_lookup, server_info_lookup, nitro_generator, bot_invite_gen
+from modules.network import do_port_check
+from modules.crypto import CryptXer, make_pw
+from modules.sysinfo import get_sys_data
+from modules.osint import whois_lookup, dns_lookup
+from modules.malicious import mail_bomb
+from modules.obfuscator import obfuscator_init
+
+def cfg_mgr():
+    while 1:
+        _cl = Theme.get_colors()
+        print_banner()
+        print(Colorate.Horizontal(_cl["head"], "  [ CONFIGURATION & SETTINGS ]\n"))
+        _tl = [("1","Blue"),("2","Red"),("3","Purple"),("4","Green"),("5","Yellow"),("6","Pink"),("7","Cyan"),("8","Gray"),("9","Rainbow")]
+        print(Colorate.Horizontal(_cl["head"], "  [ THEMES ]"))
+        for _i in range(0, len(_tl), 3):
+            _ln = ""
+            for _k, _v in _tl[_i:_i+3]: _ln += Colorate.Horizontal(_cl["num"], f"  [{_k}] ") + Colorate.Horizontal(_cl["txt"], f"{_v:<15}")
+            print(_ln)
+        print("\n" + Colorate.Horizontal(_cl["head"], "  [ TOGGLES ]"))
+        print(Colorate.Horizontal(_cl["num"], "  [10] ") + Colorate.Horizontal(_cl["txt"], "Auto-Update") + " " * 10 + Colorate.Horizontal(_cl["num"], "[11] ") + Colorate.Horizontal(_cl["txt"], "Discord Popup"))
+        print(Colorate.Horizontal(_cl["num"], "  [99] ") + Colorate.Horizontal(_cl["txt"], "Return to Menu"))
+        _c = get_inpt("navi@config:~#")
+        if _c in [str(_x) for _x in range(1, 10)]:
+            _tm = {"1":"blue","2":"red","3":"purple","4":"green","5":"yellow","6":"pink","7":"cyan","8":"gray","9":"rainbow"}[_c]
+            try:
+                with open("core/config.json", "r") as _f: _d = json.load(_f)
+                _d["theme"] = _tm
+                with open("core/config.json", "w") as _f: json.dump(_d, _f, indent=2)
+                print(Colorate.Horizontal(_cl["head"], f"  [+] Theme -> {_tm.upper()}"))
+                matrix_effect(1, Theme.get_matrix_color())
+            except: pass
+        elif _c in ["10", "11"]:
+            try:
+                with open("core/config.json", "r") as _f: _d = json.load(_f)
+                _k = "auto_update" if _c == "10" else "auto_open_discord"
+                _d[_k] = not _d.get(_k, 1)
+                with open("core/config.json", "w") as _f: json.dump(_d, _f, indent=2)
+                print(Colorate.Horizontal(_cl["head"], f"  [+] {_k} is now {_d[_k]}"))
+                time.sleep(1)
+            except: pass
+        elif _c == "99": break
+
+def inf_view():
+    _cl = Theme.get_colors()
+    print_banner()
+    try:
+        with open("core/config.json", "r") as _f: _d = json.load(_f)
+        for _k, _v in _d.items(): print(Colorate.Horizontal(_cl["num"], f"  {_k}: ") + Colorate.Horizontal(_cl["txt"], str(_v)))
+    except: pass
+    input(Colorate.Horizontal(_cl["head"], "\n  Press Enter..."))
+
+def _pre():
+    _cl, _cfg = Theme.get_colors(), get_config()
+    if _cfg.get("auto_update"):
+        try:
+            import requests
+            _r = requests.get("https://raw.githubusercontent.com/glockinhand/navi-multitool/main/core/config.json", timeout=5) # update check
+            if _r.status_code == 200:
+                _rv = _r.json().get("version", "1.0.0")
+                if _rv != _cfg.get("version"):
+                    print(Colorate.Horizontal(_cl["num"], f"  [!] Update available: {_rv}"))
+                    time.sleep(2)
+        except: pass
+
+def _pop():
+    _cfg = get_config()
+    if _cfg.get("auto_open_discord"): # can be disabled in cfg
+        time.sleep(3)
+        try:
+            import webbrowser
+            webbrowser.open(_cfg.get("discord", ""))
+        except: pass
+
+def run_app():
+    while 1:
+        _cl = Theme.get_colors()
+        print_banner()
+        print(Colorate.Horizontal(_cl["head"], "    [ DISCORD ]              [ OSINT ]                [ MALICIOUS ]"))
+        _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] ID to Token", "[11] Whois Lookup", "[21] Clipper Build"),("[3] Token Info", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] PFP Lookup", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Nitro Gen", "[15] Dox Creator", ""), ("", "[16] Phone Lookup", ""), ("", "[17] Email Lookup", "")]
+        for _r1, _r2, _r3 in _d:
+            def _f(s, w):
+                if not s: return " " * w
+                _p = s.find(']') + 2 if ']' in s else 0
+                return Colorate.Horizontal(_cl["num"], s[:_p]) + Colorate.Horizontal(_cl["txt"], f"{s[_p:]:<{w-_p}}")
+            print(f"    {_f(_r1, 25)}{_f(_r2, 25)}{_f(_r3, 20)}")
+        print("\n" + Colorate.Horizontal(_cl["head"], "    [ GENERAL ]              [ ROBLOX ]               [ SYSTEM ]"))
+        _g = [("[30] Base64 Codec", "[40] User Info", "[60] Info"),("[31] System Info", "[41] Cookie Info", "[61] Config"),("[32] IP Pinger", "[42] Cookie Login", "[99] Exit"),("[33] Obfuscator", "", ""),("[13] Pass Generator", "", "")]
+        for _r1, _r2, _r3 in _g:
+            print(f"    {_f(_r1, 25)}{_f(_r2, 25)}{_f(_r3, 20)}")
+        _c = get_inpt()
+        if _c == "1":
+            while 1:
+                print_banner()
+                print(Colorate.Horizontal(_cl["head"], "  [ WEBHOOK OPERATIONS ]\n"))
+                menu_opts({"1": "Spammer", "2": "Deleter", "99": "Return"})
+                _cc = get_inpt("navi@discord/webhooks:~#")
+                if _cc == "1": webhook_spam(get_inpt("url:"), get_inpt("msg:"), int(get_inpt("amt (10):") or 10))
+                elif _cc == "2": webhook_delete(get_inpt("url:"))
+                elif _cc == "99": break
+        elif _c == "2":
+            _uid = get_inpt("UID:")
+            print(Colorate.Horizontal(_cl["head"], f"  [+] Token: {id_to_token(_uid)}"))
+            input(Colorate.Horizontal(_cl["head"], "\n  Enter..."))
+        elif _c == "3":
+            from modules.discord_tools import token_info
+            token_info(get_inpt("Token:"))
+        elif _c == "4": pfp_lookup(get_inpt("UID:"))
+        elif _c == "5": nitro_generator(int(get_inpt("Threads (1):") or 1))
+        elif _c == "10":
+            _res = do_port_check(get_inpt("host:"))
+            if not _res: print(Colorate.Horizontal(_cl["num"], "  [!] None found."))
+            else: [print(Colorate.Horizontal(_cl["head"], f"  [+] Port {p} OPEN")) for p in _res]
+            input("\n  Enter...")
+        elif _c == "11":
+            _inf = whois_lookup(get_inpt("ip/domain:"))
+            if not _inf or "ERR" in _inf: print(Colorate.Horizontal(_cl["num"], f"  [!] Error: {_inf.get('ERR', '??')}"))
+            else: [print(Colorate.Horizontal(_cl["num"], f"  {k:<15}: ") + Colorate.Horizontal(_cl["txt"], str(v))) for k, v in _inf.items()]
+            input("\n  Enter...")
+        elif _c == "12":
+            _r = dns_lookup(get_inpt("host:"))
+            for _k, _v in _r.items(): print(Colorate.Horizontal(_cl["num"], f"  {_k}: ") + Colorate.Horizontal(_cl["txt"], str(_v)))
+            input("\n  Enter...")
+        elif _c == "13":
+            print(Colorate.Horizontal(_cl["head"], f"  => {make_pw(int(get_inpt('len:') or 16))}"))
+            input("\n  Enter...")
+        elif _c == "14":
+            from modules.dox import dox_tracker
+            dox_tracker()
+        elif _c == "15":
+            from modules.dox import dox_creator
+            dox_creator()
+        elif _c == "16":
+            from modules.lookup import phone_track
+            phone_track()
+        elif _c == "17":
+            from modules.osint import email_lookup_init
+            email_lookup_init()
+        elif _c == '20': mail_bomb(get_inpt("email:"), int(get_inpt("amt:") or 10)); input("\n  Enter...")
+        elif _c == '21':
+            from modules.malicious import build_clipper
+            build_clipper(); input("\n  Enter...")
+        elif _c == '22':
+            from modules.malicious import sql_scanner
+            sql_scanner()
+        elif _c == '23':
+            from modules.malicious import start_brute
+            start_brute()
+        elif _c == '30':
+            _m, _t = get_inpt("(E/D):").upper(), get_inpt("Text:")
+            try: print(Colorate.Horizontal(_cl["head"], f"  Res: {CryptXer.b64_e(_t) if _m == 'E' else CryptXer.b64_d(_t)}"))
+            except: pass
+            input("\n  Enter...")
+        elif _c == '31':
+            _inf = get_sys_data()
+            for _k, _v in _inf.items(): print(Colorate.Horizontal(_cl["num"], f"  {_k}: ") + Colorate.Horizontal(_cl["txt"], str(_v)))
+            input("\n  Enter...")
+        elif _c == '32':
+            from modules.osint import ip_pinger
+            ip_pinger()
+        elif _c == '33':
+            obfuscator_init()
+        elif _c == '40':
+            from modules.roblox import roblox_user_info
+            roblox_user_info()
+        elif _c == '41':
+            from modules.roblox import roblox_cookie_info
+            roblox_cookie_info()
+        elif _c == '42':
+            from modules.roblox import roblox_cookie_login
+            roblox_cookie_login()
+        elif _c == "60": inf_view()
+        elif _c == "61": cfg_mgr()
+        elif _c == "99": sys.exit(0)
+
+if __name__ == '__main__':
+    init_os()
+    boot_anim()
+    _pre()
+    threading.Thread(target=_pop, daemon=True).start()
+    run_app()

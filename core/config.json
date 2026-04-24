@@ -1,0 +1,10 @@
+{
+  "name": "Navi Multitool",
+  "version": "1.0.0",
+  "author": "gih",
+  "github": "https://github.com/glockinhand",
+  "discord": "https://discord.gg/bkWzktRuqm",
+  "theme": "blue",
+  "auto_open_discord": true,
+  "auto_update": true
+}
