@@ -15,7 +15,7 @@
 ## 📸 Preview
 
 <p align="center">
-  <img src="https://i.ibb.co/21Kw5chr/image.png" alt="Navi Interface">
+  <img src="https://i.ibb.co/vxWf1Jk0/image.png" alt="Navi Interface">
 </p>
 
 ---
@@ -24,7 +24,7 @@
 
 ### 📡 Discord Operations
 *   **Webhook Control**: Advanced multi-threaded **Spammer** and instant **Deleter**.
-*   **Intelligence**: Deep **Token Information** extractor and **ID-to-Token** converter.
+*   **Token Tools**: many tools like: **Token Nuker**, **Status Rotator**, **Token Info** etc.
 *   **Profile Tools**: Rapid **PFP Lookup** and **Banner Lookup** via User ID.
 *   **Generation**: Built-in **Nitro Code Generator** and **Bot Invite** generator.
 
@@ -35,7 +35,7 @@
 
 ### 💀 Malicious Tools
 *   **Flooding**: High-volume **Email Bomber** for stress testing.
-*   **Persistence**: Custom **Clipper Builder** for cryptocurrency redirection.
+*   **Persistence**: Custom **Clipper Builder and Stealer** for cryptocurrency redirection and info stealing.
 *   **Exploitation**: Integrated **Vulnerability Scanner** and **DDoS Attack** protocols.
 *   *And more features coming soon...*
 
