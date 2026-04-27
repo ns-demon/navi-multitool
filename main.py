@@ -64,14 +64,17 @@ def _pre():
     _cl, _cfg = Theme.get_colors(), get_config()
     if _cfg.get("auto_update"):
         try:
-            import requests
+            import requests, webbrowser
             _r = requests.get("https://raw.githubusercontent.com/glockinhand/navi-multitool/main/core/config.json", timeout=5) # update check
             if _r.status_code == 200:
                 _rv = _r.json().get("version", "1.0.0")
                 if _rv != _cfg.get("version"):
-                    print(Colorate.Horizontal(_cl["num"], f"  [!] Update available: {_rv}"))
-                    time.sleep(2)
-        except: pass
+                    print(Colorate.Horizontal(_cl["num"], f"\n  [!] Update available: {_rv}"))
+                    print(Colorate.Horizontal(_cl["head"], f"  [+] Opening repository: https://github.com/glockinhand/navi-multitool"))
+                    webbrowser.open("https://github.com/glockinhand/navi-multitool")
+                    input(Colorate.Horizontal(_cl["num"], "  [>] Press ENTER to exit and update manually..."))
+                    sys.exit(0)
+        except Exception: pass
 
 def _pop():
     _cfg = get_config()
