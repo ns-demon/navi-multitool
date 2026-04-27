@@ -1,0 +1,3 @@
+@echo off
+echo Loading Navi...
+python main.py

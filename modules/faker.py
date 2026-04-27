@@ -1,0 +1,309 @@
+import time, random, string, threading, os, base64
+from core.display import Colors, Colorate, get_inpt, Theme, System, print_banner
+
+def _cls(title):
+    os.system('cls' if os.name == 'nt' else 'clear')
+    System.Title(f"Navi - {title}")
+
+def fake_token_gen():
+    _cls("Token Generator")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], """
+  _______  _        _______  _        _______  _______ 
+ (  ____ \( (    /|(  ____ \( (    /|(  ____ \(  ____ )
+ | (    \/|  \  ( || (    \/|  \  ( || (    \/| (    |)
+ | (__    |   \ | || (__    |   \ | || (__    | (____)|
+ |  __)   | (\ \) ||  __)   | (\ \) ||  __)   |     __)
+ | (      | | \   || (      | | \   || (      | (\ (   
+ | (____/\| )  \  || (____/\| )  \  || (____/\| ) \ \__
+ (_______/|/    )_)(_______/|/    )_)(_______/|/   \__/
+    """))
+    print(Colorate.Horizontal(cl["head"], "  [+] Initializing Token Generation..."))
+    amt = int(get_inpt("Amount to generate:") or 5)
+    
+    for i in range(amt):
+        u = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+        em = f"{u}@atomicmail.io"
+        print(f"\n  {Colorate.Horizontal(cl['num'], '[1]')} Using Email: {Colorate.Horizontal(cl['txt'], em)}")
+        time.sleep(0.8)
+        print(f"  {Colorate.Horizontal(cl['num'], '[2]')} Connecting to Discord Gateway...")
+        time.sleep(1.2)
+        print(f"  {Colorate.Horizontal(cl['num'], '[3]')} Solving HCaptcha {Colorate.Horizontal(cl['txt'], '(Enterprise Mode)')}...")
+        time.sleep(random.uniform(1.5, 3.0))
+        print(f"  {Colorate.Horizontal(cl['num'], '[4]')} Account Created. Verifying Email...")
+        time.sleep(1.0)
+        
+        p1 = base64.b64encode(str(random.randint(100000000000000000, 999999999999999999)).encode()).decode().rstrip("=")
+        p2 = ''.join(random.choices(string.ascii_letters + string.digits, k=6))
+        p3 = ''.join(random.choices(string.ascii_letters + string.digits + "-_", k=27))
+        tk = f"{p1}.{p2}.{p3}"
+        
+        print(Colorate.Horizontal(cl["head"], f"  [SUCCESS] Token: {tk}"))
+        if not os.path.exists("output"): os.makedirs("output")
+        with open("output/fake_tokens.txt", "a") as f: f.write(f"{tk}\n")
+    
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def fake_exodus():
+    _cls("Exodus Larp")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], "  [+] Generating fake seed file for larping..."))    
+    content = f"""
+EXODUS WALLET RECOVERY - BACKUP
+-------------------------------
+DATE: {time.strftime("%Y-%m-%d %H:%M:%S")}
+TYPE: 12-WORD MNEMONIC
+
+RECOVERY PHRASE 1:
+critic draw oak hood reward bunker next old spy about clown notice
+
+
+-------------------------------
+[!] Keep in mind that this is a larp. You are not able to move the funds.
+[!] Navi Multitool - Faker mode
+"""
+    
+    path = "output/exodus_seed.txt"
+    if not os.path.exists("output"): os.makedirs("output")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+    
+    print(Colorate.Horizontal(cl["head"], f"  [>] Success! File created: {path}"))
+    print(Colorate.Horizontal(cl["num"], "  [>] Opening file..."))
+    
+    try:
+        os.startfile(os.path.abspath(path))
+    except:
+        print(Colorate.Horizontal(cl["num"], "  [!] Could not auto-open. Please open output/exodus_seed.txt manually."))
+    
+    time.sleep(1)
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def fake_mail_gen():
+    _cls("Mail Generator")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], """
+  __  __   _   ___ _    
+ |  \/  | /_\ |_ _| |   
+ | |\/| |/ _ \ | || |__ 
+ |_|  |_/_/ \_\___|____|
+    """))
+    print(Colorate.Horizontal(cl["head"], "  [+] Initializing Fake Mail Generator..."))
+    amt = int(get_inpt("Amount to generate:") or 10)
+    doms = ["gmail.com", "yahoo.com", "outlook.com", "protonmail.com", "hotmail.com"]
+    for i in range(amt):
+        u = ''.join(random.choices(string.ascii_lowercase + string.digits, k=random.randint(6, 12)))
+        m = f"{u}@{random.choice(doms)}"
+        print(Colorate.Horizontal(cl["num"], f"  [>] Created: ") + Colorate.Horizontal(cl["txt"], m))
+        time.sleep(0.05)
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def fake_identity_gen():
+    _cls("Identity Generator")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], """
+  ___ ___  ___ _  _ _____ ___ _______   __
+ |_ _|   \| __| \| |_   _|_ _|_   _\ \ / /
+  | || |) | _|| .` | | |  | |  | |  \ V / 
+ |___|___/|___|_|\_| |_| |___| |_|   |_|  
+    """))
+    print(Colorate.Horizontal(cl["head"], "  [+] Generating Fake Identity..."))
+    fnames = ["James", "Mary", "Robert", "Patricia", "John", "Jennifer", "Michael", "Linda"]
+    lnames = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis"]
+    cities = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia"]
+    
+    id_data = [
+        ("Full Name", f"{random.choice(fnames)} {random.choice(lnames)}"),
+        ("DOB", f"{random.randint(1970, 2005)}-{random.randint(1, 12):02d}-{random.randint(1, 28):02d}"),
+        ("Address", f"{random.randint(100, 999)} {random.choice(lnames)} St, {random.choice(cities)}"),
+        ("SSN", f"{random.randint(100, 999)}-{random.randint(10, 99)}-{random.randint(1000, 9999)}"),
+        ("Phone", f"+1 ({random.randint(200, 999)}) {random.randint(200, 999)}-{random.randint(1000, 9999)}")
+    ]
+    
+    print(Colorate.Horizontal(cl["main"], "  " + "─" * 40))
+    for k, v in id_data:
+        print(Colorate.Horizontal(cl["num"], f"  [>] {k:<15}: ") + Colorate.Horizontal(cl["txt"], v))
+        time.sleep(0.2)
+    print(Colorate.Horizontal(cl["main"], "  " + "─" * 40))
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def fake_nitro_gen():
+    _cls("Nitro Generator")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], """
+  _  _ ___ _____ ___  ___ 
+ | \| |_ _|_   _| _ \/ _ \
+ | .` || |  | | |   / (_) |
+ |_|\_|___| |_| |_|_\\___/ 
+    """))
+    print(Colorate.Horizontal(cl["head"], "  [+] Starting Fake Nitro Gen (Visual Mode)..."))
+    count = 0
+    try:
+        while True:
+            code = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
+            is_hit = random.random() < 0.01
+            if is_hit:
+                print(Colorate.Horizontal(cl["head"], f"  [HIT] discord.gift/{code}"))
+                count += 1
+            else:
+                print(Colorate.Horizontal(cl["num"], f"  [BAD] discord.gift/{code}"), end="\r")
+            time.sleep(0.01)
+    except KeyboardInterrupt:
+        print(Colorate.Horizontal(cl["head"], f"\n  [=] Session ended. Hits: {count}"))
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def fake_ddos():
+    _cls("DDoS Simulator")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["num"], """
+  ____  ____  ____  ____ 
+ |  _ \|  _ \/ __ \/ ___|
+ | | | | | | | | | \___ \
+ | |_| | |_| | |_| |___) |
+ |____/|____/ \____/|____/ 
+    """))
+    target = get_inpt("Target IP:")
+    port = get_inpt("Port (80):") or "80"
+    print(Colorate.Horizontal(cl["head"], f"  [+] Launching simulated DDoS on {target}:{port}..."))
+    time.sleep(1)
+    try:
+        while True:
+            bytes_sent = random.randint(500, 1500)
+            print(Colorate.Horizontal(cl["num"], f"  [>] Sent {bytes_sent} bytes to {target} via UDP..."), end="\r")
+            time.sleep(0.02)
+    except KeyboardInterrupt:
+        print(Colorate.Horizontal(cl["head"], "\n  [!] Attack stopped."))
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def fake_cc_gen():
+    _cls("Credit Card Gen")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], """
+   ____ ____ ____ ____ ____ ____ 
+  / ___|  _ \ ___|  _ \_ _|  _ \
+ | |   | |_) |__ | | | | || | | |
+ | |___|  _ <|___| |_| | || |_| |
+  \____|_| \_\   |____/___|____/ 
+    """))
+    print(Colorate.Horizontal(cl["head"], "  [+] Generating Fake Credit Cards (Luhn Valid)..."))
+    amt = int(get_inpt("Amount:") or 5)
+    for _ in range(amt):
+        prefix = random.choice(["4", "51", "52", "53", "54", "55", "34", "37"])
+        body = ''.join(random.choices(string.digits, k=13 if prefix.startswith("3") else 14))
+        cc = f"{prefix}{body}"
+        exp = f"{random.randint(1, 12):02d}/{random.randint(24, 30)}"
+        cvv = random.randint(100, 999)
+        print(Colorate.Horizontal(cl["num"], f"  [>] {cc} | EXP: {exp} | CVV: {cvv}"))
+        time.sleep(0.1)
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def fake_wallet_miner():
+    _cls("Wallet Miner")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], """
+  __  __ ___ _  _ ___ ___ 
+ |  \/  |_ _| \| | __| _ \\
+ | |\/| || || .` | _||   /
+ |_|  |_|___|_|\_|___|_|_\\
+    """))
+    wallet = get_inpt("Wallet Address:")
+    print(Colorate.Horizontal(cl["head"], f"  [+] Connecting to pool for {wallet[:10]}..."))
+    balance = 0.0
+    try:
+        while True:
+            hashrate = random.uniform(45.5, 98.2)
+            earned = random.uniform(0.0001, 0.0005)
+            balance += earned
+            print(Colorate.Horizontal(cl["txt"], f"  [~] Mining... {hashrate:.2f} MH/s | Balance: {balance:.6f} BTC"), end="\r")
+            time.sleep(0.1)
+            if random.random() < 0.05:
+                print(Colorate.Horizontal(cl["head"], f"\n  [!] Block found! Reward: {earned*10:.6f} BTC"))
+    except KeyboardInterrupt:
+        print(Colorate.Horizontal(cl["head"], f"\n  [=] Final Balance: {balance:.6f} BTC"))
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def social_botter():
+    _cls("Social Botter")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], """
+  ___  ___ _____ _____ ___ ___ 
+ | _ )/ _ \_   _|_   _| __| _ \\
+ | _ \ (_) || |   | | | _||   /
+ |___/\___/ |_|   |_| |___|_|_\\
+    """))
+    platform = get_inpt("Platform (IG/TikTok/YT):")
+    user = get_inpt("Username:")
+    amt = int(get_inpt("Followers amount:") or 1000)
+    print(Colorate.Horizontal(cl["head"], f"  [+] Booting {platform} bots for {user}..."))
+    for i in range(1, amt + 1, random.randint(5, 20)):
+        print(Colorate.Horizontal(cl["num"], f"  [>] Adding followers... {i}/{amt}"), end="\r")
+        time.sleep(0.05)
+    print(Colorate.Horizontal(cl["head"], f"\n  [=] Successfully added {amt} followers to {user}."))
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def fake_paypal_otp():
+    _cls("PayPal OTP Bypass")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], """
+  ___   _ __   __ ___  _   _    
+ | _ \ /_\\ \ / /| _ \/_\ | |   
+ |  _// _ \\ V / |  _/ _ \| |__ 
+ |_| /_/ \_\|_|  |_|/_/ \_\____|
+    """))
+    email = get_inpt("Target Email:")
+    print(Colorate.Horizontal(cl["head"], f"  [+] Requesting OTP bypass for {email}..."))
+    time.sleep(1.5)
+    print(Colorate.Horizontal(cl["num"], "  [>] Intercepting SMS gateway..."))
+    time.sleep(2)
+    otp = ''.join(random.choices(string.digits, k=6))
+    print(Colorate.Horizontal(cl["head"], f"  [!] OTP FOUND: {otp}"))
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def fake_account_gen():
+    _cls("Account Gen")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], """
+    _   ___ ___ ___  _   _ _  _ _____ 
+   /_\ / __/ __/ _ \| | | | \| |_   _|
+  / _ \ (_| (_| (_) | |_| | .` | | |  
+ /_/ \_\___\___\___/ \___/|_|\_| |_|  
+    """))
+    service = get_inpt("Service (Steam/Epic/etc):")
+    amt = int(get_inpt("Amount:") or 5)
+    print(Colorate.Horizontal(cl["head"], f"  [+] Generating {service} accounts..."))
+    for _ in range(amt):
+        u = ''.join(random.choices(string.ascii_lowercase, k=8))
+        p = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
+        print(Colorate.Horizontal(cl["num"], f"  [>] {u}:{p}"))
+        time.sleep(0.1)
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def fake_fortnite_checker():
+    _cls("Fortnite Checker")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], """
+  ___ ___  ___ _____ _  _ ___ _____ ___ 
+ | __/ _ \| _ \_   _| \| |_ _|_   _| __|
+ | _| (_) |   / | | | .` || |  | | | _| 
+ |_| \___/|_|_\ |_| |_|\_|___| |_| |___|
+    """))
+    print(Colorate.Horizontal(cl["head"], "  [+] Starting Fortnite Checker (Visual)..."))
+    try:
+        while True:
+            u = ''.join(random.choices(string.ascii_lowercase, k=6))
+            skins = random.randint(0, 200)
+            is_rare = skins > 150 or random.random() < 0.05
+            if is_rare:
+                print(Colorate.Horizontal(cl["head"], f"  [RARE] {u}@gmail.com | Skins: {skins} | OG: Yes"))
+            else:
+                print(Colorate.Horizontal(cl["num"], f"  [SKIPPED] {u}@gmail.com | Skins: {skins}"), end="\r")
+            time.sleep(0.05)
+    except KeyboardInterrupt: pass
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def faker_explanation():
+    _cls("Explanation")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], "  [ EXPLANATION ]"))
+    print(Colorate.Horizontal(cl["txt"], "  The Faker section is designed for aesthetic and \n  demonstration purposes. All tools here are \n  SIMULATED and do not perform real actions.\n  \n  Use them to inject ur stealer or just to larp."))
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
