@@ -15,7 +15,7 @@
 ## 📸 Preview
 
 <p align="center">
-  <img src="https://i.ibb.co/vxWf1Jk0/image.png" alt="Navi Interface">
+  <img src="https://i.ibb.co/mCGs3xmH/ezgif-71169c6f566a1aab.gif" alt="Navi Interface">
 </p>
 
 ---
