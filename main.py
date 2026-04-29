@@ -225,7 +225,7 @@ def run_app():
                     "4": "Fake Nitro", "5": "Fake DDoS", "6": "Fake Credit Cards", 
                     "7": "Fake Wallet Miner", "8": "Social Botter", "9": "Fake PayPal OTP",
                     "10": "Fake Account Gen", "11": "Fake Fortnite Check", "12": "Fake Exodus",
-                    "13": "Explanation", "99": "Return"
+                    "13": "Explanation", "14": "Fake Bruteforcer", "99": "Return"
                 })
                 _cc = get_inpt("navi@faker:~#")
                 if _cc == "1": from modules.faker import fake_token_gen; fake_token_gen()
@@ -241,6 +241,7 @@ def run_app():
                 elif _cc == "11": from modules.faker import fake_fortnite_checker; fake_fortnite_checker()
                 elif _cc == "12": from modules.faker import fake_exodus; fake_exodus()
                 elif _cc == "13": from modules.faker import faker_explanation; faker_explanation()
+                elif _cc == "14": from modules.faker import fake_bruteforcer; fake_bruteforcer()
                 elif _cc == "99": break
         elif _c == "60": inf_view()
         elif _c == "61": cfg_mgr()

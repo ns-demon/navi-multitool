@@ -301,6 +301,69 @@ def fake_fortnite_checker():
     except KeyboardInterrupt: pass
     input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
 
+def fake_bruteforcer():
+    _cls("Account Bruteforcer")
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], """
+  ____  _____  _    _ _______ ______ 
+ |  _ \|  __ \| |  | |__   __|  ____|
+ | |_) | |__) | |  | |  | |  | |__   
+ |  _ <|  _  /| |  | |  | |  |  __|  
+ | |_) | | \ \| |__| |  | |  | |____ 
+ |____/|_|  \_\\\\____/   |_|  |______|
+    """))
+    
+    platform = get_inpt("Platform (IG/TikTok/Twitch):")
+    target = get_inpt("Target Username:")
+    threads = int(get_inpt("Threads (1-500):") or 100)
+    
+    print(Colorate.Horizontal(cl["head"], f"\n  [+] Initializing attack on {target} ({platform})..."))
+    time.sleep(1)
+    print(Colorate.Horizontal(cl["num"], "  [>] Loading proxies from 'proxies.txt' (Scraped 5,204 HTTP/S)..."))
+    time.sleep(1.5)
+    print(Colorate.Horizontal(cl["num"], "  [>] Loading combo list from 'passwords.txt' (1.2M entries)..."))
+    time.sleep(2)
+    
+    print(Colorate.Horizontal(cl["head"], f"\n  [+] Brute-force attack started with {threads} threads.\n"))
+    
+    attempts = 0
+    start_time = time.time()
+    
+    try:
+        while attempts < 10000:
+            for _ in range(random.randint(5, 15)):
+                pw = ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(8, 14)))
+                status = random.choice([
+                    f"{Colorate.Horizontal(cl['num'], '[FAILED]')} {pw:<20} | Proxy: {random.randint(1,255)}.{random.randint(1,255)}:8080",
+                    f"{Colorate.Horizontal(cl['num'], '[RETRY] ')} {pw:<20} | Rate Limited - Switching Proxy...",
+                    f"{Colorate.Horizontal(cl['num'], '[ERROR] ')} {pw:<20} | Connection Timeout",
+                ])
+                print(f"  {status}")
+                attempts += 1
+                
+                if random.random() < 0.05:
+                    time.sleep(0.1)
+                
+            time.sleep(0.01)
+            
+            if random.random() < 0.02:
+                print(Colorate.Horizontal(cl["head"], f"  [!] Rotating proxy pool... (Active: {random.randint(400, 5000)})"))
+                time.sleep(0.5)
+
+            if attempts > 500: # After some "real" looking attempts, show the message
+                break
+                
+    except KeyboardInterrupt:
+        pass
+
+    print("\n" + "─" * 60)
+    print(Colorate.Horizontal(cl["head"], f"  [!] BRUTEFORCE STATUS: {Colorate.Horizontal(cl['txt'], 'IN PROGRESS...')}"))
+    print(Colorate.Horizontal(cl["head"], f"  [!] NOTICE: {Colorate.Horizontal(cl['txt'], 'Bruteforcing passwords this will take time, but the engine is bypasssing 2FA and Rate-limits.')}"))
+    print(Colorate.Horizontal(cl["head"], f"  [!] INFO: {Colorate.Horizontal(cl['txt'], 'Navi Multitool - Advanced Simulation Engine.')}"))
+    print("─" * 60)
+    
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
 def faker_explanation():
     _cls("Explanation")
     cl = Theme.get_colors()
