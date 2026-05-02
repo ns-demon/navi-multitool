@@ -56,21 +56,25 @@
 
 ## 🛠️ Installation & Setup
 
-Navi is built with simplicity in mind. It handles its own dependencies automatically.
-
 1.  **Clone the Repository**
     ```bash
     git clone https://github.com/glockinhand/navi-multitool.git
     cd navi-multitool
     ```
 
-2.  **Launch Navi**
+2.  **Install Dependencies**
+    *   **Windows**: Run `install.bat`
+    *   **Linux/macOS**: `pip install -r requirements.txt`
+
+3.  **Launch Navi**
     ```bash
     python main.py
     ```
 
 > [!NOTE]
-> On the first run, Navi will automatically install required libraries like `pystyle`, `requests`, and `selenium`.
+> Navi can also handle its own dependencies automatically on the first run, but using `install.bat` is recommended for a stable environment.
+
+---
 
 ---
 
