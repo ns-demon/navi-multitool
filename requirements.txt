@@ -1,0 +1,12 @@
+requests
+websocket-client
+aiohttp
+dnspython
+pystyle
+pyinstaller
+Pillow
+pycryptodome
+pywin32
+selenium
+beautifulsoup4
+pysocks
