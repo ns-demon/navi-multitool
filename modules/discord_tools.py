@@ -1,4 +1,5 @@
 import time, urllib.request, urllib.error, urllib.parse, json, requests, random, string, threading, webbrowser, os, concurrent.futures
+from modules.selfbot import selfbot_menu
 from datetime import datetime, timezone
 from core.display import Colors, Colorate, get_inpt, Theme
 

