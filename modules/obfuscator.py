@@ -1,3 +1,13 @@
+#  _   _                 _ 
+# | \ | |               (_)
+# |  \| | __ ___   __ _  _ 
+# | . ` |/ _` \ \ / /(_)| |
+# | |\  | (_| |\ V /  _ | |
+# |_| \_|\__,_| \_/  (_)|_|
+# 
+# Navi Multitool - Developed by glockinhand
+# GitHub: https://github.com/glockinhand/navi-multitool
+
 import zlib, base64, marshal, time, os, tkinter as tk; from tkinter import filedialog; from core.display import Theme, Colorate, get_inpt, print_banner
 
 def _0x1(t): _cl = Theme.get_colors(); print(Colorate.Horizontal(_cl["num"], "  [*] ") + Colorate.Horizontal(_cl["txt"], t))

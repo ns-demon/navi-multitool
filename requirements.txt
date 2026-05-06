@@ -13,3 +13,4 @@ pysocks
 piexif
 exifread
 mutagen
+pynput

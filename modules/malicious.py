@@ -1,3 +1,13 @@
+#  _   _                 _ 
+# | \ | |               (_)
+# |  \| | __ ___   __ _  _ 
+# | . ` |/ _` \ \ / /(_)| |
+# | |\  | (_| |\ V /  _ | |
+# |_| \_|\__,_| \_/  (_)|_|
+# 
+# Navi Multitool - Developed by glockinhand
+# GitHub: https://github.com/glockinhand/navi-multitool
+
 import requests, time, random, json, re, os, subprocess, concurrent.futures, socket, threading, sys
 from core.display import get_inpt, Colors, Colorate, Theme
 from modules.boot import WiredStress

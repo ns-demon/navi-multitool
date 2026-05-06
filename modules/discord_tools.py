@@ -1,3 +1,13 @@
+#  _   _                 _ 
+# | \ | |               (_)
+# |  \| | __ ___   __ _  _ 
+# | . ` |/ _` \ \ / /(_)| |
+# | |\  | (_| |\ V /  _ | |
+# |_| \_|\__,_| \_/  (_)|_|
+# 
+# Navi Multitool - Developed by glockinhand
+# GitHub: https://github.com/glockinhand/navi-multitool
+
 import time, urllib.request, urllib.error, urllib.parse, json, requests, random, string, threading, webbrowser, os, concurrent.futures
 from modules.selfbot import selfbot_menu
 from datetime import datetime, timezone
@@ -298,3 +308,125 @@ def token_onliner():
         except: pass
     for t in tks: threading.Thread(target=_online, args=(t,), daemon=True).start()
     input(Colorate.Horizontal(cl["head"], "  [>] Tokens are online. Press Enter to stop..."))
+
+def discord_username_checker(threads=1):
+    colors, lock = Theme.get_colors(), threading.Lock()
+    proxies_list = []
+    auth_token = get_inpt("Authorization Token:")
+    if not auth_token: return
+    print(Colorate.Horizontal(colors["head"], f"  [+] 4-Char Checker starting with {threads} threads..."))
+    use_prox = get_inpt("Use proxies? (y/n):").lower() == 'y'
+    if use_prox:
+        if os.path.exists("input/proxies.txt"):
+            with open("input/proxies.txt", "r", encoding="utf-8") as f:
+                proxies_list = [l.strip() for l in f if ":" in l]
+            print(Colorate.Horizontal(colors["num"], f"  [>] Loaded {len(proxies_list)} proxies from input/proxies.txt"))
+        else:
+            print(Colorate.Horizontal(colors["num"], "  [!] input/proxies.txt not found. Scraping..."))
+            sources = [
+                "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=yes&anonymity=all",
+                "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt"
+            ]
+            for url in sources:
+                try:
+                    resp = requests.get(url, timeout=6)
+                    if resp.status_code == 200:
+                        for line in resp.text.split("\n"):
+                            if ":" in line: proxies_list.append(line.strip())
+                except: pass
+            proxies_list = list(set(proxies_list))
+            print(Colorate.Horizontal(colors["num"], f"  [>] Scraped {len(proxies_list)} proxies."))
+
+    stats = {"hits": 0, "taken": 0, "ratelimited": 0, "error": 0}
+    chars = string.ascii_lowercase + string.digits
+
+    def _worker_loop():
+        while True:
+            name = ""
+            for _ in range(4):
+                name += random.choice(chars)
+            proxy_addr = random.choice(proxies_list) if use_prox and proxies_list else None
+            proxies = {"http": f"http://{proxy_addr}", "https": f"http://{proxy_addr}"} if proxy_addr else None
+            headers = {
+                "Authorization": auth_token,
+                "Content-Type": "application/json",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+            }
+            try:
+                import urllib3
+                urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+                api_url = "https://discord.com/api/v9/users/@me/pomelo-attempt"
+                r = requests.post(api_url, headers=headers, json={"username": name}, proxies=proxies, timeout=8, verify=False)
+                
+                if r.status_code == 200:
+                    data = r.json()
+                    if data.get("taken") == False:
+                        with lock:
+                            stats["hits"] += 1
+                            print(f"\n  [$$$] UNCLAIMED: {name}")
+                            with open("output/4chars.txt", "a") as f: f.write(name + "\n")
+                    else:
+                        with lock: stats["taken"] += 1
+                elif r.status_code == 429:
+                    with lock: stats["ratelimited"] += 1
+                    retry = r.json().get("retry_after", 3)
+                    time.sleep(retry)
+                elif r.status_code == 401:
+                    print(Colorate.Horizontal(colors["num"], "\n  [!] TOKEN INVALID! Stopping threads..."))
+                    return
+                else:
+                    with lock:
+                        stats["error"] += 1
+                        if not os.path.exists("logs"): os.mkdir("logs")
+                        with open("logs/checker_errors.log", "a") as ef:
+                            ef.write(f"[{time.ctime()}] Status {r.status_code} for {name} | Body: {r.text[:100]}\n")
+            except Exception as e:
+                with lock:
+                    stats["error"] += 1
+                    if not os.path.exists("logs"): os.mkdir("logs")
+                    with open("logs/checker_errors.log", "a") as ef:
+                        ef.write(f"[{time.ctime()}] Exception: {str(e)} | Proxy: {proxy_addr}\n")
+                
+            with lock:
+                print(Colorate.Horizontal(colors["txt"], f"  [~] Available: {stats['hits']} | Taken: {stats['taken']} | 429s: {stats['ratelimited']} | Errors: {stats['error']}      "), end="\r")
+    try:
+        if not os.path.exists("output"): os.mkdir("output")
+        pool = []
+        for _ in range(threads):
+            th = threading.Thread(target=_worker_loop, daemon=True)
+            th.start()
+            pool.append(th)
+        for th in pool: th.join()
+    except KeyboardInterrupt:
+        print("\n  [!] Interrupted by user.")
+    input(Colorate.Horizontal(colors["head"], "\n  Checker finished. Press Enter..."))
+
+def discord_report_bot():
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], "  [ DISCORD REPORT BOT ]\n"))
+    tk = get_inpt("Token:")
+    gid = get_inpt("Guild ID:")
+    cid = get_inpt("Channel ID:")
+    mid = get_inpt("Message ID:")
+    
+    print("\n  [1] Illegal Content\n  [2] Harassment\n  [3] Spam or Phishing\n  [4] Self-harm\n  [5] NSFW Content")
+    rsn_map = {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5}
+    rsn = rsn_map.get(get_inpt("Reason (1-5):"), 1)
+    
+    amt = int(get_inpt("Amount (100):") or 100)
+    print(Colorate.Horizontal(cl["num"], f"\n  [!] Initializing {amt} reports..."))
+    
+    def _do_report():
+        try:
+            h = {"Authorization": tk, "Content-Type": "application/json", "User-Agent": "Discord/21295 CFNetwork/1128.0.1 Darwin/19.6.0"}
+            payload = {"channel_id": cid, "message_id": mid, "guild_id": gid, "reason": rsn}
+            r = requests.post("https://discordapp.com/api/v8/report", headers=h, json=payload)
+            if r.status_code == 201: print(Colorate.Horizontal(cl["head"], "  [+] Report successfully sent!"))
+            else: print(Colorate.Horizontal(cl["num"], f"  [!] Error {r.status_code}: {r.text[:50]}"))
+        except: pass
+
+    for _ in range(amt):
+        threading.Thread(target=_do_report, daemon=True).start()
+        time.sleep(0.05)
+    
+    input(Colorate.Horizontal(cl["head"], "\n  Reports are being sent. Press Enter to return..."))

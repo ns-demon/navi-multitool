@@ -1,3 +1,13 @@
+#  _   _                 _ 
+# | \ | |               (_)
+# |  \| | __ ___   __ _  _ 
+# | . ` |/ _` \ \ / /(_)| |
+# | |\  | (_| |\ V /  _ | |
+# |_| \_|\__,_| \_/  (_)|_|
+# 
+# Navi Multitool - Developed by glockinhand
+# GitHub: https://github.com/glockinhand/navi-multitool
+
 import requests, socket, webbrowser, concurrent.futures, time
 from core.display import get_inpt, menu_opts, Colors, Colorate, Theme
 from modules.email_lookup import email_lookup_init
