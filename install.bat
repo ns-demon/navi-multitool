@@ -16,8 +16,6 @@ if %errorlevel% neq 0 (
     exit /b
 )
 
-echo [*] Upgrading pip...
-python -m pip install --upgrade pip -q
 
 echo [*] Installing dependencies from requirements.txt...
 pip install -r requirements.txt
