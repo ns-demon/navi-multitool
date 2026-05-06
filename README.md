@@ -1,7 +1,7 @@
 # <p align="center">🌌 Navi Multitool</p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-1.0.0-blue.svg?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/Version-1.3.0-blue.svg?style=for-the-badge" alt="Version">
   <img src="https://img.shields.io/badge/Author-gih-purple.svg?style=for-the-badge" alt="Author">
   <img src="https://img.shields.io/badge/Language-Python-yellow.svg?style=for-the-badge&logo=python" alt="Python">
 </p>
