@@ -14,3 +14,5 @@ piexif
 exifread
 mutagen
 pynput
+psutil
+qrcode[pil]

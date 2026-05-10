@@ -41,14 +41,32 @@ def phone_track():
     print_banner()
     print(Colorate.Horizontal(cl["head"], "  [ PHONE TRACKER ]\n"))
     
-    n = get_inpt("number (ex: +1234567890):")
-    print(Colorate.Horizontal(cl["head"], f"\n  [+] Analyzing {n}...\n"))
+    _n = get_inpt("number (ex: +1...):")
+    if not _n: return
+    print(Colorate.Horizontal(cl["head"], f"  [*] Fetching data for {_n}...\n"))
     
-    res = NumberInfo(n)
-    if res:
-        for k, v in res.items():
-            print(f"  {Colorate.Horizontal(cl['num'], f'{k:<12}')} : {Colorate.Horizontal(cl['txt'], v)}")
-    else:
-        print(Colorate.Horizontal(cl["num"], "  [!] Invalid number format."))
+    try:
+        _p = phonenumbers.parse(_n, None)
+        _valid = phonenumbers.is_valid_number(_p)
+        
+        _res = {
+            "Valid": _valid,
+            "E164": phonenumbers.format_number(_p, phonenumbers.PhoneNumberFormat.E164),
+            "International": phonenumbers.format_number(_p, phonenumbers.PhoneNumberFormat.INTERNATIONAL),
+            "National": phonenumbers.format_number(_p, phonenumbers.PhoneNumberFormat.NATIONAL),
+            "Carrier": carrier.name_for_number(_p, "en") or "Unknown",
+            "Type": "Mobile" if phonenumbers.number_type(_p) == phonenumbers.PhoneNumberType.MOBILE else "Fixed",
+            "Region": phonenumbers.region_code_for_number(_p),
+            "Location": geocoder.description_for_number(_p, "en"),
+            "Timezones": len(timezone.time_zones_for_number(_p)),
+            "WhatsApp": f"https://wa.me/{_n.strip('+').replace(' ', '')}",
+            "Telegram": f"https://t.me/{_n}"
+        }
+        
+        for _k, _v in _res.items():
+            print(f"  {Colorate.Horizontal(cl['num'], f'{_k:<12}')} : {Colorate.Horizontal(cl['txt'], str(_v))}")
+            
+    except Exception as _e:
+        print(Colorate.Horizontal(cl["num"], f"  [!] Error: {_e}"))
         
     input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))

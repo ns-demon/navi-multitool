@@ -55,23 +55,33 @@ def dns_lookup(t):
     except: return {"error": "failed"}
 
 def ip_pinger():
-    cl = Theme.get_colors()
-    h = get_inpt("host:")
-    p = int(get_inpt("port (80):") or 80)
-    b = int(get_inpt("bytes (64):") or 64)
-    print(Colorate.Horizontal(cl["head"], f"\n  [+] Pinging {h}:{p}... (CTRL+C)\n"))
+    _cl = Theme.get_colors()
+    _h = get_inpt("host:")
+    _p = int(get_inpt("port (80):") or 80)
+    _b = int(get_inpt("bytes (64):") or 64)
+    print(Colorate.Horizontal(_cl["head"], f"\n  [+] Pinging {_h}:{_p}... (CTRL+C)\n"))
+    _ts, _sc, _fl, _rs = [], 0, 0, []
     def _png():
+        nonlocal _sc, _fl
         try:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.settimeout(2)
-                st = time.time()
-                s.connect((h, p))
-                s.sendall(b'\x00' * b)
-                ms = (time.time() - st) * 1000
-                print(Colorate.Horizontal(cl["head"], f"  [+] Reply from {h}: {ms:.2f}ms"))
-        except: print(Colorate.Horizontal(cl["num"], f"  [!] Timeout: {h}"))
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as _s:
+                _s.settimeout(2)
+                _st = time.time()
+                _s.connect((_h, _p))
+                _s.sendall(b'\x00' * _b)
+                _ms = (time.time() - _st) * 1000
+                _sc += 1; _rs.append(_ms)
+                _ls = (_fl / (_sc + _fl)) * 100 if (_sc + _fl) > 0 else 0
+                print(Colorate.Horizontal(_cl["head"], f"  [+] Reply: {_ms:.2f}ms | sent={_sc} loss={_ls:.1f}%"))
+        except:
+            _fl += 1
+            print(Colorate.Horizontal(_cl["num"], f"  [!] Timeout: {_h}"))
     try:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=20) as ex:
-            while 1: ex.submit(_png); time.sleep(0.1)
-    except: print(Colorate.Horizontal(cl["num"], "\n  [!] Stopped."))
-    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+        while 1: _png(); time.sleep(0.1)
+    except KeyboardInterrupt:
+        _tot = _sc + _fl
+        _l = (_fl / _tot) * 100 if _tot > 0 else 0
+        print("\n" + Colorate.Horizontal(_cl["head"], f"  [=] Stats: sent={_tot} lost={_fl} loss={_l:.1f}%"))
+        if _rs:
+            print(Colorate.Horizontal(_cl["head"], f"  [=] RTT:   min={min(_rs):.2f}ms  avg={sum(_rs)/len(_rs):.2f}ms  max={max(_rs):.2f}ms"))
+    input(Colorate.Horizontal(_cl["head"], "\n  Press Enter..."))

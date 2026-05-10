@@ -69,13 +69,25 @@ class Scanner:
         if r and not r.json().get("data", {}).get("available"):
             with self.l: self.f.append("Imgur")
 
+    def lck(self):
+        r = self._req(f"https://leakcheck.io/api/public?check={self.e}")
+        if r and r.json().get("success"):
+            with self.l: self.br = r.json()
+
+    def erep(self):
+        r = self._req(f"https://emailrep.io/{self.e}")
+        if r and r.status_code == 200:
+            try:
+                with self.l: self.rep = r.json()
+            except: pass
+
 def email_lookup_init():
     cl = Theme.get_colors()
     t = get_inpt("target@email:~#")
     if not t or '@' not in t: return
     
     d = t.split('@')[-1]
-    print(Colorate.Horizontal(cl["head"], f"  [*] Fetching DNS records for {d}..."))
+    print(Colorate.Horizontal(cl["head"], f"  [*] Fetching Intelligence for {t}..."))
     
     def _q(domain, type):
         try:
@@ -85,32 +97,44 @@ def email_lookup_init():
 
     mx = _q(d, 'MX')
     spf_recs = _q(d, 'TXT')
+    dmarc = _q(f"_dmarc.{d}", 'TXT')
     
-    print(f"\n{Colorate.Horizontal(cl['head'], '  [ DOMAIN INTEL ]')}")
-    _l = lambda k, v: print(Colorate.Horizontal(cl["num"], f"  {k:<12} -> ") + Colorate.Horizontal(cl["txt"], str(v)))
-    
-    _l("TARGET", t)
-    if mx:
-        for m in mx: _l("MX_SRV", m)
-    
-    spf = "N/A"
-    for s in spf_recs:
-        if "v=spf1" in s: spf = s; break
-    _l("SPF_REC", spf)
+    _pr = lambda k, v: print(Colorate.Horizontal(cl["num"], f"  {k:<12} -> ") + Colorate.Horizontal(cl["txt"], str(v)))
     
     s = Scanner(t)
-    print(f"\n{Colorate.Horizontal(cl['head'], '  [*] Scanning social footprints...')}")
-    
-    tasks = [s.ig, s.tw, s.sp, s.ph, s.pin, s.img]
+    s.br, s.rep = None, None
+    tasks = [s.ig, s.tw, s.sp, s.ph, s.pin, s.img, s.lck, s.erep]
     threads = [threading.Thread(target=x) for x in tasks]
     for _t in threads: _t.start()
     for _t in threads: _t.join()
-    
+
+    print(f"\n{Colorate.Horizontal(cl['head'], '  [ DOMAIN INTEL ]')}")
+    if mx: _pr("MX Server", mx[0])
+    spf = "N/A"
+    for _s in spf_recs:
+        if "v=spf1" in _s: spf = _s; break
+    _pr("SPF Record", spf[:50] + "..." if len(spf) > 50 else spf)
+    if dmarc: _pr("DMARC", dmarc[0][:50] + "...")
+
+    print(f"\n{Colorate.Horizontal(cl['head'], '  [ BREACH DATA ]')}")
+    if s.br and s.br.get("found"):
+        _pr("Breaches", f"{s.br.get('found')} found")
+        if s.br.get("sources"):
+            _srcs = []
+            for _src in s.br["sources"][:4]:
+                if isinstance(_src, dict): _srcs.append(_src.get("name", "Unknown"))
+                else: _srcs.append(str(_src))
+            _pr("Sources", ", ".join(_srcs))
+    else: _pr("Breaches", "None found")
+
+    if s.rep and isinstance(s.rep, dict):
+        print(f"\n{Colorate.Horizontal(cl['head'], '  [ REPUTATION ]')}")
+        _pr("Status", s.rep.get("reputation", "Unknown"))
+        _pr("Suspicious", s.rep.get("suspicious", "False"))
+        _pr("References", s.rep.get("references", "0"))
+
     if s.f:
-        print(Colorate.Horizontal(cl["head"], f"  [+] Found on {len(s.f)} platforms:"))
-        for plat in s.f:
-            print(Colorate.Horizontal(cl["num"], "  [>] ") + Colorate.Horizontal(cl["txt"], plat))
-    else:
-        print(Colorate.Horizontal(cl["num"], "  [!] No social footprints found."))
+        print(f"\n{Colorate.Horizontal(cl['head'], '  [ SOCIAL FOOTPRINTS ]')}")
+        for plat in s.f: print(Colorate.Horizontal(cl["num"], "  [>] ") + Colorate.Horizontal(cl["txt"], plat))
     
-    input(Colorate.Horizontal(cl["head"], "\n  [ BACK ]"))
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))

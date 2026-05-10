@@ -76,3 +76,36 @@ def roblox_cookie_login():
     except Exception as e:
         print(Colorate.Horizontal(cl["num"], f"  [!] Selenium error: {e}"))
         input("\n  Press Enter...")
+
+def roblox_group_info():
+    cl = Theme.get_colors()
+    _id = get_inpt("group_id:")
+    print(Colorate.Horizontal(cl["head"], "  [+] Fetching group data..."))
+    try:
+        r = requests.get(f"https://groups.roblox.com/v1/groups/{_id}", headers=_hdr()).json()
+        if "id" not in r:
+            print(Colorate.Horizontal(cl["num"], "  [!] Group not found."))
+            return
+        ln = "  " + "─" * 50
+        print(Colorate.Horizontal(cl["head"], ln))
+        inf = [("Name", r.get("name")), ("Owner", r.get("owner", {}).get("username")), ("Members", r.get("memberCount")), ("Public", r.get("publicEntryAllowed")), ("Locked", r.get("isLocked"))]
+        for k, v in inf:
+            print(Colorate.Horizontal(cl["num"], f"  [>] {k:<12}: ") + Colorate.Horizontal(cl["txt"], str(v)))
+        print(Colorate.Horizontal(cl["head"], ln))
+    except Exception as e: print(Colorate.Horizontal(cl["num"], f"  [!] Error: {e}"))
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def roblox_asset_dl():
+    cl = Theme.get_colors()
+    _id = get_inpt("asset_id:")
+    print(Colorate.Horizontal(cl["head"], "  [+] Downloading asset..."))
+    try:
+        r = requests.get(f"https://assetdelivery.roblox.com/v1/asset/?id={_id}", headers=_hdr())
+        if r.status_code != 200:
+            print(Colorate.Horizontal(cl["num"], "  [!] Asset not found."))
+            return
+        if not os.path.exists("output"): os.makedirs("output")
+        with open(f"output/asset_{_id}.rbxm", "wb") as f: f.write(r.content)
+        print(Colorate.Horizontal(cl["head"], f"  [+] Saved to: output/asset_{_id}.rbxm"))
+    except Exception as e: print(Colorate.Horizontal(cl["num"], f"  [!] Error: {e}"))
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))

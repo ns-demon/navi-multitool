@@ -82,5 +82,13 @@ THEMES = {
         "txt": Colors.white,
         "sub": Colors.rainbow,
         "inp": Colors.rainbow
+    },
+    "modern": {
+        "banner": Colors.white_to_blue,
+        "head": Colors.white,
+        "num": Colors.white_to_blue,
+        "txt": Colors.white,
+        "sub": Colors.white_to_blue,
+        "inp": Colors.white_to_blue
     }
 }

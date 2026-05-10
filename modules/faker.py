@@ -8,8 +8,9 @@
 # Navi Multitool - Developed by glockinhand
 # GitHub: https://github.com/glockinhand/navi-multitool
 
-import time, random, string, threading, os, base64
-from core.display import Colors, Colorate, get_inpt, Theme, System, print_banner
+import time, random, string, threading, os, base64, re, requests, json
+from pystyle import Colors, Colorate, Center, System
+from core.display import get_inpt, Theme, print_banner
 
 def _cls(title):
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -310,6 +311,55 @@ def fake_fortnite_checker():
             time.sleep(0.05)
     except KeyboardInterrupt: pass
     input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def fake_hacker_typer():
+    _cls("Hacker Terminal")
+    _cl = Theme.get_colors()
+    print(Colorate.Horizontal(_cl["head"], "  [!] Press CTRL+C to stop hacking..."))
+    time.sleep(1)
+    try:
+        while 1:
+            _s = "".join(random.choices("0123456789ABCDEF", k=random.randint(16, 64)))
+            print(Colorate.Horizontal(_cl["head" if random.random() < 0.1 else "num"], f"  {_s}"))
+            time.sleep(0.01)
+    except KeyboardInterrupt: pass
+
+def fake_ransomware():
+    _cl = Theme.get_colors()
+    _cls("Critical System Failure")
+    print(Colorate.Horizontal(Colors.red, Center.XCenter(r"""
+    
+    [!] YOUR FILES HAVE BEEN ENCRYPTED [!]
+    
+    To decrypt your files, send 0.5 BTC to:
+    bc1pqdsuxtmgx5ds6c0xf6nydfwxj5hzdkterv9v02sc5js67sgs8w7qj6373f
+    
+    Time remaining: 23:59:59
+    
+    """)))
+    input(Colorate.Horizontal(Colors.red, " "))
+
+def fake_qr_gen():
+    _cls("QR Code Generator")
+    _cl = Theme.get_colors()
+    _d = get_inpt("text/url:")
+    if not _d: return
+    print(Colorate.Horizontal(_cl["head"], "  [+] Generating QR code..."))
+    try:
+        import qrcode
+        _qr = qrcode.make(_d)
+        if not os.path.exists("output"): os.makedirs("output")
+        _safe = re.sub(r'[\\/:*?"<>|]', '_', _d[:30])
+        _p = os.path.join("output", f"qr_{_safe}.png")
+        _qr.save(_p)
+        print(Colorate.Horizontal(_cl["head"], f"  [+] Saved to: {_p}"))
+        try: os.startfile(os.path.abspath(_p))
+        except: pass
+    except ImportError:
+        os.system("pip install qrcode[pil] -q")
+        print(Colorate.Horizontal(_cl["num"], "  [!] Installed qrcode, re-run to generate."))
+    except Exception as _e: print(Colorate.Horizontal(_cl["num"], f"  [!] Error: {_e}"))
+    input(Colorate.Horizontal(_cl["head"], "\n  Press Enter..."))
 
 def fake_bruteforcer():
     _cls("Account Bruteforcer")

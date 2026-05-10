@@ -70,7 +70,7 @@ def sql_scanner():
 
 def _w_stg(txt, sym='?'):
     c = Theme.get_colors()
-    return f" {Colorate.Horizontal(c['num'], f'[{sym}]')} {Colorate.Horizontal(cl['txt'], txt)}"
+    return f" {Colorate.Horizontal(c['num'], f'[{sym}]')} {Colorate.Horizontal(c['txt'], txt)}"
 
 def start_brute():
     cl = Theme.get_colors()
@@ -94,3 +94,14 @@ def start_brute():
         _final = (wf.sent_bytes * 8) / 1000000000
         print(Colorate.Horizontal(cl["num"], f"\n  [!] Session terminated. Data: {_final:.3f} Gb"))
     input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def ip_grabber():
+    _cl = Theme.get_colors()
+    print(Colorate.Horizontal(_cl["head"], "  [ IP GRABBER ]\n"))
+    print(Colorate.Horizontal(_cl["head"], "  [+] Opening Grabbify in browser..."))
+    try:
+        import webbrowser
+        webbrowser.open("https://grabify.org")
+    except Exception as _e:
+        print(Colorate.Horizontal(_cl["num"], f"  [!] Error: {_e}"))
+    time.sleep(2)
