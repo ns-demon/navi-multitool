@@ -20,6 +20,12 @@
 
 ---
 
+<p align="center">
+  <img src="https://i.ibb.co/jk1p5zYw/ezgif-754bbfc1f35ead20.gif" alt="Navi Interface">
+</p>
+
+---
+
 ## 🚀 Key Features
 
 ### 📡 Discord Operations
@@ -80,6 +86,14 @@
 
 ## 🎨 Themes
 Customize your terminal experience using the built-in configuration menu:
+
+<p align="center">
+  <img src="https://i.ibb.co/35hcVSy4/image1.png" width="24%" />
+  <img src="https://i.ibb.co/kVQCnQBz/image.png" width="24%" />
+  <img src="https://i.ibb.co/1YVCYYGM/image.png" width="24%" />
+  <img src="https://i.ibb.co/KjB7zKRm/image.png" width="24%" />
+</p>
+
 `Blue` | `Red` | `Purple` | `Green` | `Yellow` | `Pink` | `Cyan` | `Gray` | `Rainbow`
 
 ---
