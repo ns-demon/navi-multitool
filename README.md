@@ -16,22 +16,6 @@
   <b>Navi</b> is a high-performance terminal-based multitool designed for developers, security researchers, and enthusiasts. Featuring a sleek aesthetic, it combines power with professional UI.
 </p>
 
----
-
-## 📸 Preview
-
-<p align="center">
-  <img src="https://i.ibb.co/mCGs3xmH/ezgif-71169c6f566a1aab.gif" alt="Navi Interface">
-</p>
-
----
-
-<p align="center">
-  <img src="https://i.ibb.co/jk1p5zYw/ezgif-754bbfc1f35ead20.gif" alt="Navi Interface">
-</p>
-
----
-
 ## 🚀 Key Features
 
 ### 📡 Discord Operations
@@ -64,7 +48,23 @@
 *   **Customization**: Global **Theme Manager** (9+ distinct styles).
 *   **Settings**: Persistent **Config** management (Auto-Updates, Discord Popups, etc.).
 
+
 ---
+
+## 📸 Preview
+
+<p align="center">
+  <img src="https://i.ibb.co/mCGs3xmH/ezgif-71169c6f566a1aab.gif" alt="Navi Interface">
+</p>
+
+---
+
+<p align="center">
+  <img src="https://i.ibb.co/jk1p5zYw/ezgif-754bbfc1f35ead20.gif" alt="Navi Interface">
+</p>
+
+---
+
 
 ## 🛠️ Installation & Setup
 
