@@ -1,4 +1,10 @@
-# <p align="center">🌌 Navi Multitool</p>
+# <p align="center">~ Navi Multitool ~</p>
+
+<p align="center">
+  <img src="https://i.ibb.co/kg0R2k2H/image.png"
+       alt="Navi Interface"
+       style="width: 100%; height: auto;">
+</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Version-1.5.0-blue.svg?style=for-the-badge" alt="Version">
