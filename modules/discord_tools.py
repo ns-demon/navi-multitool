@@ -428,5 +428,73 @@ def discord_report_bot():
     for _ in range(amt):
         threading.Thread(target=_do_report, daemon=True).start()
         time.sleep(0.05)
-    
+
     input(Colorate.Horizontal(cl["head"], "\n  Reports are being sent. Press Enter to return..."))
+    
+def discord_server_cloner(tk):
+    cl = Theme.get_colors()
+    print(Colorate.Horizontal(cl["head"], "  [ DISCORD SERVER CLONER ]\n"))
+    src = get_inpt("Source Guild ID:")
+    dst = get_inpt("Target Guild ID:")
+    h = {"Authorization": tk, "Content-Type": "application/json"}
+    def _get(ep): return requests.get(f"https://discord.com/api/v9{ep}", headers=h)
+    def _post(ep, d): return requests.post(f"https://discord.com/api/v9{ep}", headers=h, json=d)
+    def _delete(ep): return requests.delete(f"https://discord.com/api/v9{ep}", headers=h)
+    print(Colorate.Horizontal(cl["num"], "  [>] Fetching source data..."))
+    r_roles = _get(f"/guilds/{src}/roles")
+    r_chans = _get(f"/guilds/{src}/channels")
+    if r_roles.status_code != 200 or r_chans.status_code != 200:
+        print(Colorate.Horizontal(cl["num"], "  [!] Error fetching guild data. Check IDs/Token permissions."))
+        input("\n  Press Enter...")
+        return
+    roles = r_roles.json()
+    chans = sorted(r_chans.json(), key=lambda x: x.get("position", 0))
+    print(Colorate.Horizontal(cl["head"], f"  [+] Found {len(roles)} roles and {len(chans)} channels."))
+    if get_inpt("Clear target guild first? (y/n):").lower() == 'y':
+        print(Colorate.Horizontal(cl["num"], "  [!] Clearing target..."))
+        target_chans_req = _get(f"/guilds/{dst}/channels")
+        if target_chans_req.status_code == 200:
+            target_chans = target_chans_req.json()
+            for c in target_chans:
+                _delete(f"/channels/{c['id']}")
+                time.sleep(0.3)
+        target_roles_req = _get(f"/guilds/{dst}/roles")
+        if target_roles_req.status_code == 200:
+            target_roles = target_roles_req.json()
+            for r in target_roles:
+                if r["name"] != "@everyone":
+                    _delete(f"/guilds/{dst}/roles/{r['id']}")
+                    time.sleep(0.3)
+    print(Colorate.Horizontal(cl["head"], "  [+] Cloning Roles..."))
+    for r in reversed(roles):
+        if r["name"] == "@everyone": continue
+        p = {"name": r["name"], "permissions": r["permissions"], "color": r["color"], "hoist": r["hoist"], "mentionable": r["mentionable"]}
+        _post(f"/guilds/{dst}/roles", p)
+        print(Colorate.Horizontal(cl["txt"], f"  [>] Created role: {r['name']}"))
+        time.sleep(0.5)
+
+    print(Colorate.Horizontal(cl["head"], "  [+] Cloning Categories & Channels..."))
+    cat_map = {} 
+    
+    for c in chans:
+        if c["type"] == 4: 
+            p = {"name": c["name"], "type": 4}
+            res = _post(f"/guilds/{dst}/channels", p)
+            if res.status_code in [200, 201]:
+                cat_map[c["id"]] = res.json()["id"]
+                print(Colorate.Horizontal(cl["txt"], f"  [>] Created category: {c['name']}"))
+            time.sleep(0.5)
+
+    for c in chans:
+        if c["type"] != 4:
+            p = {"name": c["name"], "type": c["type"], "topic": c.get("topic"), "nsfw": c.get("nsfw", False)}
+            if c.get("parent_id") in cat_map:
+                p["parent_id"] = cat_map[c["parent_id"]]
+            
+            res = _post(f"/guilds/{dst}/channels", p)
+            if res.status_code in [200, 201]:
+                print(Colorate.Horizontal(cl["txt"], f"  [>] Created channel: {c['name']}"))
+            time.sleep(0.5)
+
+    print(Colorate.Horizontal(cl["head"], "\n  [=] Cloning process finished."))
+    input("  Press Enter...")

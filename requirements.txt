@@ -16,3 +16,4 @@ mutagen
 pynput
 psutil
 qrcode[pil]
+PyQt5

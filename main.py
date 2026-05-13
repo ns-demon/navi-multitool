@@ -11,8 +11,8 @@
 import sys, time, subprocess, json, os, threading, zipfile, io, shutil
 
 def _init():
-    try: import pystyle, requests, selenium, dns.resolver, bs4, socks, websocket, piexif, exifread, mutagen
-    except: subprocess.check_call([sys.executable, "-m", "pip", "install", "pystyle", "requests", "selenium", "dnspython", "beautifulsoup4", "pysocks", "websocket-client", "piexif", "exifread", "mutagen", "-q"])
+    try: import pystyle, requests, selenium, dns.resolver, bs4, socks, websocket, piexif, exifread, mutagen, PyQt5
+    except: subprocess.check_call([sys.executable, "-m", "pip", "install", "pystyle", "requests", "selenium", "dnspython", "beautifulsoup4", "pysocks", "websocket-client", "piexif", "exifread", "mutagen", "PyQt5", "-q"])
 
 
 _init()
@@ -32,18 +32,18 @@ def cfg_mgr():
         _cl = Theme.get_colors()
         print_banner()
         print(Colorate.Horizontal(_cl["head"], "  [ CONFIGURATION & SETTINGS ]\n"))
-        _tl = [("1","Blue"),("2","Red"),("3","Purple"),("4","Green"),("5","Yellow"),("6","Pink"),("7","Cyan"),("8","Gray"),("9","Rainbow"),("10","Modern")]
+        _tl = [("1","Blue"),("2","Red"),("3","Purple"),("4","Green"),("5","Yellow"),("6","Pink"),("7","Cyan"),("8","Gray"),("9","Rainbow"),("10","Modern"),("11","Modern Red"),("12","Modern Purple")]
         print(Colorate.Horizontal(_cl["head"], "  [ THEMES ]"))
         for _i in range(0, len(_tl), 3):
             _ln = ""
             for _k, _v in _tl[_i:_i+3]: _ln += Colorate.Horizontal(_cl["num"], f"  [{_k}] ") + Colorate.Horizontal(_cl["txt"], f"{_v:<15}")
             print(_ln)
         print("\n" + Colorate.Horizontal(_cl["head"], "  [ TOGGLES ]"))
-        print(Colorate.Horizontal(_cl["num"], "  [11] ") + Colorate.Horizontal(_cl["txt"], "Auto-Update") + " " * 10 + Colorate.Horizontal(_cl["num"], "[12] ") + Colorate.Horizontal(_cl["txt"], "Discord Popup"))
+        print(Colorate.Horizontal(_cl["num"], "  [13] ") + Colorate.Horizontal(_cl["txt"], "Auto-Update") + " " * 10 + Colorate.Horizontal(_cl["num"], "[14] ") + Colorate.Horizontal(_cl["txt"], "Discord Popup"))
         print(Colorate.Horizontal(_cl["num"], "  [99] ") + Colorate.Horizontal(_cl["txt"], "Return to Menu"))
         _c = get_inpt("navi@config:~#")
-        if _c in [str(_x) for _x in range(1, 11)]:
-            _tm = {"1":"blue","2":"red","3":"purple","4":"green","5":"yellow","6":"pink","7":"cyan","8":"gray","9":"rainbow","10":"modern"}[_c]
+        if _c in [str(_x) for _x in range(1, 13)]:
+            _tm = {"1":"blue","2":"red","3":"purple","4":"green","5":"yellow","6":"pink","7":"cyan","8":"gray","9":"rainbow","10":"modern","11":"modern_red","12":"modern_purple"}[_c]
             try:
                 with open("core/config.json", "r") as _f: _d = json.load(_f)
                 _d["theme"] = _tm
@@ -51,10 +51,10 @@ def cfg_mgr():
                 print(Colorate.Horizontal(_cl["head"], f"  [+] Theme -> {_tm.upper()}"))
                 matrix_effect(1, Theme.get_matrix_color())
             except: pass
-        elif _c in ["11", "12"]:
+        elif _c in ["13", "14"]:
             try:
                 with open("core/config.json", "r") as _f: _d = json.load(_f)
-                _k = "auto_update" if _c == "11" else "auto_open_discord"
+                _k = "auto_update" if _c == "13" else "auto_open_discord"
                 _d[_k] = not _d.get(_k, 1)
                 with open("core/config.json", "w") as _f: json.dump(_d, _f, indent=2)
                 print(Colorate.Horizontal(_cl["head"], f"  [+] {_k} is now {_d[_k]}"))
@@ -120,11 +120,11 @@ def run_app():
         _cl = Theme.get_colors()
         print_banner()
         _cfg = get_config()
-        if _cfg.get("theme", "blue").lower() == "modern":
+        if _cfg.get("theme", "blue").lower().startswith("modern"):
             from core.modern_ui import ModernUI as _mui
-            _d_i = ["[1] Webhook Tools", "[2] Token Tools", "[3] Nitro Generator", "[4] Server Info", "[5] Bot Invite Gen", "[6] Selfbot"]
+            _d_i = ["[1] Webhook Tools", "[2] Token Tools", "[3] Nitro Generator", "[4] Server Info", "[5] Bot Invite Gen", "[6] Selfbot", "[7] Server Cloner"]
             _o_i = ["[10] Port Scanner", "[11] Whois Lookup", "[12] DNS Lookup", "[14] Dox Tracker", "[15] Dox Creator", "[16] Phone Lookup", "[17] Email Lookup"]
-            _m_i = ["[20] Email Bomber", "[21] Crypto Clipper", "[22] Vuln Scanner", "[23] DDoS Attack", "[24] Navi Stealer", "[25] Keylogger Builder", "[26] IP Grabber"]
+            _m_i = ["[20] Email Bomber", "[21] Crypto Clipper", "[22] Vuln Scanner", "[23] DDoS Attack", "[24] Stealer Builder", "[25] Keylogger Builder", "[26] IP Grabber"]
             _g_i = ["[30] Base64 Codec", "[31] System Info", "[32] IP Pinger", "[33] Obfuscator", "[13] Metadata Scan"]
             _r_i = ["[40] User Info", "[41] Cookie Info", "[42] Cookie Login", "[43] Group Info", "[44] Asset DL"]
             _f_i = ["[50] Faker Tools", "[34] Web Cloner", "[35] QR Code Gen"]
@@ -135,7 +135,7 @@ def run_app():
             _mui.render_menu(Colorate, Theme, [("GENERAL", _g_i), ("ROBLOX", _r_i), ("FAKER", _f_i), ("SYSTEM", _s_i)])
         else:
             print(Colorate.Horizontal(_cl["head"], "    [ DISCORD ]              [ OSINT ]                [ MALICIOUS ]"))
-            _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Navi Stealer"), ("[6] Selfbot", "[16] Phone Lookup", "[25] Keylogger Builder"), ("", "[17] Email Lookup", "[26] IP Grabber")]
+            _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Stealer Builder"), ("[6] Selfbot", "[16] Phone Lookup", "[25] Keylogger Builder"), ("[7] Server Cloner", "[17] Email Lookup", "[26] IP Grabber")]
             for _r1, _r2, _r3 in _d:
                 def _f(s, w):
                     if not s: return " " * w
@@ -160,7 +160,7 @@ def run_app():
             while 1:
                 print_banner()
                 print(Colorate.Horizontal(_cl["head"], "  [ TOKEN & ACCOUNT TOOLS ]\n"))
-                menu_opts({"1": "ID to Token", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "7": "Selfbot", "8": "Username Checker", "9": "Report Bot", "99": "Return"})
+                menu_opts({"1": "ID to Token", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "7": "Selfbot", "8": "Username Checker", "9": "Report Bot", "10": "Server Cloner", "99": "Return"})
                 _cc = get_inpt("navi@discord/tokens:~#")
                 if _cc == "1":
                     _uid = get_inpt("UID:")
@@ -190,10 +190,16 @@ def run_app():
                 elif _cc == "9":
                     from modules.discord_tools import discord_report_bot
                     discord_report_bot()
+                elif _cc == "10":
+                    from modules.discord_tools import discord_server_cloner
+                    discord_server_cloner(get_inpt("Token:"))
                 elif _cc == "99": break
         elif _c == "6":
             from modules.discord_tools import selfbot_menu
             selfbot_menu()
+        elif _c == "7":
+            from modules.discord_tools import discord_server_cloner
+            discord_server_cloner(get_inpt("Token:"))
         elif _c == "3": nitro_generator(int(get_inpt("Threads (1):") or 1))
         elif _c == "4":
             from modules.discord_tools import server_info_lookup
@@ -242,8 +248,7 @@ def run_app():
             from modules.malicious import start_brute
             start_brute()
         elif _c == '24':
-            from modules.recovery_builder import build_navi_recovery
-            build_navi_recovery()
+            subprocess.run([sys.executable, "modules/builder_gui.py"])
         elif _c == '25':
             from modules.keylogger import build_keylogger
             build_keylogger()

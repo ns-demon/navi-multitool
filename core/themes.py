@@ -30,8 +30,8 @@ THEMES = {
     "purple": {
         "banner": Colors.blue_to_purple,
         "head": Colors.purple_to_blue,
-        "num": Colors.purple_to_red,
-        "txt": Colors.blue_to_purple,
+        "num": Colors.purple_to_blue,
+        "txt": Colors.white,
         "sub": Colors.purple_to_blue,
         "inp": Colors.purple_to_blue
     },
@@ -39,7 +39,7 @@ THEMES = {
         "banner": Colors.green_to_white,
         "head": Colors.white_to_green,
         "num": Colors.white_to_green,
-        "txt": Colors.green_to_white,
+        "txt": Colors.white,
         "sub": Colors.green_to_white,
         "inp": Colors.white_to_green
     },
@@ -47,7 +47,7 @@ THEMES = {
         "banner": Colors.yellow_to_red,
         "head": Colors.red_to_yellow,
         "num": Colors.yellow_to_red,
-        "txt": Colors.red_to_yellow,
+        "txt": Colors.white,
         "sub": Colors.red_to_yellow,
         "inp": Colors.red_to_yellow
     },
@@ -55,7 +55,7 @@ THEMES = {
         "banner": Colors.purple_to_red,
         "head": Colors.red_to_purple,
         "num": Colors.purple_to_blue,
-        "txt": Colors.pink,
+        "txt": Colors.white,
         "sub": Colors.pink,
         "inp": Colors.pink
     },
@@ -90,5 +90,21 @@ THEMES = {
         "txt": Colors.white,
         "sub": Colors.white_to_blue,
         "inp": Colors.white_to_blue
+    },
+    "modern_red": {
+        "banner": Colors.white_to_red,
+        "head": Colors.white,
+        "num": Colors.white_to_red,
+        "txt": Colors.white,
+        "sub": Colors.white_to_red,
+        "inp": Colors.white_to_red
+    },
+    "modern_purple": {
+        "banner": Colors.blue_to_purple,
+        "head": Colors.white,
+        "num": Colors.blue_to_purple,
+        "txt": Colors.white,
+        "sub": Colors.blue_to_purple,
+        "inp": Colors.blue_to_purple
     }
 }

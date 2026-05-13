@@ -72,7 +72,7 @@ class Theme:
     def get_matrix_color():
         c = get_config().get("theme", "blue").lower()
         if c == "rainbow": return -1
-        m = {"red":196,"purple":93,"green":46,"yellow":226,"pink":201,"cyan":51,"gray":245,"blue":27}
+        m = {"red":196,"purple":93,"green":46,"yellow":226,"pink":201,"cyan":51,"gray":245,"blue":27, "modern_red":196, "modern_purple":93}
         return m.get(c, 27)
 
 def clr():
@@ -179,7 +179,7 @@ def boot_anim():
         time.sleep(0.1)
     
     cfg = get_config()
-    if cfg.get("theme", "blue").lower() == "modern":
+    if cfg.get("theme", "blue").lower().startswith("modern"):
         ModernUI.boot_anim(Colorate, Theme, type_print)
         
     time.sleep(0.4)
@@ -218,8 +218,34 @@ def matrix_effect(cycles=1, color_id=27):
 
 def print_banner():
     cfg = get_config()
-    if cfg.get("theme", "blue").lower() == "modern":
+    if cfg.get("theme", "blue").lower().startswith("modern"):
         return ModernUI.print_banner(Colorate, Theme, clr)
+    clr()
+    cols = Theme.get_colors()
+    banners = [
+        f"""
+      ::::    :::     :::     :::     ::: ::::::::::: 
+     :+:+:   :+:   :+: :+:   :+:     :+:     :+:      
+    :+:+:+  +:+  +:+   +:+  +:+     +:+     +:+       
+   +#+ +:+ +#+ +#++:++#++: +#+     +:+     +#+        
+  +#+  +#+#+# +#+     +#+  +#+   +#+      +#+         
+ #+#   #+#+# #+#     #+#   #+#+#+#       #+#          
+###    #### ###     ###     ###     ########### 
+        """,
+        f"""
+  _   _    _ __     _____ 
+ | \ | |  / \\ \   / /_ _|
+ |  \| | / _ \\ \ / / | | 
+ | |\  |/ ___ \\ V /  | | 
+ |_| \_/_/   \_\\_/  |___|
+        """
+
+    ]
+    bn = random.choice(banners)
+
+    print(Colorate.Horizontal(cols["banner"], Center.XCenter(bn)))
+    print(Colorate.Horizontal(cols["sub"], Center.XCenter("~ Present Day, Present Time ~")))
+    print("\n")
     clr()
     cols = Theme.get_colors()
     banners = [
