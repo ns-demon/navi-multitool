@@ -21,7 +21,7 @@
 ### 📡 Discord Operations
 *   **Webhook Control**: Advanced multi-threaded **Spammer** and instant **Deleter**.
 *   **Token Tools**: many tools like: **Token Nuker**, **Status Rotator**, **Token Info** etc.
-*   **Profile Tools**: Rapid **PFP Lookup** and **Banner Lookup** via User ID.
+*   **Selfbot**: with **Nitro Sniper**, **DM Logger** etc.
 *   **Generation**: Built-in **Nitro Code Generator** and **Bot Invite** generator.
 
 ### 🔍 OSINT & Intelligence
