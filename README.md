@@ -1,97 +1,82 @@
-# <p align="center">~ Navi Multitool ~</p>
+# <p align="center">🛸 Navi Multitool</p>
 
 <p align="center">
-  <img src="https://i.ibb.co/kg0R2k2H/image.png"
-       alt="Navi Interface"
-       style="width: 100%; height: auto;">
+  <img src="https://i.ibb.co/kg0R2k2H/image.png" alt="Navi Banner" width="100%">
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-1.5.0-blue.svg?style=for-the-badge" alt="Version">
-  <img src="https://img.shields.io/badge/Author-gih-purple.svg?style=for-the-badge" alt="Author">
-  <img src="https://img.shields.io/badge/Language-Python-yellow.svg?style=for-the-badge&logo=python" alt="Python">
+  <img src="https://img.shields.io/badge/Version-1.6.0-0078D4?style=for-the-badge&logo=github" alt="Version">
+  <img src="https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-blue?style=for-the-badge&logo=windows" alt="Platform">
 </p>
 
 <p align="center">
-  <b>Navi</b> is a high-performance terminal-based multitool designed for developers, security researchers, and enthusiasts. Featuring a sleek aesthetic, it combines power with professional UI.
+  <b>Navi</b> is a premium, high-performance terminal multitool designed for efficiency, security testing, and OSINT exploration. Featuring a state-of-the-art <b>Modern UI</b> and a vast array of specialized modules.
 </p>
 
-## 🚀 Key Features
+---
+
+## ⚡ Core Features
 
 ### 📡 Discord Operations
-*   **Webhook Control**: Advanced multi-threaded **Spammer** and instant **Deleter**.
-*   **Token Tools**: many tools like: **Token Nuker**, **Status Rotator**, **Token Info** etc.
-*   **Selfbot**: with **Nitro Sniper**, **DM Logger** etc.
-*   **Generation**: Built-in **Nitro Code Generator** and **Bot Invite** generator.
+*   **Webhook Suite**: High-speed **Spammer** and instant **Deleter** for webhook management.
+*   **Account Suite**: 
+    *   **Token Tools**: Info extractor, Nuker, Login automator, and Status rotator.
+    *   **Onliner**: Keeps accounts active 24/7.
+    *   **Username Checker**: Multi-threaded availability checks.
+*   **Automation**: 
+    *   **Nitro Generator**: High-speed code generator.
+    *   **Server Cloner**: Perfectly replicate server structures (channels, roles, etc.).
+    *   **Selfbot**: Advanced features like Nitro sniping and DM logging.
 
 ### 🔍 OSINT & Intelligence
-*   **Target Tracking**: Specialized **Dox Tracker** and **Dox Creator** modules.
-*   **Network Mapping**: High-speed **Port Scanner**, **Whois Lookup**, and **DNS Resolver**.
-*   **Personal Lookups**: Search by **Phone Number** or **Email Address** globally.
+*   **Network Mapping**: High-precision **Port Scanner**, **Whois Lookup**, and **DNS Resolver**.
+*   **Target Intelligence**: 
+    *   **Dox Tracker & Creator**: Comprehensive person-of-interest mapping.
+    *   **Lookup Suite**: Global Phone Number and Email Address tracking.
+    *   **Metadata Scan**: Deep analysis of file metadata (Exif, etc.).
+*   **IP Tools**: Advanced **IP Grabber** and high-frequency **Pinger**.
 
-### 💀 Malicious Tools
-*   **Flooding**: High-volume **Email Bomber** for stress testing.
-*   **Persistence**: Custom **Clipper Builder and Stealer** for cryptocurrency redirection and info stealing.
-*   **Exploitation**: Integrated **Vulnerability Scanner** and **DDoS Attack** protocols.
-*   *And more features coming soon...*
+### 💀 Exploitation & Builders
+*   **Multi-Builder GUI**: A centralized interface for generating custom stubs:
+    *   **Discord RAT**: Full remote access with Discord-based C2, persistence, and embed responses.
+    *   **Recovery Tool**: Blue-themed GUI for browser data and token extraction.
+    *   **Crypto Clipper**: Intelligent cryptocurrency address redirection.
+    *   **Keylogger**: Stealthy background input recording.
+*   **Attack Vectors**: 
+    *   **Email Bomber**: High-volume mail stress testing.
+    *   **DDoS Protocol**: Integrated Layer 4 and Layer 7 attack simulations.
+    *   **SQL Scanner**: Automated vulnerability detection.
 
-### 🛡️ General & Security
-*   **Python Obfuscator V2**: Professional bytecode compilation (Anti-Print) with XOR encryption.
-*   **Cryptography**: **Base64 Codec** (Encode/Decode) and **Password Generator**.
-*   **Diagnostics**: Detailed **System Information** and high-precision **IP Pinger**.
+### 🛡️ Security & Utilities
+*   **Obfuscator V2**: Professional-grade Python obfuscation with XOR encryption and Anti-Print protection.
+*   **Web Cloner**: Instant local cloning of any website.
+*   **Cryptography**: Base64 Codec and high-entropy Password Generator.
+*   **QR Generator**: Custom QR code creation for payloads or links.
 
-### 🎮 Roblox Tools
-*   **Account Intel**: Detailed **User Info** extractor and **Cookie Information** validator.
-*   **Session Control**: Secure **Cookie Login** automation tool.
+### 🎮 Game Suite (Roblox)
+*   **Intel**: Detailed User, Cookie, and Group information extractors.
+*   **Control**: Automated Cookie Login and high-speed Asset Downloader.
 
-### ⚙️ System & Navigation
-*   **Customization**: Global **Theme Manager** (9+ distinct styles).
-*   **Settings**: Persistent **Config** management (Auto-Updates, Discord Popups, etc.).
-
+### 🎭 Simulation Modules
+*   **Faker Suite**: 16+ modules for simulating various scenarios (Fake Nitro, Identity, Wallets, etc.) for demonstration or educational purposes.
 
 ---
 
-## 📸 Preview
+## 📸 Interface Preview
 
 <p align="center">
-  <img src="https://i.ibb.co/mCGs3xmH/ezgif-71169c6f566a1aab.gif" alt="Navi Interface">
+  <img src="https://i.ibb.co/mCGs3xmH/ezgif-71169c6f566a1aab.gif" alt="Modern UI Preview" width="80%">
+</p>
+
+<p align="center">
+  <img src="https://i.ibb.co/jk1p5zYw/ezgif-754bbfc1f35ead20.gif" alt="Function Preview" width="80%">
 </p>
 
 ---
 
-<p align="center">
-  <img src="https://i.ibb.co/jk1p5zYw/ezgif-754bbfc1f35ead20.gif" alt="Navi Interface">
-</p>
-
----
-
-
-## 🛠️ Installation & Setup
-
-1.  **Clone the Repository**
-    ```bash
-    git clone https://github.com/glockinhand/navi-multitool.git
-    cd navi-multitool
-    ```
-
-2.  **Install Dependencies**
-    *   **Windows**: Run `install.bat`
-    *   **Linux/macOS**: `pip install -r requirements.txt`
-
-3.  **Launch Navi**
-    ```bash
-    python main.py
-    ```
-
-> [!NOTE]
-> Navi can also handle its own dependencies automatically on the first run, but using `install.bat` is recommended for a stable environment.
-
----
-
----
-
-## 🎨 Themes
-Customize your terminal experience using the built-in configuration menu:
+## 🎨 Professional Themes
+Navi offers a variety of themes to suit your aesthetic, including the new **Modern** series:
 
 <p align="center">
   <img src="https://i.ibb.co/35hcVSy4/image1.png" width="24%" />
@@ -100,14 +85,42 @@ Customize your terminal experience using the built-in configuration menu:
   <img src="https://i.ibb.co/KjB7zKRm/image.png" width="24%" />
 </p>
 
-`Blue` | `Red` | `Purple` | `Green` | `Yellow` | `Pink` | `Cyan` | `Gray` | `Rainbow`
+`Modern` | `Modern Red` | `Modern Purple` | `Rainbow` | `Blue` | `Red` | `Purple` | `Green` | `Yellow`
 
 ---
 
+## 🛠️ Installation
 
-## 🔗 Connections
-- **Developer**: [gih](https://github.com/glockinhand)
-- **Discord**: [Join the Discord](https://discord.gg/bkWzktRuqm)
+### Prerequisites
+- Python 3.9 or higher installed.
+- Internet connection for initial dependency setup.
+
+### Quick Start
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/glockinhand/navi-multitool.git
+    cd navi-multitool
+    ```
+
+2.  **Run Installation**
+    - **Windows**: Just run `install.bat`
+    - **Linux/macOS**: `pip install -r requirements.txt`
+
+3.  **Launch**
+    ```bash
+    python main.py
+    ```
+
+---
+
+## ⚠️ Disclaimer
+This tool is developed for **educational and ethical security testing purposes only**. The developer is not responsible for any misuse or damage caused by this application. Use Navi responsibly and within legal boundaries.
+
+---
+
+## 🔗 Stay Connected
+- **Main Developer**: [glockinhand](https://github.com/glockinhand)
+- **Community Discord**: [Join the Server](https://discord.gg/bkWzktRuqm)
 
 <p align="center">
   <i>"Present Day, Present Time... Hahaha!"</i>
