@@ -8,7 +8,7 @@ class BuildManager:
         try:
             log("NAVI: initializing build...")
             
-            stub_src = "modules/recovery.py"
+            stub_src = "modules/stub/recovery.py"
             if not os.path.exists(stub_src):
                 log(f"NAVI: error - {stub_src} not found")
                 return False
