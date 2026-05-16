@@ -1,7 +1,16 @@
 import sys
+import os
+
+# Ensure the project root is on sys.path so that
+# absolute imports like 'modules.builder.main_window' resolve correctly
+# when this file is launched as a standalone subprocess.
+_project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
+
 from PyQt5.QtWidgets import QApplication
-from main_window import MainWindow
-from pages.splash import SplashScreen
+from modules.builder.main_window import MainWindow
+from modules.builder.pages.splash import SplashScreen
 
 def main():
     app = QApplication(sys.argv)
