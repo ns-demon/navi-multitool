@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 title Navi Multitool - Installer
 color 0b
 
@@ -24,20 +25,16 @@ echo ======================================================
 echo             ERROR: PYTHON NOT FOUND
 echo ======================================================
 echo.
-echo Python is not installed or not in PATH (environment variable).
+echo Python is not installed or not in PATH.
 echo.
-echo Solution:
-echo 1. Download Python: https://www.python.org/downloads/
+echo 1. Download: https://www.python.org/downloads/
 echo 2. Run the installer.
-echo 3. IMPORTANT: Check the box at the bottom:
-echo    "Add python.exe to PATH" (or "Add Python to PATH")
+echo 3. Check "Add python.exe to PATH" at the bottom.
 echo 4. Click "Install Now".
 echo 5. Restart this installer.
 echo.
-echo ======================================================
-echo.
 pause
-exit /b
+exit /b 1
 
 :python_found
 echo [+] Python found (%PYTHON_CMD%)
@@ -45,9 +42,8 @@ echo.
 
 %PYTHON_CMD% -m pip --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [*] Pip is not available. Trying to install/restore pip...
+    echo [*] Pip not found. Trying to restore...
     %PYTHON_CMD% -m ensurepip --default-pip >nul 2>&1
-    
     %PYTHON_CMD% -m pip --version >nul 2>&1
     if %errorlevel% neq 0 (
         color 0c
@@ -55,39 +51,32 @@ if %errorlevel% neq 0 (
         echo               ERROR: PIP NOT FOUND
         echo ======================================================
         echo.
-        echo The Python Package Manager (pip) was not found.
-        echo.
-        echo Solution:
-        echo 1. Open Command Prompt (cmd) as Administrator.
-        echo 2. Run the following command to manually install pip:
+        echo Run this manually to fix it:
         echo    %PYTHON_CMD% -m ensurepip --default-pip
-        echo 3. Restart this installer.
-        echo.
-        echo ======================================================
         echo.
         pause
-        exit /b
+        exit /b 1
     )
 )
 
 echo [*] Installing dependencies from requirements.txt...
+echo.
 %PYTHON_CMD% -m pip install -r requirements.txt
 
 if %errorlevel% neq 0 (
     color 0c
     echo.
     echo [!] Some dependencies failed to install.
-    echo [!] Please check your internet connection or run as Administrator.
+    echo [!] Check your internet connection or run as Administrator.
     echo.
-    echo If this error persists, you can try installing the packages manually by
-    echo running this in cmd:
-    echo %PYTHON_CMD% -m pip install -r requirements.txt
+    echo To retry manually:
+    echo    %PYTHON_CMD% -m pip install -r requirements.txt
 ) else (
+    color 0a
     echo.
-    echo [+] Installation completed successfully!
-    echo [+] You can now run the tool using start.bat or main.py
+    echo [+] Installation complete!
+    echo [+] Run the tool with start.bat or main.py
 )
 
 echo.
-echo Press any key to exit...
-pause >nul
+pause
