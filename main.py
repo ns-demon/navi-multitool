@@ -197,7 +197,7 @@ def _nbot_ui():
         print(Colorate.Horizontal(_cl["num"], "  [3] ") + Colorate.Horizontal(_cl["txt"], "Show Help"))
         print(Colorate.Horizontal(_cl["num"], "  [99]") + Colorate.Horizontal(_cl["txt"], "Return to Main Menu"))
         
-        cmd = get_inpt("navi@testbot:~#").strip().lower()
+        cmd = get_inpt("navi@nukebot:~#").strip().lower()
         
         if cmd == "1":
             try:
