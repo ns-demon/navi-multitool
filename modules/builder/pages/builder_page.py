@@ -161,11 +161,6 @@ class BuilderPage(QWidget):
         icon = self.selected_icon
         telegram_config = self.options_page.get_telegram_config()
 
-        if not telegram_config:
-            self.box = CustomMessageBox("NAVI", "error", "NAVI: configure telegram first")
-            self.box.show()
-            return
-
         self.build_window = BuildLogBox(self)
         self.build_window.show()
 

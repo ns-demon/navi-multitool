@@ -115,6 +115,125 @@ def _pop():
             webbrowser.open(_cfg.get("discord", ""))
         except: pass
 
+def _nbot_ui():
+    _cl = Theme.get_colors()
+    import base64
+    
+    token = ""
+    config_path = "core/botcfg.json"
+    
+    default_config = {
+        "BOT_TOKEN": "",
+        "MESSAGE_CONTENT": "@everyone | Server Nuked | discord.gg/4qUD63pnPy | https://github.com/glockinhand/navi-multitool",
+        "WEBHOOK_URL": "This webhook for tracking your nukes",
+        "GUILD_NEW_NAME": "navi owns this",
+        "CHANNEL_AMOUNT": 60,
+        "BATCH_SIZE_CHANNELS": 60,
+        "BATCH_SIZE_DELETE": 30,
+        "BATCH_SIZE_BAN": 4,
+        "TOTAL_MESSAGES": 800,
+        "MAX_MESSAGES_PER_CHANNEL": 18,
+        "TOTAL_WEBHOOKS": 2000,
+        "WEBHOOK_DELAY": 0.06,
+        "SPAM_EMOJIS": ["🏴", "🌙", "🔥", "💀", "👾"],
+        "WEBHOOK_USERNAME": "Navi Runs Cord",
+        "COMMAND_PREFIX": "."
+    }
+    
+    if not os.path.exists("core"):
+        os.makedirs("core")
+        
+    cfg_data = default_config.copy()
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, "r", encoding="utf-8") as f:
+                loaded_data = json.load(f)
+                if isinstance(loaded_data, dict):
+                    cfg_data.update(loaded_data)
+                    token = cfg_data.get("BOT_TOKEN", "").strip()
+        except Exception:
+            pass
+            
+    if not token:
+        print_banner()
+        print(Colorate.Horizontal(_cl["head"], "  [ TEST BOT ]\n"))
+        print(Colorate.Horizontal(_cl["num"], "  Please enter Discord Bot Token:"))
+        token = get_inpt("  Token: ").strip()
+        if not token:
+            print(Colorate.Horizontal(_cl["num"], "  [!] Token cannot be empty!"))
+            time.sleep(1.5)
+            return
+            
+        cfg_data["BOT_TOKEN"] = token
+        
+        try:
+            with open(config_path, "w", encoding="utf-8") as f:
+                json.dump(cfg_data, f, indent=2)
+            print(Colorate.Horizontal(_cl["head"], "  [+] Token saved to core/botcfg.json!"))
+            time.sleep(1)
+        except Exception as e:
+            print(Colorate.Horizontal(_cl["num"], f"  [!] Could not save token: {e}"))
+            time.sleep(1.5)
+            
+    bot_id = "Unknown"
+    try:
+        parts = token.split('.')
+        if len(parts) >= 1:
+            padded = parts[0] + '=' * (4 - len(parts[0]) % 4)
+            bot_id = base64.b64decode(padded).decode('utf-8')
+    except Exception:
+        pass
+        
+    bot_invite = f"https://discord.com/oauth2/authorize?client_id={bot_id}&scope=bot&permissions=8" if bot_id != "Unknown" else "Could not determine Bot ID"
+    
+    while True:
+        print_banner()
+        print(Colorate.Horizontal(_cl["head"], "  [ DISCORD NUKE BOT UI ]\n"))
+        print(Colorate.Horizontal(_cl["num"], "  [=] Bot ID:     ") + Colorate.Horizontal(_cl["txt"], bot_id))
+        print(Colorate.Horizontal(_cl["num"], "  [=] Bot Invite: ") + Colorate.Horizontal(_cl["head"], bot_invite))
+        print("\n" + Colorate.Horizontal(_cl["head"], "  [ CONTROL PANEL ]"))
+        print(Colorate.Horizontal(_cl["num"], "  [1] ") + Colorate.Horizontal(_cl["txt"], "Start Bot (New Window)"))
+        print(Colorate.Horizontal(_cl["num"], "  [2] ") + Colorate.Horizontal(_cl["txt"], "Open botcfg.json"))
+        print(Colorate.Horizontal(_cl["num"], "  [3] ") + Colorate.Horizontal(_cl["txt"], "Show Help"))
+        print(Colorate.Horizontal(_cl["num"], "  [99]") + Colorate.Horizontal(_cl["txt"], "Return to Main Menu"))
+        
+        cmd = get_inpt("navi@testbot:~#").strip().lower()
+        
+        if cmd == "1":
+            try:
+                if os.name == 'nt':
+                    subprocess.Popen([sys.executable, "modules/nbot.py"], creationflags=subprocess.CREATE_NEW_CONSOLE)
+                else:
+                    subprocess.Popen([sys.executable, "modules/nbot.py"])
+                print(Colorate.Horizontal(_cl["head"], "  [+] Bot started in a new terminal window!"))
+            except Exception as e:
+                print(Colorate.Horizontal(_cl["num"], f"  [!] Error starting bot: {e}"))
+            time.sleep(2)
+            
+        elif cmd == "2":
+            try:
+                if os.path.exists(config_path):
+                    os.startfile(os.path.abspath(config_path))
+                    print(Colorate.Horizontal(_cl["head"], "  [+] botcfg.json opened!"))
+                else:
+                    print(Colorate.Horizontal(_cl["num"], "  [!] Configuration file does not exist!"))
+            except Exception as e:
+                print(Colorate.Horizontal(_cl["num"], f"  [!] Error opening file: {e}"))
+            time.sleep(1.5)
+            
+        elif cmd == "3":
+            print_banner()
+            print(Colorate.Horizontal(_cl["head"], "  [ TEST BOT HELP ]\n"))
+            print(Colorate.Horizontal(_cl["txt"], "  The Test Bot runs in a separate console window and responds to Discord commands:"))
+            print(Colorate.Horizontal(_cl["num"], "  • .kill   ") + Colorate.Horizontal(_cl["txt"], "- Deletes guild channels and spams/bans (Configurable)."))
+            print(Colorate.Horizontal(_cl["num"], "  • .massban") + Colorate.Horizontal(_cl["txt"], "- Bans all non-admin members in the server."))
+            print(Colorate.Horizontal(_cl["num"], "  • .erase  ") + Colorate.Horizontal(_cl["txt"], "- Deletes all channels in the guild."))
+            print(Colorate.Horizontal(_cl["txt"], "\n  Configurable values are stored in core/botcfg.json."))
+            input("\n  Press Enter to continue...")
+            
+        elif cmd == "99":
+            break
+
 def run_app():
     while 1:
         _cl = Theme.get_colors()
@@ -122,7 +241,7 @@ def run_app():
         _cfg = get_config()
         if _cfg.get("theme", "blue").lower().startswith("modern"):
             from core.modern_ui import ModernUI as _mui
-            _d_i = ["[1] Webhook Tools", "[2] Token Tools", "[3] Nitro Generator", "[4] Server Info", "[5] Bot Invite Gen", "[6] Selfbot", "[7] Server Cloner"]
+            _d_i = ["[1] Webhook Tools", "[2] Token Tools", "[3] Nitro Generator", "[4] Server Info", "[5] Bot Invite Gen", "[6] Selfbot", "[7] Server Cloner", "[8] Test Bot"]
             _o_i = ["[10] Port Scanner", "[11] Whois Lookup", "[12] DNS Lookup", "[14] Dox Tracker", "[15] Dox Creator", "[16] Phone Lookup", "[17] Email Lookup"]
             _m_i = ["[20] Email Bomber", "[21] Crypto Clipper", "[22] Vuln Scanner", "[23] DDoS Attack", "[24] Stealer Builder", "[25] Keylogger Builder", "[26] IP Grabber", "[27] Rat Builder"]
             _g_i = ["[30] Base64 Codec", "[31] System Info", "[32] IP Pinger", "[33] Obfuscator", "[13] Metadata Scan"]
@@ -135,7 +254,7 @@ def run_app():
             _mui.render_menu(Colorate, Theme, [("GENERAL", _g_i), ("ROBLOX", _r_i), ("FAKER", _f_i), ("SYSTEM", _s_i)])
         else:
             print(Colorate.Horizontal(_cl["head"], "    [ DISCORD ]              [ OSINT ]                [ MALICIOUS ]"))
-            _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Stealer Builder"), ("[6] Selfbot", "[16] Phone Lookup", "[25] Keylogger Builder"), ("[7] Server Cloner", "[17] Email Lookup", "[26] IP Grabber"), ("", "", "[27] Rat Builder")]
+            _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Stealer Builder"), ("[6] Selfbot", "[16] Phone Lookup", "[25] Keylogger Builder"), ("[7] Server Cloner", "[17] Email Lookup", "[26] IP Grabber"), ("[8] Test Bot", "", "[27] Rat Builder")]
             for _r1, _r2, _r3 in _d:
                 def _f(s, w):
                     if not s: return " " * w
@@ -200,6 +319,8 @@ def run_app():
         elif _c == "7":
             from modules.discord_tools import discord_server_cloner
             discord_server_cloner(get_inpt("Token:"))
+        elif _c == "8":
+            _nbot_ui()
         elif _c == "3": nitro_generator(int(get_inpt("Threads (1):") or 1))
         elif _c == "4":
             from modules.discord_tools import server_info_lookup

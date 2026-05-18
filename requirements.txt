@@ -17,3 +17,4 @@ pynput
 psutil
 qrcode[pil]
 PyQt5
+discord.py
