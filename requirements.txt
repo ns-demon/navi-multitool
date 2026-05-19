@@ -18,3 +18,4 @@ psutil
 qrcode[pil]
 PyQt5
 discord.py
+legacy-cgi
