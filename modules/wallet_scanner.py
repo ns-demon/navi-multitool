@@ -1,10 +1,188 @@
+#  _   _                 _ 
+# | \ | |               (_)
+# |  \| | __ ___   __ _  _ 
+# | . ` |/ _` \ \ / /(_)| |
+# | |\  | (_| |\ V /  _ | |
+# |_| \_|\__,_| \_/  (_)|_|
+# 
+# Navi Multitool - Developed by glockinhand
+# GitHub: https://github.com/glockinhand/navi-multitool
+
 import asyncio
 import os
 import sys
 import time
 import random
+import hashlib
+import hmac
 from datetime import datetime
 from pystyle import Colors as _PY
+from Crypto.Hash import keccak, RIPEMD160
+
+class BIP32:
+    P = 2**256 - 2**32 - 977
+    N = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141
+    Gx = 0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798
+    Gy = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8
+    G = (Gx, Gy)
+
+    @classmethod
+    def _inv(cls, a, n):
+        if a == 0:
+            return 0
+        lm, hm = 1, 0
+        low, high = a % n, n
+        while low > 1:
+            r = high // low
+            nm, new = hm - r * lm, high - r * low
+            lm, low, hm, high = nm, new, lm, low
+        return lm % n
+
+    @classmethod
+    def _ec_add(cls, p, q):
+        if not p: return q
+        if not q: return p
+        (px, py), (qx, qy) = p, q
+        if px == qx and py == qy:
+            s = ((3 * px * px) * cls._inv(2 * py, cls.P)) % cls.P
+        else:
+            if px == qx: return None
+            s = ((qy - py) * cls._inv(qx - px, cls.P)) % cls.P
+        rx = (s * s - px - qx) % cls.P
+        ry = (s * (px - rx) - py) % cls.P
+        return (rx, ry)
+
+    @classmethod
+    def _ec_mul(cls, k, p):
+        res = None
+        addend = p
+        while k:
+            if k & 1:
+                res = cls._ec_add(res, addend)
+            addend = cls._ec_add(addend, addend)
+            k >>= 1
+        return res
+
+    @classmethod
+    def privkey_to_pubkey(cls, privkey_bytes, compressed=True):
+        k = int.from_bytes(privkey_bytes, 'big')
+        pt = cls._ec_mul(k, cls.G)
+        if pt is None:
+            raise ValueError("Invalid private key")
+        x, y = pt
+        if compressed:
+            prefix = b'\x02' if y % 2 == 0 else b'\x03'
+            return prefix + x.to_bytes(32, 'big')
+        else:
+            return b'\x04' + x.to_bytes(32, 'big') + y.to_bytes(32, 'big')
+
+    @classmethod
+    def from_seed(cls, seed):
+        I = hmac.new(b"Bitcoin seed", seed, hashlib.sha512).digest()
+        return cls(I[:32], I[32:])
+
+    def __init__(self, private_key, chain_code):
+        self.private_key = private_key
+        self.chain_code = chain_code
+
+    def child(self, index):
+        is_hardened = (index & 0x80000000) != 0
+        if is_hardened:
+            data = b'\x00' + self.private_key + index.to_bytes(4, 'big')
+        else:
+            pubkey = self.privkey_to_pubkey(self.private_key, compressed=True)
+            data = pubkey + index.to_bytes(4, 'big')
+
+        I = hmac.new(self.chain_code, data, hashlib.sha512).digest()
+        Il, Ir = I[:32], I[32:]
+
+        k_par = int.from_bytes(self.private_key, 'big')
+        il_int = int.from_bytes(Il, 'big')
+        if il_int >= self.N:
+            raise ValueError("Invalid child key")
+        child_k = (il_int + k_par) % self.N
+        if child_k == 0:
+            raise ValueError("Invalid child key")
+
+        return BIP32(child_k.to_bytes(32, 'big'), Ir)
+
+    def derive_path(self, path):
+        parts = path.split('/')
+        if parts[0] != 'm':
+            raise ValueError("Path must start with 'm'")
+        curr = self
+        for part in parts[1:]:
+            if part.endswith("'"):
+                index = int(part[:-1]) | 0x80000000
+            else:
+                index = int(part)
+            curr = curr.child(index)
+        return curr
+
+def base58_encode(b):
+    chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+    n = int.from_bytes(b, 'big')
+    res = []
+    while n > 0:
+        n, r = divmod(n, 58)
+        res.append(chars[r])
+    pad = 0
+    for c in b:
+        if c == 0:
+            pad += 1
+        else:
+            break
+    return (chars[0] * pad) + "".join(reversed(res))
+
+def base58_check_encode(version_byte, payload):
+    data = version_byte + payload
+    checksum = hashlib.sha256(hashlib.sha256(data).digest()).digest()[:4]
+    return base58_encode(data + checksum)
+
+def ripemd160_hash(data):
+    r = RIPEMD160.new()
+    r.update(data)
+    return r.digest()
+
+def keccak256_hash(data):
+    k = keccak.new(digest_bits=256)
+    k.update(data)
+    return k.digest()
+
+def eth_address(privkey):
+    pubkey = BIP32.privkey_to_pubkey(privkey, compressed=False)[1:]
+    khash = keccak256_hash(pubkey)
+    addr_hex = khash[-20:].hex()
+    
+    addr_hex = addr_hex.lower()
+    k = keccak.new(digest_bits=256)
+    k.update(addr_hex.encode('ascii'))
+    ahash = k.hexdigest()
+    checksum_addr = ""
+    for i in range(40):
+        if int(ahash[i], 16) >= 8:
+            checksum_addr += addr_hex[i].upper()
+        else:
+            checksum_addr += addr_hex[i]
+    return "0x" + checksum_addr
+
+def btc_address(privkey):
+    pubkey = BIP32.privkey_to_pubkey(privkey, compressed=True)
+    sha = hashlib.sha256(pubkey).digest()
+    pkhash = ripemd160_hash(sha)
+    return base58_check_encode(b'\x00', pkhash)
+
+def ltc_address(privkey):
+    pubkey = BIP32.privkey_to_pubkey(privkey, compressed=True)
+    sha = hashlib.sha256(pubkey).digest()
+    pkhash = ripemd160_hash(sha)
+    return base58_check_encode(b'\x30', pkhash)
+
+def trx_address(privkey):
+    pubkey = BIP32.privkey_to_pubkey(privkey, compressed=False)[1:]
+    khash = keccak256_hash(pubkey)
+    pkhash = khash[-20:]
+    return base58_check_encode(b'\x41', pkhash)
 
 def _get_theme():
     from core.display import Colorate, Theme, get_inpt
@@ -14,25 +192,20 @@ def wallet_scanner_init():
     Colorate, Theme, get_inpt = _get_theme()
     try:
         import aiohttp
-        from bip_utils import (Bip39MnemonicGenerator, Bip39SeedGenerator,
-                                Bip44, Bip44Coins, Bip44Changes)
+        from mnemonic import Mnemonic
     except ImportError:
         import subprocess
         _cl = Theme.get_colors()
-        print(Colorate.Horizontal(_cl["num"], "  [*] Installing required packages (aiohttp, bip-utils)..."))
+        print(Colorate.Horizontal(_cl["num"], "  [*] Installing required packages (aiohttp, mnemonic)..."))
         subprocess.check_call([
             sys.executable, "-m", "pip", "install",
-            "aiohttp", "bip-utils", "-q"
+            "aiohttp", "mnemonic", "-q"
         ])
         import aiohttp
-        from bip_utils import (Bip39MnemonicGenerator, Bip39SeedGenerator,
-                                Bip44, Bip44Coins, Bip44Changes)
-    _run(aiohttp, Bip39MnemonicGenerator, Bip39SeedGenerator,
-         Bip44, Bip44Coins, Bip44Changes,
-         Colorate, Theme, get_inpt)
-def _run(aiohttp, Bip39MnemonicGenerator, Bip39SeedGenerator,
-         Bip44, Bip44Coins, Bip44Changes,
-         Colorate, Theme, get_inpt):
+        from mnemonic import Mnemonic
+    _run(aiohttp, Mnemonic, Colorate, Theme, get_inpt)
+
+def _run(aiohttp, Mnemonic, Colorate, Theme, get_inpt):
     RED     = _PY.red
     GREEN   = _PY.green
     CYAN    = _PY.cyan
@@ -43,6 +216,7 @@ def _run(aiohttp, Bip39MnemonicGenerator, Bip39SeedGenerator,
     script_start = time.time()
     semaphore  = asyncio.Semaphore(150)
     print_lock = asyncio.Lock()
+
     def set_title(title: str):
         if os.name == "nt":
             import ctypes
@@ -50,6 +224,7 @@ def _run(aiohttp, Bip39MnemonicGenerator, Bip39SeedGenerator,
         else:
             sys.stdout.write(f"\x1b]2;{title}\x07")
             sys.stdout.flush()
+
     def save_wallet(network, address, balance, mnemonic, priv_key):
         os.makedirs("found_wallets", exist_ok=True)
         ts       = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -61,18 +236,21 @@ def _run(aiohttp, Bip39MnemonicGenerator, Bip39SeedGenerator,
             f.write(f"Mnemonic     : {mnemonic}\n")
             f.write(f"Private Key  : {priv_key}\n")
         return filename
+
     def generate_wallets(seed_bytes):
-        def addr(coin):
-            return (Bip44.FromSeed(seed_bytes, coin)
-                    .Purpose().Coin().Account(0)
-                    .Change(Bip44Changes.CHAIN_EXT)
-                    .AddressIndex(0).PublicKey().ToAddress())
+        root = BIP32.from_seed(seed_bytes)
+        eth_priv = root.derive_path("m/44'/60'/0'/0/0").private_key
+        btc_priv = root.derive_path("m/44'/0'/0'/0/0").private_key
+        ltc_priv = root.derive_path("m/44'/2'/0'/0/0").private_key
+        trx_priv = root.derive_path("m/44'/195'/0'/0/0").private_key
+        
         return (
-            addr(Bip44Coins.ETHEREUM),
-            addr(Bip44Coins.BITCOIN),
-            addr(Bip44Coins.LITECOIN),
-            addr(Bip44Coins.TRON),
+            eth_address(eth_priv),
+            btc_address(btc_priv),
+            ltc_address(ltc_priv),
+            trx_address(trx_priv),
         )
+
     async def get_balance(session, address, network):
         timeout = aiohttp.ClientTimeout(total=10)
         if network == "btc":
@@ -117,11 +295,13 @@ def _run(aiohttp, Bip39MnemonicGenerator, Bip39SeedGenerator,
             except Exception:
                 return "0"
         return "0"
+
     async def worker(session, word_count):
         await asyncio.sleep(random.uniform(0.0, 2.0))
+        mnemo = Mnemonic("english")
         while True:
-            mnemonic_obj = Bip39MnemonicGenerator().FromWordsNumber(word_count)
-            seed_bytes   = Bip39SeedGenerator(mnemonic_obj).Generate()
+            mnemonic_str = mnemo.generate(strength=128 if word_count == 12 else 256)
+            seed_bytes   = mnemo.to_seed(mnemonic_str, passphrase="")
             eth_addr, btc_addr, ltc_addr, trx_addr = generate_wallets(seed_bytes)
             results = await asyncio.gather(
                 get_balance(session, eth_addr, "eth"),
@@ -139,7 +319,7 @@ def _run(aiohttp, Bip39MnemonicGenerator, Bip39SeedGenerator,
             btc_val = val(results[2], 8)
             ltc_val = val(results[3], 8)
             trx_val = val(results[4], 6)
-            m_str = str(mnemonic_obj)
+            m_str = mnemonic_str
             found = any(v > 0 for v in [e_val, b_val, btc_val, ltc_val, trx_val])
             if found:
                 stats["found"] += 1
@@ -180,6 +360,7 @@ def _run(aiohttp, Bip39MnemonicGenerator, Bip39SeedGenerator,
             )
             async with print_lock:
                 print(line)
+
     async def title_loop():
         while True:
             elapsed = time.time() - script_start
@@ -188,6 +369,7 @@ def _run(aiohttp, Bip39MnemonicGenerator, Bip39SeedGenerator,
                 f"Scanned: {stats['generated']:,}  |  Hits: {stats['found']}  |  {rps:.1f} w/s"
             )
             await asyncio.sleep(1)
+
     async def _main(num_workers, word_count):
         _cl = Theme.get_colors()
         os.system("cls" if os.name == "nt" else "clear")
@@ -206,6 +388,7 @@ def _run(aiohttp, Bip39MnemonicGenerator, Bip39SeedGenerator,
             tasks = [asyncio.create_task(worker(session, word_count)) for _ in range(num_workers)]
             tasks.append(asyncio.create_task(title_loop()))
             await asyncio.gather(*tasks)
+
     _cl = Theme.get_colors()
     os.system("cls" if os.name == "nt" else "clear")
     print(Colorate.Horizontal(_cl["head"], f"\n  ╔══════════════════════════════════════════╗"))
