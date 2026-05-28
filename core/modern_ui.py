@@ -32,7 +32,7 @@ class ModernUI:
         
         print("\n\n")
         for i, line in enumerate(_b):
-            if i == 5: # Texte auf die allerletzte Zeile verschieben
+            if i == 5:
                 _left = "~ present day "
                 _right = "present time ~"
                 _pad = 5

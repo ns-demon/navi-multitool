@@ -82,8 +82,24 @@ def init_os():
     cfg = get_config()
     ver = cfg.get("version", "1.0.0")
     user = os.environ.get('USERNAME', 'Unknown') if os.name == 'nt' else os.environ.get('USER', 'Unknown')
-    System.Size(120, 32)
+    try:
+        if os.name == 'nt':
+            os.system('mode con cols=120 lines=38')
+            sys.stdout.write('\x1b[8;38;120t')
+            sys.stdout.flush()
+        else:
+            sys.stdout.write('\x1b[8;38;120t')
+            sys.stdout.flush()
+    except:
+        print("error")
+        pass
     System.Title(f"*Navi @ {user} ~ v{ver}")
+    cols, rows = shutil.get_terminal_size()
+    if cols < 80:
+        cl = Theme.get_colors()
+        print(Colorate.Horizontal(cl.get("num", ""), f"\n  [!] WARNING: Terminal width is {cols} (less than 80)."))
+        print(Colorate.Horizontal(cl.get("txt", ""), "      For the best experience and alignment, please widen your terminal window!\n"))
+        time.sleep(3.0)
 
 def type_print(text, delay=0.03):
     cl = Theme.get_colors()
@@ -244,7 +260,7 @@ def print_banner():
     bn = random.choice(banners)
 
     print(Colorate.Horizontal(cols["banner"], Center.XCenter(bn)))
-    print(Colorate.Horizontal(cols["sub"], Center.XCenter("~ Present Day, Present Time ~")))
+    print(Colorate.Horizontal(cols["sub"], Center.XCenter("\n~ Present Day, Present Time ~")))
     print("\n")
     clr()
     cols = Theme.get_colors()
@@ -270,7 +286,7 @@ def print_banner():
     bn = random.choice(banners)
 
     print(Colorate.Horizontal(cols["banner"], Center.XCenter(bn)))
-    print(Colorate.Horizontal(cols["sub"], Center.XCenter("~ Present Day, Present Time ~")))
+    print(Colorate.Horizontal(cols["sub"], Center.XCenter("\n~ Present Day, Present Time ~")))
     print("\n")
 
 def menu_opts(options):
@@ -285,7 +301,13 @@ def menu_opts(options):
         print(_line)
     print()
 
-def get_inpt(prompt=f"{user}@navi:~#"):
+def get_inpt(prompt=None):
+    if prompt is None:
+        prompt = f"{user}@navi:~#"
+    else:
+        prompt = prompt.replace("navi@root/", f"{user}@navi/")
+        prompt = prompt.replace("navi@", f"{user}@navi/")
+        
     cl = Theme.get_colors()
     _prmpt = f"\n  {prompt} "
     return input(Colorate.Horizontal(cl["inp"], _prmpt))
