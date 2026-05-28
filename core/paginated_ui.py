@@ -280,9 +280,6 @@ class PaginatedUI:
 
     @staticmethod
     def draw_card_box(title, items, theme_colors=None):
-        """
-        Render sub-menus in a clean boxed layout, centered on screen, no alignment shifts.
-        """
         colors = theme_colors or Theme.get_colors()
         tw = shutil.get_terminal_size().columns
         box_w = max(50, min(80, tw - 6))
