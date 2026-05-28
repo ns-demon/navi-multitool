@@ -43,7 +43,6 @@ def cfg_mgr():
         mg = PaginatedUI.get_margin(box_w)
 
         def _p(text=""):
-            """Print a full-width box row, centered on screen."""
             pad_right = max(0, inner - len(text))
             print(mg + Colorate.Horizontal(_cl["num"], "│") +
                   Colorate.Horizontal(_cl["txt"], text) +
@@ -51,7 +50,6 @@ def cfg_mgr():
                   Colorate.Horizontal(_cl["num"], "│"))
 
         def _pc(text_plain, color):
-            """Print a centered-text box row."""
             pad = (inner - len(text_plain)) // 2
             extra = inner - len(text_plain) - pad * 2
             print(mg + Colorate.Horizontal(_cl["num"], "│") +
@@ -63,7 +61,6 @@ def cfg_mgr():
         def _div(char="─", left="├", right="┤"):
             print(mg + Colorate.Horizontal(_cl["head"], left + char * inner + right))
 
-        # ── Header ────────────────────────────────────────────────────────────
         title = " CONFIGURATION & SETTINGS "
         bd_len = max(2, (inner - len(title)) // 2)
         bd_ext = "─" if (inner - len(title)) % 2 != 0 else ""
@@ -72,7 +69,6 @@ def cfg_mgr():
         _pc(f"Active Theme: {active_theme}", _cl["head"])
         _p()
 
-        # ── Theme grid (3 columns) ─────────────────────────────────────────────
         _tl = [("1","Blue"),("2","Red"),("3","Purple"),("4","Green"),("5","Yellow"),("6","Pink"),
                ("7","Cyan"),("8","Gray"),("9","Rainbow"),("10","Modern"),("11","Modern Red"),("12","Modern Purple")]
         col_w = inner // 3
@@ -88,7 +84,6 @@ def cfg_mgr():
             pad_val = max(0, inner - len(plain_ln))
             print(mg + Colorate.Horizontal(_cl["num"], "│") + _ln + " " * pad_val + Colorate.Horizontal(_cl["num"], "│"))
 
-        # ── Toggles ───────────────────────────────────────────────────────────
         _p()
         _div()
         _p()
@@ -116,7 +111,6 @@ def cfg_mgr():
         _div()
         _p()
 
-        # ── Return ────────────────────────────────────────────────────────────
         exit_plain = "  [99] Return to Main Menu"
         pad_exit = max(0, inner - len(exit_plain))
         print(mg + Colorate.Horizontal(_cl["num"], "│") +
