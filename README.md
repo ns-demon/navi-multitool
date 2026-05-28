@@ -73,11 +73,11 @@
 ## 📸 Interface Preview
 
 <p align="center">
-  <img src="https://i.ibb.co/mCGs3xmH/ezgif-71169c6f566a1aab.gif" alt="Modern UI Preview" width="80%">
+  <img src="https://i.ibb.co/mCPvQWt9/ezgif-43009de2c03d4907.gif" alt="Modern UI Preview" width="80%">
 </p>
 
 <p align="center">
-  <img src="https://i.ibb.co/jk1p5zYw/ezgif-754bbfc1f35ead20.gif" alt="Function Preview" width="80%">
+  <img src="https://i.ibb.co/b5KZnZL0/ezgif-470aa4e7ae5d5dec.gif" alt="Function Preview" width="80%">
 </p>
 
 ---
