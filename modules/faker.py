@@ -9,8 +9,8 @@
 # GitHub: https://github.com/glockinhand/navi-multitool
 
 import time, random, string, threading, os, base64, re, requests, json
-from pystyle import Colors, Colorate, Center, System
-from core.display import get_inpt, Theme, print_banner
+from pystyle import Colors, Center, System
+from core.display import Colorate, get_inpt, Theme, print_banner
 
 def _cls(title):
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -131,11 +131,11 @@ def fake_identity_gen():
         ("Phone", f"+1 ({random.randint(200, 999)}) {random.randint(200, 999)}-{random.randint(1000, 9999)}")
     ]
     
-    print(Colorate.Horizontal(cl["main"], "  " + "─" * 40))
+    print(Colorate.Horizontal(cl["head"], "  " + "─" * 40))
     for k, v in id_data:
         print(Colorate.Horizontal(cl["num"], f"  [>] {k:<15}: ") + Colorate.Horizontal(cl["txt"], v))
         time.sleep(0.2)
-    print(Colorate.Horizontal(cl["main"], "  " + "─" * 40))
+    print(Colorate.Horizontal(cl["head"], "  " + "─" * 40))
     input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
 
 def fake_nitro_gen():

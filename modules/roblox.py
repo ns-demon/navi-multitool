@@ -109,3 +109,34 @@ def roblox_asset_dl():
         print(Colorate.Horizontal(cl["head"], f"  [+] Saved to: output/asset_{_id}.rbxm"))
     except Exception as e: print(Colorate.Horizontal(cl["num"], f"  [!] Error: {e}"))
     input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
+
+def roblox_name_history():
+    cl = Theme.get_colors()
+    un = get_inpt("roblox_username:")
+    print(Colorate.Horizontal(cl["head"], "  [+] Fetching name history..."))
+    try:
+        r = requests.post("https://users.roblox.com/v1/usernames/users", headers=_hdr(), json={"usernames": [un], "excludeBannedUsers": False})
+        d = r.json()
+        if not d.get('data'):
+            print(Colorate.Horizontal(cl["num"], "  [!] User not found."))
+            return
+        uid = d['data'][0]['id']
+        res = requests.get(f"https://users.roblox.com/v1/users/{uid}/username-history?limit=50&sortOrder=Desc", headers=_hdr())
+        
+        ln = "  " + "─" * 50
+        print(Colorate.Horizontal(cl["head"], ln))
+        
+        if res.status_code == 200:
+            hist = res.json().get("data", [])
+            if not hist:
+                print(Colorate.Horizontal(cl["num"], "  [>] No past usernames found."))
+            else:
+                for idx, entry in enumerate(hist):
+                    print(Colorate.Horizontal(cl["num"], f"  [{idx+1}] ") + Colorate.Horizontal(cl["txt"], entry.get("name")))
+        else:
+            print(Colorate.Horizontal(cl["num"], "  [!] API Error or Private History."))
+            
+        print(Colorate.Horizontal(cl["head"], ln))
+    except Exception as e:
+        print(Colorate.Horizontal(cl["num"], f"  [!] Error: {e}"))
+    input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
