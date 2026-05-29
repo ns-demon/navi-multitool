@@ -380,7 +380,7 @@ def run_app():
         elif _c == "2":
             while 1:
                 print_banner()
-                PaginatedUI.draw_card_box("TOKEN & ACCOUNT TOOLS", {"1": "Token Bruteforce", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "7": "Selfbot", "8": "Username Checker", "9": "Report Bot", "10": "Server Cloner", "99": "Return"})
+                PaginatedUI.draw_card_box("TOKEN & ACCOUNT TOOLS", {"1": "Token Bruteforce", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "7": "Selfbot", "8": "Report Bot", "9": "Server Cloner", "99": "Return"})
                 _cc = get_inpt("navi@discord/tokens:~#")
                 if _cc == "1":
                     id_to_token()
@@ -404,12 +404,9 @@ def run_app():
                     from modules.discord_tools import selfbot_menu
                     selfbot_menu()
                 elif _cc == "8":
-                    from modules.discord_tools import discord_username_checker
-                    discord_username_checker(int(get_inpt("Threads (1):") or 1))
-                elif _cc == "9":
                     from modules.discord_tools import discord_report_bot
                     discord_report_bot()
-                elif _cc == "10":
+                elif _cc == "9":
                     from modules.discord_tools import discord_server_cloner
                     discord_server_cloner(get_inpt("Token:"))
                 elif _cc == "99": break
@@ -421,6 +418,9 @@ def run_app():
             discord_server_cloner(get_inpt("Token:"))
         elif _c == "8":
             _nbot_ui()
+        elif _c == "9":
+            from modules.discord_tools import discord_username_checker
+            discord_username_checker()
         elif _c == "3": nitro_generator(int(get_inpt("Threads (1):") or 1))
         elif _c == "4":
             from modules.discord_tools import server_info_lookup
