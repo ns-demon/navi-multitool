@@ -32,7 +32,8 @@ PAGES = [
             ("5", "Bot Invite Gen", "Generate administrator bot invite links"),
             ("6", "Selfbot", "Launch a custom Discord selfbot menu"),
             ("7", "Server Cloner", "Clone Discord servers using a token"),
-            ("8", "Nuke Bot", "Advanced server destruction bot console")
+            ("8", "Nuke Bot", "Advanced server destruction bot console"),
+            ("9", "Username Checker", "Check availability of Discord usernames")
         ]
     },
     {
