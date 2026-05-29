@@ -452,7 +452,9 @@ def discord_username_checker():
                     usernames.add(name)
 
             with open(output_file, "w", encoding="utf-8") as f:
-                for username in sorted(usernames):
+                username_list = list(usernames)
+                random.shuffle(username_list)
+                for username in username_list:
                     f.write(username + "\n")
 
             print(Colorate.Horizontal(cl["head"], f"  {len(usernames)} valid Discord usernames saved to '{output_file}'."))
