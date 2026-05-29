@@ -25,7 +25,7 @@ def _snd(url, d, m='POST'):
 def webhook_spam(url, msg, amt=10):
     cl = Theme.get_colors()
     print("\n  [+] Initializing spam...") 
-    sc, p = 0, {"content": msg, "username": "Navi@WIRED", "avatar_url": "https://i.ibb.co/Wv94YGVx/navi.png"}
+    sc, p = 0, {"content": msg, "username": "Navi@Multitool", "avatar_url": "https://i.ibb.co/Wv94YGVx/navi.png"}
     for i in range(amt):
         st = _snd(url, p)
         if st in [200, 204]:
@@ -389,97 +389,283 @@ def token_onliner():
     for t in tks: threading.Thread(target=_online, args=(t,), daemon=True).start()
     input(Colorate.Horizontal(cl["head"], "  [>] Tokens are online. Press Enter to stop..."))
 
-def discord_username_checker(threads=1):
-    colors, lock = Theme.get_colors(), threading.Lock()
-    proxies_list = []
-    auth_token = get_inpt("Authorization Token:")
-    if not auth_token: return
-    print(Colorate.Horizontal(colors["head"], f"  [+] 4-Char Checker starting with {threads} threads..."))
-    use_prox = get_inpt("Use proxies? (y/n):").lower() == 'y'
-    if use_prox:
-        if os.path.exists("input/proxies.txt"):
-            with open("input/proxies.txt", "r", encoding="utf-8") as f:
-                proxies_list = [l.strip() for l in f if ":" in l]
-            print(Colorate.Horizontal(colors["num"], f"  [>] Loaded {len(proxies_list)} proxies from input/proxies.txt"))
-        else:
-            print(Colorate.Horizontal(colors["num"], "  [!] input/proxies.txt not found. Scraping..."))
-            sources = [
-                "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=yes&anonymity=all",
-                "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt"
-            ]
-            for url in sources:
-                try:
-                    resp = requests.get(url, timeout=6)
-                    if resp.status_code == 200:
-                        for line in resp.text.split("\n"):
-                            if ":" in line: proxies_list.append(line.strip())
-                except: pass
-            proxies_list = list(set(proxies_list))
-            print(Colorate.Horizontal(colors["num"], f"  [>] Scraped {len(proxies_list)} proxies."))
+def discord_username_checker():
+    import random, string, requests, time, os, threading
+    from datetime import datetime
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    from core.display import Theme, Colorate, Colors, clr, get_inpt
 
-    stats = {"hits": 0, "taken": 0, "ratelimited": 0, "error": 0}
-    chars = string.ascii_lowercase + string.digits
+    cl = Theme.get_colors()
 
-    def _worker_loop():
-        while True:
-            name = ""
-            for _ in range(4):
-                name += random.choice(chars)
-            proxy_addr = random.choice(proxies_list) if use_prox and proxies_list else None
-            proxies = {"http": f"http://{proxy_addr}", "https": f"http://{proxy_addr}"} if proxy_addr else None
+    while True:
+        clr()
+        print(Colorate.Horizontal(cl["head"], "  [ DISCORD USERNAME CHECKER ]\n"))
+        print(Colorate.Horizontal(cl["num"], "  [1] ") + Colorate.Horizontal(cl["txt"], "Generate Usernames"))
+        print(Colorate.Horizontal(cl["num"], "  [2] ") + Colorate.Horizontal(cl["txt"], "Check Usernames"))
+        print(Colorate.Horizontal(cl["num"], "  [3] ") + Colorate.Horizontal(cl["txt"], "Return"))
+        choice = get_inpt("navi@username_checker:~# ").strip()
+
+        if choice == "1":
+            print(Colorate.Horizontal(cl["num"], "  Which kind of usernames to generate? [4L, 4C, 3L, 3C]"))
+            username_type = get_inpt("  > ").strip().upper()
+
+            print(Colorate.Horizontal(cl["num"], "  Allow . and _ ? [y/n]"))
+            allow_special = get_inpt("  > ").strip().lower() == "y"
+
+            letters = string.ascii_lowercase
+            chars = string.ascii_lowercase + string.digits
+
+            if allow_special:
+                chars += "._"
+
+            if username_type == "4L":
+                length = 4
+                chars = letters + ("._" if allow_special else "")
+            elif username_type == "4C":
+                length = 4
+            elif username_type == "3L":
+                length = 3
+                chars = letters + ("._" if allow_special else "")
+            elif username_type == "3C":
+                length = 3
+            else:
+                print(Colorate.Horizontal(cl["num"], "  Invalid option."))
+                get_inpt("  Press Enter...")
+                continue
+
+            amount_str = get_inpt("  Amount of usernames (default 50000): ")
+            amount = int(amount_str) if amount_str else 50000
+
+            output_file = "input/usernames.txt"
+            if not os.path.exists("input"):
+                os.makedirs("input")
+                
+            usernames = set()
+
+            while len(usernames) < amount:
+                name = "".join(random.choices(chars, k=length))
+                valid = True
+                if ".." in name: valid = False
+                if name.startswith(".") or name.endswith("."): valid = False
+                if not any(c.isalnum() for c in name): valid = False
+                if valid:
+                    usernames.add(name)
+
+            with open(output_file, "w", encoding="utf-8") as f:
+                for username in sorted(usernames):
+                    f.write(username + "\n")
+
+            print(Colorate.Horizontal(cl["head"], f"  {len(usernames)} valid Discord usernames saved to '{output_file}'."))
+            get_inpt("  Press Enter...")
+
+        elif choice == "2":
+            webhook_url = get_inpt("Webhook URL: ")
+            usernames_file = "input/usernames.txt"
+            proxies_file = "input/proxies.txt"
+
+            threads = 10
+            delay_seconds = 0.3
+            discord_register = "https://discord.com/api/v9/auth/register"
+
             headers = {
-                "Authorization": auth_token,
                 "Content-Type": "application/json",
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                "X-Super-Properties": "eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiQ2hyb21lIiwiZGV2aWNlIjoiIiwic3lzdGVtX2xvY2FsZSI6ImVuLVVTIiwiYnJvd3Nlcl91c2VyX2FnZW50IjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEyNC4wLjAuMCBTYWZhcmkvNTM3LjM2IiwiYnJvd3Nlcl92ZXJzaW9uIjoiMTI0LjAuMC4wIiwib3NfdmVyc2lvbiI6IjEwIn0=",
+                "Origin": "https://discord.com",
+                "Referer": "https://discord.com/register",
             }
-            try:
-                import urllib3
-                urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-                api_url = "https://discord.com/api/v9/users/@me/pomelo-attempt"
-                r = requests.post(api_url, headers=headers, json={"username": name}, proxies=proxies, timeout=8, verify=False)
-                
-                if r.status_code == 200:
-                    data = r.json()
-                    if data.get("taken") == False:
-                        with lock:
-                            stats["hits"] += 1
-                            print(f"\n  [$$$] UNCLAIMED: {name}")
-                            with open("output/4chars.txt", "a") as f: f.write(name + "\n")
-                    else:
-                        with lock: stats["taken"] += 1
-                elif r.status_code == 429:
-                    with lock: stats["ratelimited"] += 1
-                    retry = r.json().get("retry_after", 3)
-                    time.sleep(retry)
-                elif r.status_code == 401:
-                    print(Colorate.Horizontal(colors["num"], "\n  [!] TOKEN INVALID! Stopping threads..."))
-                    return
+
+            print_lock = threading.Lock()
+            results_lock = threading.Lock()
+            webhook_lock = threading.Lock()
+            counter_lock = threading.Lock()
+
+            state = {
+                "checked_count": 0,
+                "available_list": [],
+                "total_usernames": 0
+            }
+
+            def load_file(filepath):
+                if not os.path.exists(filepath): return []
+                with open(filepath, "r", encoding="utf-8") as f:
+                    return [line.strip() for line in f if line.strip() and not line.startswith("#")]
+
+            def random_email():
+                rand = "".join(random.choices(string.ascii_lowercase + string.digits, k=20))
+                return f"{rand}@discard.email"
+
+            def parse_proxy(proxy_str):
+                proxy_str = proxy_str.strip()
+                if not proxy_str: return None
+                if proxy_str.startswith("http://") or proxy_str.startswith("https://"):
+                    return {"http": proxy_str, "https": proxy_str}
+                parts = proxy_str.split(":")
+                if len(parts) == 2:
+                    url = f"http://{parts[0]}:{parts[1]}"
+                elif len(parts) == 4:
+                    ip, port, user, password = parts
+                    url = f"http://{user}:{password}@{ip}:{port}"
+                else: return None
+                return {"http": url, "https": url}
+
+            def safe_print(msg):
+                with print_lock: print(msg)
+
+            def send_webhook(username):
+                if not webhook_url: return
+                timestamp = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+                payload = {
+                    "content": "@everyone",
+                    "username": "Navi",
+                    "avatar_url": "https://i.ibb.co/Wv94YGVx/navi.png",
+                    "embeds": [{
+                        "title": "✅ Available Username Found!",
+                        "description": f"**`{username}`** is available on Discord!",
+                        "color": 0x45a7f5,
+                        "fields": [
+                            {"name": "Username", "value": f"`{username}`", "inline": True},
+                            {"name": "Time", "value": timestamp, "inline": True},
+                        ],
+                        "thumbnail": {"url": "https://i.ibb.co/Wv94YGVx/navi.png"},
+                        "footer": {
+                            "text": "Navi Multitool • https://github.com/glockinhand/navi-multitool",
+                            "icon_url": "https://i.ibb.co/Wv94YGVx/navi.png"
+                        },
+                    }]
+                }
+                with webhook_lock:
+                    try:
+                        requests.post(webhook_url, json=payload, timeout=10)
+                    except: pass
+
+            def check_username(username, proxy):
+                retries = 3
+                for attempt in range(retries):
+                    try:
+                        payload = {
+                            "username": username,
+                            "password": "N4vImuLt1$$tO_Ol",
+                            "email": random_email(),
+                            "consent": True,
+                            "date_of_birth": "2000-01-01",
+                            "captcha_key": None,
+                        }
+                        response = requests.post(discord_register, json=payload, headers=headers, proxies=proxy, timeout=10)
+
+                        if response.status_code == 400:
+                            body = response.json()
+                            errors = body.get("errors", {})
+                            username_errors = errors.get("username", {}).get("_errors", [])
+                            codes = [e.get("code") for e in username_errors]
+                            if "USERNAME_ALREADY_TAKEN" in codes:
+                                return False
+                            else:
+                                return True
+                        elif response.status_code == 201: return True
+                        elif response.status_code == 429:
+                            try:
+                                retry_after = int(float(response.json().get("retry_after", 10))) + 1
+                            except: retry_after = 10
+                            return ("rate_limited", retry_after)
+                        else:
+                            if attempt < retries - 1:
+                                time.sleep(2)
+                                continue
+                            return "error"
+                    except requests.exceptions.ProxyError: return "proxy_error"
+                    except requests.exceptions.Timeout:
+                        if attempt < retries - 1:
+                            time.sleep(2)
+                            continue
+                        return "timeout"
+                    except: return "error"
+                return "error"
+
+            def worker(username, proxy):
+                if len(username) < 2 or len(username) > 32: return
+                result = check_username(username, proxy)
+
+                while isinstance(result, tuple) and result[0] == "rate_limited":
+                    retry_after = result[1]
+                    safe_print(Colorate.Horizontal(cl["num"], f"  [!] Rate limited, waiting {retry_after}s..."))
+                    time.sleep(retry_after)
+                    result = check_username(username, proxy)
+
+                with counter_lock:
+                    state["checked_count"] += 1
+                    current = state["checked_count"]
+
+                if result is True:
+                    safe_print(Colorate.Horizontal(cl["head"], f"  [+] Available: {username} ({current}/{state['total_usernames']})"))
+                    with results_lock: state["available_list"].append(username)
+                    send_webhook(username)
+                elif result is False:
+                    safe_print(Colorate.Horizontal(cl["num"], f"  [-] Taken: {username} ({current}/{state['total_usernames']})"))
+                elif result == "proxy_error":
+                    safe_print(Colorate.Horizontal(cl["num"], f"  [!] Proxy Error for {username}"))
                 else:
-                    with lock:
-                        stats["error"] += 1
-                        if not os.path.exists("logs"): os.mkdir("logs")
-                        with open("logs/checker_errors.log", "a") as ef:
-                            ef.write(f"[{time.ctime()}] Status {r.status_code} for {name} | Body: {r.text[:100]}\n")
-            except Exception as e:
-                with lock:
-                    stats["error"] += 1
-                    if not os.path.exists("logs"): os.mkdir("logs")
-                    with open("logs/checker_errors.log", "a") as ef:
-                        ef.write(f"[{time.ctime()}] Exception: {str(e)} | Proxy: {proxy_addr}\n")
-                
-            with lock:
-                print(Colorate.Horizontal(colors["txt"], f"  [~] Available: {stats['hits']} | Taken: {stats['taken']} | 429s: {stats['ratelimited']} | Errors: {stats['error']}      "), end="\r")
-    try:
-        if not os.path.exists("output"): os.mkdir("output")
-        pool = []
-        for _ in range(threads):
-            th = threading.Thread(target=_worker_loop, daemon=True)
-            th.start()
-            pool.append(th)
-        for th in pool: th.join()
-    except KeyboardInterrupt:
-        print("\n  [!] Interrupted by user.")
-    input(Colorate.Horizontal(colors["head"], "\n  Checker finished. Press Enter..."))
+                    safe_print(Colorate.Horizontal(cl["num"], f"  [!] Error checking {username}"))
+
+                time.sleep(delay_seconds)
+
+            print(Colorate.Horizontal(cl["head"], "\n  [ DISCORD USERNAME CHECKER ]\n"))
+
+            usernames = load_file(usernames_file)
+            proxies_raw = load_file(proxies_file)
+
+            if not proxies_raw:
+                print(Colorate.Horizontal(cl["num"], f"  [!] Proxies not found in {proxies_file}."))
+                print(Colorate.Horizontal(cl["txt"], "  Please add your HTTP/SOCKS proxies to this file to prevent rate limits and bans."))
+                get_inpt("  Press Enter...")
+                continue
+
+            if not usernames:
+                print(Colorate.Horizontal(cl["num"], f"  [!] No usernames found in {usernames_file}."))
+                get_inpt("  Press Enter...")
+                continue
+
+            state["total_usernames"] = len(usernames)
+            proxy_pool = [p for p in (parse_proxy(x) for x in proxies_raw) if p]
+            
+            if not proxy_pool:
+                print(Colorate.Horizontal(cl["num"], "  [!] No valid proxies parsed. Please check your proxies.txt format."))
+                get_inpt("  Press Enter...")
+                continue
+
+            print(Colorate.Horizontal(cl["txt"], f"  Usernames: {state['total_usernames']}"))
+            print(Colorate.Horizontal(cl["txt"], f"  Proxies: {len(proxy_pool)}"))
+            print(Colorate.Horizontal(cl["txt"], f"  Threads: {threads}"))
+            print(Colorate.Horizontal(cl["txt"], f"  Delay: {delay_seconds}s\n"))
+
+            start_time = time.time()
+
+            with ThreadPoolExecutor(max_workers=threads) as executor:
+                futures = [
+                    executor.submit(worker, username, proxy_pool[i % len(proxy_pool)])
+                    for i, username in enumerate(usernames)
+                ]
+                for future in as_completed(futures):
+                    try: future.result()
+                    except: pass
+
+            elapsed = (time.time() - start_time) / 60
+
+            print(Colorate.Horizontal(cl["head"], "\n  [=] Checker Finished"))
+            print(Colorate.Horizontal(cl["txt"], f"  Checked: {state['checked_count']}"))
+            print(Colorate.Horizontal(cl["txt"], f"  Elapsed: {elapsed:.1f}m"))
+            print(Colorate.Horizontal(cl["head"], f"  Available: {len(state['available_list'])}"))
+
+            if state['available_list']:
+                if not os.path.exists("output"): os.makedirs("output")
+                with open("output/available_usernames.txt", "w", encoding="utf-8") as f:
+                    f.write("\n".join(state['available_list']))
+                print(Colorate.Horizontal(cl["txt"], "  Saved to output/available_usernames.txt"))
+            
+            get_inpt("  Press Enter...")
+            
+        elif choice == "3":
+            break
 
 def discord_report_bot():
     cl = Theme.get_colors()
