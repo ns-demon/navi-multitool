@@ -192,12 +192,7 @@ def boot_anim():
     ]
     for s in seq:
         type_print(s, 0.02)
-        time.sleep(0.1)
-    
-    cfg = get_config()
-    if cfg.get("theme", "blue").lower().startswith("modern"):
-        ModernUI.boot_anim(Colorate, Theme, type_print)
-        
+        time.sleep(0.1)        
     time.sleep(0.4)
 
 def matrix_effect(cycles=1, color_id=27):

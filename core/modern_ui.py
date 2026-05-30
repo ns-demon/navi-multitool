@@ -51,13 +51,7 @@ class ModernUI:
                 print(_col.Horizontal(_c["banner"], Center.XCenter(line)))
         print("\n")
 
-    @staticmethod
-    def boot_anim(_col, _thm, _typ):
-        _c = _thm.get_colors()
-        print("\n")
-        _u = os.environ.get('USERNAME') or os.environ.get('USER') or 'User'
-        _typ(f"Synchronizing interface with terminal... Welcome, {_u}.", 0.01)
-        time.sleep(0.5)
+
 
     @staticmethod
     def render_menu(_col, _thm, _cats):
