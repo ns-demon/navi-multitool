@@ -406,7 +406,7 @@ def discord_username_checker():
         choice = get_inpt("navi@username_checker:~# ").strip()
 
         if choice == "1":
-            print(Colorate.Horizontal(cl["num"], "  Which kind of usernames to generate? [4L, 4C, 3L, 3C]"))
+            print(Colorate.Horizontal(cl["num"], "  Which kind of usernames to generate? [5L, 5C, 4L, 4C, 3L, 3C]"))
             username_type = get_inpt("  > ").strip().upper()
 
             print(Colorate.Horizontal(cl["num"], "  Allow . and _ ? [y/n]"))
@@ -418,7 +418,12 @@ def discord_username_checker():
             if allow_special:
                 chars += "._"
 
-            if username_type == "4L":
+            if username_type == "5L":
+                length = 5
+                chars = letters + ("._" if allow_special else "")
+            elif username_type == "5C":
+                length = 5
+            elif username_type == "4L":
                 length = 4
                 chars = letters + ("._" if allow_special else "")
             elif username_type == "4C":
@@ -436,20 +441,33 @@ def discord_username_checker():
             amount_str = get_inpt("  Amount of usernames (default 50000): ")
             amount = int(amount_str) if amount_str else 50000
 
+            max_possible = len(chars) ** length
+            if amount > max_possible:
+                amount = max_possible
+
             output_file = "input/usernames.txt"
             if not os.path.exists("input"):
                 os.makedirs("input")
                 
             usernames = set()
+            failed_attempts = 0
 
-            while len(usernames) < amount:
+            while len(usernames) < amount and failed_attempts < 100000:
                 name = "".join(random.choices(chars, k=length))
                 valid = True
                 if ".." in name: valid = False
                 if name.startswith(".") or name.endswith("."): valid = False
                 if not any(c.isalnum() for c in name): valid = False
+                
                 if valid:
+                    before = len(usernames)
                     usernames.add(name)
+                    if len(usernames) == before:
+                        failed_attempts += 1
+                    else:
+                        failed_attempts = 0
+                else:
+                    failed_attempts += 1
 
             with open(output_file, "w", encoding="utf-8") as f:
                 username_list = list(usernames)
