@@ -517,6 +517,9 @@ def run_app():
         elif _c == '45':
             from modules.roblox import roblox_name_history
             roblox_name_history()
+        elif _c == '46':
+            from modules.roblox_username_checker import main as roblox_username_checker_main
+            roblox_username_checker_main()
         elif _c == '35':
             from modules.faker import fake_qr_gen
             fake_qr_gen()
