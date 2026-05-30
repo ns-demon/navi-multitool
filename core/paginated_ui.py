@@ -73,7 +73,8 @@ PAGES = [
             ("42", "Cookie Login", "Directly log into Roblox via account cookies"),
             ("43", "Group Info", "Analyze details of target Roblox groups"),
             ("44", "Asset DL", "Download game assets and shirt/pants textures"),
-            ("45", "Name History", "Track and display past usernames of a target")
+            ("45", "Name History", "Track and display past usernames of a target"),
+            ("46", "Username Checker", "Check availability of Roblox usernames")
         ]
     },
     {
