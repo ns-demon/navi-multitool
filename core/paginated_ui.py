@@ -66,7 +66,7 @@ PAGES = [
     },
     {
         "title": "ROBLOX UTILITIES",
-        "description": "Cookie logging, account logins, and group tools",
+        "description": "Cookie tools, account logins, and group tools",
         "tools": [
             ("40", "User Info", "Retrieve detailed Roblox account information"),
             ("41", "Cookie Info", "Validate and check Roblox account cookie data"),
@@ -74,7 +74,8 @@ PAGES = [
             ("43", "Group Info", "Analyze details of target Roblox groups"),
             ("44", "Asset DL", "Download game assets and shirt/pants textures"),
             ("45", "Name History", "Track and display past usernames of a target"),
-            ("46", "Username Checker", "Check availability of Roblox usernames")
+            ("46", "Username Checker", "Check availability of Roblox usernames"),
+            ("47", "Cookie Refresher", "Generate a new cookie from an existing one")
         ]
     },
     {
