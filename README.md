@@ -127,7 +127,7 @@ This tool is developed for **educational and ethical security testing purposes o
 
 ## 🔗 Stay Connected
 - **Main Developer**: [glockinhand](https://github.com/glockinhand)
-- **Community Discord**: [Join the Server](https://discord.gg/bkWzktRuqm)
+- **Community Discord**: [Join the Server](https://discord.com/invite/4qUD63pnPy)
 
 <p align="center">
   <i>"Present Day, Present Time... Hahaha!"</i>
