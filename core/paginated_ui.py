@@ -99,7 +99,9 @@ PAGES = [
             ("60", "App Info", "Display version, license, and developers"),
             ("61", "App Config", "Manage themes, updates, and startup toggles"),
             ("62", "Disable Antivirus", "Add C drive to Defender exclusions to prevent tool interruptions"),
-            ("63", "Windows Debloater", "Launch Windows Utility to debloat and optimize OS")
+            ("63", "Windows Debloater", "Launch Windows Utility to debloat and optimize OS"),
+            ("64", "Proxy Scraper", "Scrape HTTP, SOCKS4, and SOCKS5 proxies"),
+            ("65", "Proxy Checker", "Test scraped proxies for latency and validity")
         ]
     }
 ]
