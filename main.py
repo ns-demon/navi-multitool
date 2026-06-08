@@ -573,6 +573,12 @@ def run_app():
             except Exception as e:
                 print(Colorate.Horizontal(_cl["num"], f"  [!] Error: {e}"))
             input("\n  Enter...")
+        elif _c == "64":
+            from modules.proxyscraper import scrape_proxies_menu
+            scrape_proxies_menu()
+        elif _c == "65":
+            from modules.proxychecker import proxy_checker_menu
+            proxy_checker_menu()
         elif _c == "99": sys.exit(0)
 
 if __name__ == '__main__':
