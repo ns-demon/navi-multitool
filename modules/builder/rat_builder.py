@@ -7,6 +7,8 @@ def rat_builder_init():
     print_banner()
     print(Colorate.Horizontal(_cl["head"], "  [ RAT BUILDER ]\n"))
 
+    print("if u want a better rat with more features visit https://ins0mnia.ru/")
+
     tutorial = get_inpt("Do you need a tutorial? (y/n): ").strip().lower()
     if tutorial == "y":
         webbrowser.open("https://www.youtube.com/watch?v=3dvv1wNfrsQ")
