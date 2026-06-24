@@ -1,7 +1,7 @@
 # <p align="center">🛸 Navi Multitool</p>
 
 <p align="center">
-  <a href="https://discord.gg/4qUD63pnPy">
+  <a href="https://discord.gg/DFNP2VJKPW">
     <img src="https://img.shields.io/badge/Join%20our%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord Server">
   </a>
 </p>
@@ -127,7 +127,7 @@ This tool is developed for **educational and ethical security testing purposes o
 
 ## 🔗 Stay Connected
 - **Main Developer**: [glockinhand](https://github.com/glockinhand)
-- **Community Discord**: [Join the Server](https://discord.com/invite/4qUD63pnPy)
+- **Community Discord**: [Join the Server](https://discord.com/invite/4DFNP2VJKPW)
 
 <p align="center">
   <i>"Present Day, Present Time... Hahaha!"</i>
