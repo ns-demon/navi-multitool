@@ -14,7 +14,7 @@ from core.display import Colorate, get_inpt, Theme, print_banner
 
 def _cls(title):
     os.system('cls' if os.name == 'nt' else 'clear')
-    System.Title(f"Navi - {title}")
+    System.Title(f"kev - {title}")
 
 def fake_token_gen():
     _cls("Token Generator")
@@ -58,7 +58,7 @@ def fake_token_gen():
 def fake_exodus():
     _cls("Exodus Larp")
     cl = Theme.get_colors()
-    print(Colorate.Horizontal(cl["head"], "  [+] Generating fake seed file for larping..."))    
+    print(Colorate.Horizontal(cl["head"], "  [+] Generating  seed file for larping..."))    
     content = f"""
 EXODUS WALLET RECOVERY - BACKUP
 -------------------------------
@@ -70,8 +70,8 @@ critic draw oak hood reward bunker next old spy about clown notice
 
 
 -------------------------------
-[!] Keep in mind that this is a larp. You are not able to move the funds.
-[!] Navi Multitool - Faker mode
+[!] Kev!
+[!] Kev Multitool
 """
     
     path = "output/exodus_seed.txt"
@@ -99,7 +99,7 @@ def fake_mail_gen():
  | |\/| |/ _ \ | || |__ 
  |_|  |_/_/ \_\___|____|
     """))
-    print(Colorate.Horizontal(cl["head"], "  [+] Initializing Fake Mail Generator..."))
+    print(Colorate.Horizontal(cl["head"], "  [+] Initializing  Mail Generator..."))
     amt = int(get_inpt("Amount to generate:") or 10)
     doms = ["gmail.com", "yahoo.com", "outlook.com", "protonmail.com", "hotmail.com"]
     for i in range(amt):
@@ -118,7 +118,7 @@ def fake_identity_gen():
   | || |) | _|| .` | | |  | |  | |  \ V / 
  |___|___/|___|_|\_| |_| |___| |_|   |_|  
     """))
-    print(Colorate.Horizontal(cl["head"], "  [+] Generating Fake Identity..."))
+    print(Colorate.Horizontal(cl["head"], "  [+] Generating  Identity..."))
     fnames = ["James", "Mary", "Robert", "Patricia", "John", "Jennifer", "Michael", "Linda"]
     lnames = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis"]
     cities = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia"]
@@ -147,7 +147,7 @@ def fake_nitro_gen():
  | .` || |  | | |   / (_) |
  |_|\_|___| |_| |_|_\\___/ 
     """))
-    print(Colorate.Horizontal(cl["head"], "  [+] Starting Fake Nitro Gen (Visual Mode)..."))
+    print(Colorate.Horizontal(cl["head"], "  [+] Starting Nitro Gen (..."))
     count = 0
     try:
         while True:
@@ -196,7 +196,7 @@ def fake_cc_gen():
  | |___|  _ <|___| |_| | || |_| |
   \____|_| \_\   |____/___|____/ 
     """))
-    print(Colorate.Horizontal(cl["head"], "  [+] Generating Fake Credit Cards (Luhn Valid)..."))
+    print(Colorate.Horizontal(cl["head"], "  [+] Generating  Credit Cards (Luhn Valid)..."))
     amt = int(get_inpt("Amount:") or 5)
     for _ in range(amt):
         prefix = random.choice(["4", "51", "52", "53", "54", "55", "34", "37"])
@@ -419,7 +419,7 @@ def fake_bruteforcer():
     print("\n" + "─" * 60)
     print(Colorate.Horizontal(cl["head"], f"  [!] BRUTEFORCE STATUS: {Colorate.Horizontal(cl['txt'], 'IN PROGRESS...')}"))
     print(Colorate.Horizontal(cl["head"], f"  [!] NOTICE: {Colorate.Horizontal(cl['txt'], 'Bruteforcing passwords this will take time, but the engine is bypasssing 2FA and Rate-limits.')}"))
-    print(Colorate.Horizontal(cl["head"], f"  [!] INFO: {Colorate.Horizontal(cl['txt'], 'Navi Multitool - Advanced Simulation Engine.')}"))
+    print(Colorate.Horizontal(cl["head"], f"  [!] INFO: {Colorate.Horizontal(cl['txt'], 'kev Multitool - Advanced Simulation Engine.')}"))
     print("─" * 60)
     
     input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
@@ -428,5 +428,5 @@ def faker_explanation():
     _cls("Explanation")
     cl = Theme.get_colors()
     print(Colorate.Horizontal(cl["head"], "  [ EXPLANATION ]"))
-    print(Colorate.Horizontal(cl["txt"], "  The Faker section is designed for aesthetic and \n  demonstration purposes. All tools here are \n  SIMULATED and do not perform real actions.\n  \n  Use them to inject ur stealer or just to larp."))
+    print(Colorate.Horizontal(cl["txt"], "  This  section is designed for aesthetic and \n  demonstration purposes. All tools here are \n  SIMULATED and do not perform real actions.\n  \n  Use them to inject ur stealer or just to larp."))
     input(Colorate.Horizontal(cl["head"], "\n  Press Enter..."))
