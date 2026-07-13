@@ -27,7 +27,7 @@ def _0x3(c):
     
     _l = "m=__import__('marshal');z=__import__('zlib');b=__import__('base64');"
     _e = "exec(m.loads(z.decompress(b.b64decode(''.join([chr(ord(i)^0x7) for i in bytes.fromhex('"+_h+"').decode()[::-1]])))))"
-    return "'''\n~ OBFUSCATED BY NAVI ~\n'''\n" + _l + _e
+    return "'''\n~ OBFUSCATED BY kev ~\n'''\n" + _l + _e
 
 def obfuscator_init():
     _cl = Theme.get_colors(); print_banner(); print(Colorate.Horizontal(_cl["head"], "  [ PYTHON OBFUSCATOR ]\n"))
