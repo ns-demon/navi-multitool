@@ -81,8 +81,8 @@ def start_brute():
     _t = get_inpt("target_ip:")
     _p = get_inpt("port (0=rnd):")
     _p = int(_p) if _p and _p != '0' else None
-    _s = int(get_inpt("packet_sz (1250):") or 1250)
-    _th = int(get_inpt("worker_threads (100):") or 100)
+    _s = int(get_inpt("packet_sz (3250):") or 3250)
+    _th = int(get_inpt("worker_threads (300):") or 300)
     
     wf = WiredStress(_t, _p, _s, _th)
     print(Colorate.Horizontal(cl["head"], f"\n  [+] Loading buffer... Stressing {_t}"))
