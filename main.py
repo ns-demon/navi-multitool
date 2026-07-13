@@ -23,7 +23,6 @@ from modules.network import do_port_check
 from modules.crypto import CryptXer, make_pw
 from modules.sysinfo import get_sys_data
 from modules.osint import whois_lookup, dns_lookup
-from modules.malicious import mail_bomb
 from modules.obfuscator import obfuscator_init
 from modules.metadata import metadata_init
 
@@ -461,7 +460,7 @@ def run_app():
             email_lookup_init()
 
 
-        elif _c == '20': mail_bomb(get_inpt("email:"), int(get_inpt("amt:") or 10)); input("\n  Enter...")
+        elif _c == '20': input("\n  Soon...")
         elif _c == '21':
             from modules.malicious import build_clipper
             build_clipper(); input("\n  Enter...")
