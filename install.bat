@@ -1,10 +1,10 @@
 @echo off
 chcp 65001 >nul
-title Navi Multitool - Installer
+title Kev Multitool - Installer
 color 0b
 
 echo ======================================================
-echo           NAVI MULTITOOL INSTALLER
+echo           Kev MULTITOOL INSTALLER
 echo ======================================================
 echo.
 

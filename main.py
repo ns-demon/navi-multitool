@@ -5,7 +5,7 @@
 # | |\  | (_| |\ V /  _ | |
 # |_| \_|\__,_| \_/  (_)|_|
 # 
-# Navi Multitool - Developed by glockinhand
+# Navi Multitool - Developed by glockinhand -- recoded to be better by ns-demon https://github.com/ns-demon/
 # GitHub: https://github.com/glockinhand/navi-multitool
 
 import sys, time, subprocess, json, os, threading, zipfile, io, shutil
@@ -34,8 +34,8 @@ def cfg_mgr():
         _cl = Theme.get_colors()
         _cfg = get_config()
 
-        au_status = "[ENABLED]" if _cfg.get("auto_update", True) else "[DISABLED]"
-        dp_status = "[ENABLED]" if _cfg.get("auto_open_discord", True) else "[DISABLED]"
+        au_status = "[ENABLED]" if _cfg.get("auto_update", False) else "[DISABLED]"
+        dp_status = "[ENABLED]" if _cfg.get("auto_open_discord", False) else "[DISABLED]"
         active_theme = _cfg.get("theme", "blue").upper()
 
         box_w = PaginatedUI.get_layout_width()
@@ -121,7 +121,7 @@ def cfg_mgr():
         _p()
         print(mg + Colorate.Horizontal(_cl["head"], "└" + "─" * inner + "┘"))
 
-        _c = get_inpt("navi@config:~#")
+        _c = get_inpt("kev@config:~#")
         if _c in [str(_x) for _x in range(1, 13)]:
             _tm = {"1":"blue","2":"red","3":"purple","4":"green","5":"yellow","6":"pink","7":"cyan","8":"gray","9":"rainbow","10":"modern","11":"modern_red","12":"modern_purple"}[_c]
             try:
@@ -180,7 +180,7 @@ def _pre():
     if _cfg.get("auto_update"):
         try:
             import requests
-            _r = requests.get("https://raw.githubusercontent.com/glockinhand/navi-multitool/main/core/config.json", timeout=5)
+            _r = requests.get("https://raw.githubusercontent.com/ns-demon/navi-multitool/refs/heads/main/core/config.json", timeout=5)
             if _r.status_code == 200:
                 _rv = _r.json().get("version", "1.0.0")
                 
@@ -190,7 +190,7 @@ def _pre():
                 
                 if parse_v(_rv) > parse_v(_cfg.get("version", "1.0.0")):
                     print(Colorate.Horizontal(_cl["num"], f"\n  [!] New Version Detected: {_rv}"))
-                    _url = "https://github.com/glockinhand/navi-multitool/archive/refs/heads/main.zip"
+                    _url = "https://github.com/glockinhand/n123"
                     _res = requests.get(_url, stream=True)
                     _dl, _ts = 0, int(_res.headers.get('content-length', 500000))
                     _io = io.BytesIO()
@@ -233,19 +233,19 @@ def _nbot_ui():
     
     default_config = {
         "BOT_TOKEN": "",
-        "MESSAGE_CONTENT": "@everyone | Server Nuked | discord.gg/4qUD63pnPy | https://github.com/glockinhand/navi-multitool",
+        "MESSAGE_CONTENT": "@everyone | Server Nuked | discord.com/users/1525402840577867803 | https://github.com/ns-demon/",
         "WEBHOOK_URL": "This webhook for tracking your nukes",
-        "GUILD_NEW_NAME": "navi owns this",
-        "CHANNEL_AMOUNT": 60,
-        "BATCH_SIZE_CHANNELS": 60,
+        "GUILD_NEW_NAME": "kev owns this",
+        "CHANNEL_AMOUNT": 65,
+        "BATCH_SIZE_CHANNELS": 65,
         "BATCH_SIZE_DELETE": 30,
         "BATCH_SIZE_BAN": 4,
-        "TOTAL_MESSAGES": 800,
-        "MAX_MESSAGES_PER_CHANNEL": 18,
+        "TOTAL_MESSAGES": 900,
+        "MAX_MESSAGES_PER_CHANNEL": 22,
         "TOTAL_WEBHOOKS": 2000,
         "WEBHOOK_DELAY": 0.06,
         "SPAM_EMOJIS": ["🏴", "🌙", "🔥", "💀", "👾"],
-        "WEBHOOK_USERNAME": "Navi Runs Cord",
+        "WEBHOOK_USERNAME": "kev Runs Cord",
         "COMMAND_PREFIX": "."
     }
     
@@ -306,7 +306,7 @@ def _nbot_ui():
         print(Colorate.Horizontal(_cl["num"], "  [3] ") + Colorate.Horizontal(_cl["txt"], "Show Help"))
         print(Colorate.Horizontal(_cl["num"], "  [99]") + Colorate.Horizontal(_cl["txt"], "Return to Main Menu"))
         
-        cmd = get_inpt("navi@nukebot:~#").strip().lower()
+        cmd = get_inpt("kev@nukebot:~#").strip().lower()
         
         if cmd == "1":
             try:
@@ -353,7 +353,7 @@ def run_app():
         PaginatedUI.draw_dashboard(current_page)
         
         p_name = PAGES[current_page]['title'].split()[0].lower()
-        _c_raw = get_inpt(f"navi@root/{p_name}:~#").strip()
+        _c_raw = get_inpt(f"kev@root/{p_name}:~#").strip()
         _c = _c_raw.lower()
         
         if _c in ["a", "p"]:
@@ -373,7 +373,7 @@ def run_app():
             while 1:
                 print_banner()
                 PaginatedUI.draw_card_box("WEBHOOK OPERATIONS", {"1": "Spammer", "2": "Deleter", "99": "Return"})
-                _cc = get_inpt("navi@discord/webhooks:~#")
+                _cc = get_inpt("kev@discord/webhooks:~#")
                 if _cc == "1": webhook_spam(get_inpt("url:"), get_inpt("msg:"), int(get_inpt("amt (10):") or 10))
                 elif _cc == "2": webhook_delete(get_inpt("url:"))
                 elif _cc == "99": break
@@ -381,7 +381,7 @@ def run_app():
             while 1:
                 print_banner()
                 PaginatedUI.draw_card_box("TOKEN & ACCOUNT TOOLS", {"1": "Token Bruteforce", "2": "Token Info", "3": "Token Nuker", "4": "Token Login", "5": "Status Rotator", "6": "Token Onliner", "7": "Selfbot", "8": "Report Bot", "9": "Server Cloner", "99": "Return"})
-                _cc = get_inpt("navi@discord/tokens:~#")
+                _cc = get_inpt("kev@discord/tokens:~#")
                 if _cc == "1":
                     id_to_token()
 
@@ -537,7 +537,7 @@ def run_app():
                     "13": "Hacker Terminal", "14": "Ransomware Sim", "15": "Fake Bruteforcer",
                     "16": "QR Code Gen", "17": "Explanation", "99": "Return"
                 })
-                _cc = get_inpt("navi@faker:~#")
+                _cc = get_inpt("kev@faker:~#")
                 if _cc == "1": from modules.faker import fake_token_gen; fake_token_gen()
                 elif _cc == "2": from modules.faker import fake_mail_gen; fake_mail_gen()
                 elif _cc == "3": from modules.faker import fake_identity_gen; fake_identity_gen()

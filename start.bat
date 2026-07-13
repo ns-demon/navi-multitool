@@ -1,6 +1,6 @@
 @echo off
-title Navi Multitool
-echo Loading Navi...
+title Kev Multitool
+echo Loading Kev...
 
 python --version >nul 2>&1
 if %errorlevel% equ 0 (
@@ -39,7 +39,7 @@ exit /b
 %PYTHON_CMD% main.py
 if %errorlevel% neq 0 (
     echo.
-    echo [!] Navi crashed or exited with an error (Code: %errorlevel%)
+    echo [!] Kev crashed or exited with an error (Code: %errorlevel%)
     echo [!] Possible causes: Missing libraries, Python not in PATH, or code error.
     echo [!] Try running 'install.bat' to fix library issues.
     echo.
