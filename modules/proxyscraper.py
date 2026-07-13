@@ -24,7 +24,7 @@ def scrape_proxies_menu():
     print(Colorate.Horizontal(cl["num"], "  [4] ") + Colorate.Horizontal(cl["txt"], "Scrape All (HTTP, SOCKS4, SOCKS5)"))
     print(Colorate.Horizontal(cl["num"], "  [5] ") + Colorate.Horizontal(cl["txt"], "Return"))
     
-    choice = get_inpt("navi@proxyscraper:~# ").strip()
+    choice = get_inpt("kev@proxyscraper:~# ").strip()
     
     if choice == "5":
         return

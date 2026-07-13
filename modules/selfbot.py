@@ -32,7 +32,7 @@ class kevSelfbot:
         self.user_id  = None
         self.username = None
 
-        self.nitro_sniper    = true
+        self.nitro_sniper    = True
         self.auto_responder  = False
         self.triggers        = {}
         self.logger          = False
@@ -41,7 +41,7 @@ class kevSelfbot:
         self.ghost_delay     = 5
         self.status_rotator  = False
         self.statuses        = []
-        self.anti_spam       = true
+        self.anti_spam       = True 
         self.reaction_adder  = False
         self.reaction_emoji  = "✅"
         self.reaction_channel = None
@@ -451,7 +451,7 @@ def _draw_menu(cl, bot):
     _sep(cl)
     _tog(cl, "1",  "Nitro Sniper   ", bot.nitro_sniper,   "2", "Auto Responder ", bot.auto_responder)
     _tog(cl, "3",  "Edit/Del Logger", bot.logger,         "4", "Ghost Mode     ", bot.ghost_mode)
-    _tog(cl, "5",  "Status Rotator ", bot.status_rotator, "6", "Anti Spam      ", bot.anti_spam)
+    _tog(cl, "5",  "Status Rotator ", bot.status_rotator, "6", "Anti Spam dont change.     ", bot.anti_spam)
     _tog(cl, "7",  "Auto Reactor   ", bot.reaction_adder, "8", "Typing Loop    ", bot.typing_loop)
     _tog(cl, "9",  "DM Logger      ", bot.dm_logger)
     print()
