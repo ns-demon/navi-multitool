@@ -8,7 +8,7 @@
 # Navi Multitool - Developed by glockinhand
 # GitHub: https://github.com/glockinhand/navi-multitool
 
-import os, time, sys, re
+import os, time, sys, re, random
 from pystyle import Center
 
 def _strip(_t): return re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])').sub('', _t)
@@ -33,20 +33,16 @@ class ModernUI:
         print("\n\n")
         for i, line in enumerate(_b):
             if i == 5:
-                _left = "~ present day "
-                _right = "present time ~"
-                _pad = 5
-                
-                _total_w = len(_left) + _pad + len(line) + _pad + len(_right)
-                _start_p = (_tw - _total_w) // 2
-                
-                _res = " " * _start_p
-                _res += _col.Horizontal(_c["num"], _left)
-                _res += " " * _pad
-                _res += _col.Horizontal(_c["banner"], line)
-                _res += " " * _pad
-                _res += _col.Horizontal(_c["num"], _right)
-                print(_res)
+                _quote = random.choice([
+                    "~ Reality is just another system to analyze ~",
+                    "~ Built by curiosity, powered by code ~",
+                    "~ Nothing is hidden from those who seek understanding ~",
+                    "~ Knowledge is power, but execution is everything ~",
+                    "~ The quieter you become, the more you are able to hear ~",
+                    "~ In a world of noise, information is everything ~"
+                ])
+
+                print(_col.Horizontal(_c["num"], Center.XCenter(_quote)))
             else:
                 print(_col.Horizontal(_c["banner"], Center.XCenter(line)))
         print("\n")

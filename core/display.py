@@ -16,6 +16,8 @@ import random
 import shutil
 from core.themes import THEMES
 from core.modern_ui import ModernUI
+from core.quotes import get_quote
+
 
 user = os.environ.get('USERNAME', 'Unknown') if os.name == 'nt' else os.environ.get('USER', 'Unknown')
 def get_config():
@@ -247,7 +249,7 @@ def print_banner():
     bn = random.choice(banners)
 
     print(Colorate.Horizontal(cols["banner"], Center.XCenter(bn)))
-    print(Colorate.Horizontal(cols["sub"], Center.XCenter("\n~ Present Day, Present Time ~")))
+    print(Colorate.Horizontal(cols["sub"], Center.XCenter("\n" + get_quote())))
     print("\n")
     clr()
     cols = Theme.get_colors()
@@ -273,7 +275,7 @@ def print_banner():
     bn = random.choice(banners)
 
     print(Colorate.Horizontal(cols["banner"], Center.XCenter(bn)))
-    print(Colorate.Horizontal(cols["sub"], Center.XCenter("\n~ Present Day, Present Time ~")))
+    print(Colorate.Horizontal(cols["sub"], Center.XCenter("\n" + get_quote())))
     print("\n")
 
 def menu_opts(options):
