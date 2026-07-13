@@ -1,10 +1,10 @@
 {
   "name": "Kev's Multitool",
-  "version": "2.7.1",
+  "version": "3.0.0",
   "author": "kev",
   "github": "https://github.com/ns-demon",
   "discord": "https://discord.com/users/1525402840577867803",
-  "theme": "rainbow",
+  "theme": "Modern",
   "auto_open_discord": false,
-  "auto_update": false
+  "auto_update": true
 }
