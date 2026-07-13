@@ -227,44 +227,45 @@ class PaginatedUI:
         print(Colorate.Horizontal(colors["num"], small_info.center(tw)))
 
     @classmethod
-def draw_logo(cls, colors):
-    if cls.ACTIVE_LOGO is None:
-        banners = [
-            [
-                r"██╗  ██╗███████╗██╗   ██╗",
-                r"██║ ██╔╝██╔════╝██║   ██║",
-                r"█████╔╝ █████╗  ██║   ██║",
-                r"██╔═██╗ ██╔══╝  ╚██╗ ██╔╝",
-                r"██║  ██╗███████╗ ╚████╔╝ ",
-                r"╚═╝  ╚═╝╚══════╝  ╚═══╝  ",
-            ],
-            [
-                r" _  __ _____ _   _ ",
-                r"| |/ /| ____| \ | |",
-                r"| ' / |  _| |  \| |",
-                r"| . \ | |___| |\  |",
-                r"|_|\_\|_____|_| \_|",
-            ],
-            [
-                r"██╗  ██╗███████╗██╗   ██╗",
-                r"██║ ██╔╝██╔════╝██║   ██║",
-                r"█████╔╝ █████╗  ██║   ██║",
-                r"██╔═██╗ ██╔══╝  ╚██╗ ██╔╝",
-                r"██║  ██╗███████╗ ╚████╔╝ ",
-                r"╚═╝  ╚═╝╚══════╝  ╚═══╝  ",
+    def draw_logo(cls, colors):
+        if cls.ACTIVE_LOGO is None:
+            banners = [
+                [
+                    r"██╗  ██╗███████╗██╗   ██╗",
+                    r"██║ ██╔╝██╔════╝██║   ██║",
+                    r"█████╔╝ █████╗  ██║   ██║",
+                    r"██╔═██╗ ██╔══╝  ╚██╗ ██╔╝",
+                    r"██║  ██╗███████╗ ╚████╔╝ ",
+                    r"╚═╝  ╚═╝╚══════╝  ╚═══╝  ",
+                ],
+                [
+                    r" _  __ _____ _   _ ",
+                    r"| |/ /| ____| \ | |",
+                    r"| ' / |  _| |  \| |",
+                    r"| . \ | |___| |\  |",
+                    r"|_|\_\|_____|_| \_|",
+                ],
+                [
+                    r"██╗  ██╗███████╗██╗   ██╗",
+                    r"██║ ██╔╝██╔════╝██║   ██║",
+                    r"█████╔╝ █████╗  ██║   ██║",
+                    r"██╔═██╗ ██╔══╝  ╚██╗ ██╔╝",
+                    r"██║  ██╗███████╗ ╚████╔╝ ",
+                    r"╚═╝  ╚═╝╚══════╝  ╚═══╝  ",
+                ]
             ]
-        ]
 
-        cls.ACTIVE_LOGO = random.choice(banners)
-            
+            cls.ACTIVE_LOGO = random.choice(banners)
+
         logo_lines = cls.ACTIVE_LOGO
         tw = shutil.get_terminal_size().columns
         max_w = max(len(l) for l in logo_lines)
         offset = max(0, (tw - max_w) // 2)
         margin = " " * offset
+
         for line in logo_lines:
             print(Colorate.Horizontal(colors["banner"], margin + line))
-        
+
         print()
         print(Colorate.Horizontal(colors["sub"], "~ Present Day, Present Time ~".center(tw)))
         print()
