@@ -93,7 +93,7 @@ def init_os():
     except:
         print("error")
         pass
-    System.Title(f"*Navi @ {user} ~ v{ver}")
+    System.Title(f"*kev @ {user} ~ v{ver}")
     cols, rows = shutil.get_terminal_size()
     if cols < 80:
         cl = Theme.get_colors()
@@ -188,7 +188,7 @@ def boot_anim():
     seq = [
         f"Booting Copeland OS [ Node: {user} ]...", 
         "Connecting to the Wired...", 
-        "Initalizing Navi protocol..."
+        "Initalizing kev protocol..."
     ]
     for s in seq:
         type_print(s, 0.02)
@@ -298,10 +298,10 @@ def menu_opts(options):
 
 def get_inpt(prompt=None):
     if prompt is None:
-        prompt = f"{user}@navi:~#"
+        prompt = f"{user}@kev:~#"
     else:
-        prompt = prompt.replace("navi@root/", f"{user}@navi/")
-        prompt = prompt.replace("navi@", f"{user}@navi/")
+        prompt = prompt.replace("kev@root/", f"{user}@kev/")
+        prompt = prompt.replace("kev@", f"{user}@kev/")
         
     cl = Theme.get_colors()
     _prmpt = f"\n  {prompt} "
