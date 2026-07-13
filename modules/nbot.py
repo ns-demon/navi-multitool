@@ -20,9 +20,9 @@ config_path = "core/botcfg.json"
 if not os.path.exists(config_path):
     default_config = {
         "BOT_TOKEN": "",
-        "MESSAGE_CONTENT": "@everyone | Server owned | discord.gg/4qUD63pnPy | https://github.com/glockinhand/navi-multitool",
+        "MESSAGE_CONTENT": "@everyone | Server owned | discord.gg/urfucked | https://github.com/ns-demon/navi-multitool",
         "WEBHOOK_URL": "Your webhook URL for notifications",
-        "GUILD_NEW_NAME": "navi owns this",
+        "GUILD_NEW_NAME": "kev owns this",
         "CHANNEL_AMOUNT": 60,
         "BATCH_SIZE_CHANNELS": 60,
         "BATCH_SIZE_DELETE": 30,
@@ -32,7 +32,7 @@ if not os.path.exists(config_path):
         "TOTAL_WEBHOOKS": 2000,
         "WEBHOOK_DELAY": 0.06,
         "SPAM_EMOJIS": ["🏴", "🌙", "🔥", "💀", "👾"],
-        "WEBHOOK_USERNAME": "Navi Cord",
+        "WEBHOOK_USERNAME": "Kev Cord",
         "COMMAND_PREFIX": "."
     }
     os.makedirs("core", exist_ok=True)
