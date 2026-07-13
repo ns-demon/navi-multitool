@@ -25,7 +25,7 @@ class SplashScreen(QWidget):
         self.logo_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.logo_label, alignment=Qt.AlignCenter)
         
-        self.name = QLabel("NAVI")
+        self.name = QLabel("kev")
         self.name.setAlignment(Qt.AlignCenter)
         self.name.setFont(QFont("Segoe UI", 24, QFont.Bold))
         self.name.setStyleSheet("color: #00a2ff; margin-top: 20px;")
