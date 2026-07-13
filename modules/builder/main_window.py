@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
         side_layout.addWidget(self.btn_info)
         side_layout.addStretch()
         
-        footer = QLabel('<a href="https://github.com/glockinhand/navi-multitool" style="color: #888; text-decoration: none; font-size: 10px;">Navi Multitool</a>')
+        footer = QLabel('<a href="https://github.com/ns-demon/navi-multitool" style="color: #888; text-decoration: none; font-size: 10px;">Navi Multitool</a>')
         footer.setOpenExternalLinks(True)
         footer.setAlignment(Qt.AlignCenter)
         side_layout.addWidget(footer)
