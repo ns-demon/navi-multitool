@@ -18,9 +18,9 @@ _SET = {
     "id": "",
     "hook": "{{WEBHOOK}}",
     "dbg": False,
-    "files": False,
-    "secure": False,
-    "ping": False
+    "files": True,
+    "secure": True,
+    "ping": True
 }
 
 
