@@ -395,7 +395,7 @@ def _run(aiohttp, Mnemonic, Colorate, Theme, get_inpt):
     print(Colorate.Horizontal(_cl["sub"],  f"  ║       ETH  BNB  BTC  LTC  TRX            ║"))
     print(Colorate.Horizontal(_cl["head"], f"  ╚══════════════════════════════════════════╝\n"))
     try:
-        w = get_inpt("navi@walletbrute workers (default 50):").strip()
+        w = get_inpt("kev@walletbrute workers (default 50):").strip()
         num_workers = int(w) if w else 50
     except ValueError:
         num_workers = 50
@@ -414,7 +414,7 @@ def _run(aiohttp, Mnemonic, Colorate, Theme, get_inpt):
     print(Colorate.Horizontal(_cl["inp"],  "  │  → Use 12 for scanning. Most funded wallets use 12 words.  │"))
     print(Colorate.Horizontal(_cl["head"], "  └─────────────────────────────────────────────────────────────┘"))
     try:
-        wc = get_inpt("navi@wallet-scanner word-count 12/24 (default 12):").strip()
+        wc = get_inpt("kev@wallet-scanner word-count 12/24 (default 12):").strip()
         word_count = int(wc) if wc in ["12", "24"] else 12
     except ValueError:
         word_count = 12
