@@ -6,7 +6,7 @@ class BuildLogBox(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
-        self.setWindowTitle("NAVI builder")
+        self.setWindowTitle("KEV builder")
         self.setFixedSize(500, 350)
         self.setModal(True)
         self.setStyleSheet("""
@@ -63,5 +63,5 @@ class BuildLogBox(QDialog):
         )
 
     def finish(self):
-        self.add_log("\nNAVI: build finished")
+        self.add_log("\nKEV: build finished")
         self.close_btn.setEnabled(True)
