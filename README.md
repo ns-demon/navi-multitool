@@ -22,7 +22,7 @@
 </p>
 
 ---
-
+## side note this is made by glockinhand this was just rebranded and removed functions that some people might've found annoying
 ## ⚡ Core Features
 
 ### 📡 Discord Operations
