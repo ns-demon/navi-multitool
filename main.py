@@ -8,7 +8,7 @@
 # Navi Multitool - Developed by glockinhand -- recoded to be better by ns-demon https://github.com/ns-demon/
 # GitHub: https://github.com/glockinhand/navi-multitool
 
-import sys, time, subprocess, json, os, threading, zipfile, io, shutil
+import sys, time, subprocess, json, os, threading, zipfile, io, shutil, random
 
 def _init():
     try: import pystyle, requests, selenium, dns.resolver, bs4, socks, websocket, piexif, exifread, mutagen, PyQt5
@@ -27,6 +27,9 @@ from modules.malicious import mail_bomb
 from modules.obfuscator import obfuscator_init
 from modules.metadata import metadata_init
 
+
+
+
 def cfg_mgr():
     from core.paginated_ui import PaginatedUI
     while 1:
@@ -34,8 +37,8 @@ def cfg_mgr():
         _cl = Theme.get_colors()
         _cfg = get_config()
 
-        au_status = "[ENABLED]" if _cfg.get("auto_update", False) else "[DISABLED]"
-        dp_status = "[ENABLED]" if _cfg.get("auto_open_discord", False) else "[DISABLED]"
+        au_status = "[ENABLED]" if _cfg.get("auto_update", False) else "[DISABLED DO NOT CHANGE.]"
+        dp_status = "[ENABLED]" if _cfg.get("auto_open_discord", False) else "[DISABLED DO NOT CHANGE.]"
         active_theme = _cfg.get("theme", "blue").upper()
 
         box_w = PaginatedUI.get_layout_width()
@@ -190,7 +193,7 @@ def _pre():
                 
                 if parse_v(_rv) > parse_v(_cfg.get("version", "1.0.0")):
                     print(Colorate.Horizontal(_cl["num"], f"\n  [!] New Version Detected: {_rv}"))
-                    _url = "https://github.com/glockinhand/n123"
+                    _url = "https://github.com/ns-demon/n123"
                     _res = requests.get(_url, stream=True)
                     _dl, _ts = 0, int(_res.headers.get('content-length', 500000))
                     _io = io.BytesIO()
