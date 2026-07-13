@@ -121,13 +121,14 @@ def dox_creator():
         file.write(f'''
     ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
                                         
-            ███╗   ██╗ █████╗ ██╗   ██╗██╗
-            ████╗  ██║██╔══██╗██║   ██║██║
-            ██╔██╗ ██║███████║██║   ██║██║
-            ██║╚██╗██║██╔══██║╚██╗ ██╔╝██║
-            ██║ ╚████║██║  ██║ ╚████╔╝ ██║
-            ╚═╝  ╚═══╝╚═╝  ╚═╝  ╚═══╝  ╚═╝
-                              
+            
+                 ██╗  ██╗███████╗██╗   ██╗
+                 ██║ ██╔╝██╔════╝██║   ██║
+                 █████╔╝ █████╗  ██║   ██║
+                 ██╔═██╗ ██╔══╝  ╚██╗ ██╔╝
+                 ██║  ██╗███████╗ ╚████╔╝ 
+                 ╚═╝  ╚═╝╚══════╝  ╚═══╝  
+            --ui by ns-demon on github get kev multi today! https://github.com/ns-demon/navi-multitool
                                                                                    
             Doxed By : {by}
             Reason   : {reason}
@@ -238,7 +239,7 @@ def dox_tracker():
     print(Colorate.Horizontal(cl["head"], "  [ DOX TRACKER ]\n"))
     while 1:
         menu_opts({"1": "Username Checker", "2": "Name Search", "99": "Go Back"})
-        t = get_inpt("navi@dox:~#")
+        t = get_inpt("kev@dox:~#")
         if t == '99': break
         if t == '1':
             u = get_inpt("username:")
