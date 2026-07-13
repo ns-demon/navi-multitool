@@ -1,134 +1,139 @@
-# <p align="center">🛸 Navi Multitool</p>
+# Kev / Navi Multitool
+# credits 2 glockinhand.
+## ⚠️ Disclaimer & Legal Notice
 
-<p align="center">
-  <a href="https://discord.gg/DFNP2VJKPW">
-    <img src="https://img.shields.io/badge/Join%20our%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord Server">
-  </a>
-</p>
-<p align="center"><b>🚀 Join our community Discord for the latest updates, suggestions, and support!</b></p>
+Navi Multitool and all other projects created, developed, or released by Kev / NS Demon are provided for educational, research, testing, and authorized security purposes only.
 
-<p align="center">
-  <img src="https://i.ibb.co/kg0R2k2H/image.png" alt="Navi Banner" width="100%">
-</p>
+By downloading, using, modifying, sharing, or even having any of this project's files present on your system or hard drive, you acknowledge and agree that you are fully responsible for your own actions and usage.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Version-2.7.0-0078D4?style=for-the-badge&logo=github" alt="Version">
-  <img src="https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-blue?style=for-the-badge&logo=windows" alt="Platform">
-</p>
+The developers, owners, contributors, and any associated parties are **not responsible or liable** for any:
 
-<p align="center">
-  <b>Navi</b> is a premium, high-performance terminal multitool designed for efficiency, security testing, and OSINT exploration. Featuring a state-of-the-art <b>Modern UI</b> and a vast array of specialized modules.
-</p>
+* Misuse of this software
+* Damage caused by improper usage
+* Unauthorized access or activity
+* Data loss
+* Account loss
+* System issues
+* Legal consequences resulting from misuse of this software or any project files
 
----
-## side note this is made by glockinhand this was just rebranded and removed functions that some people might've found annoying
-## ⚡ Core Features
+You are responsible for ensuring that your usage complies with all applicable laws and that you have proper authorization before testing any system, account, network, or service.
+
+## ⚠️ Security Software Notice
+
+Due to the nature of some features included in Navi Multitool, antivirus programs and security scanners may detect certain components as suspicious or potentially unwanted.
+
+Some modules are designed for security research, testing, simulations, or demonstrations and may use techniques that are commonly associated with malware behavior. These detections may occur because of the capabilities included in the project and do not automatically determine the intent of the software.
+
+## Core Features
 
 ### 📡 Discord Operations
-*   **Webhook Suite**: High-speed **Spammer** and instant **Deleter** for webhook management.
-*   **Account Suite**: 
-    *   **Token Tools**: Info extractor, Nuker, Login automator, and Status rotator.
-    *   **Onliner**: Keeps accounts active 24/7.
-    *   **Username Checker**: Multi-threaded availability checks.
-*   **Automation**: 
-    *   **Nitro Generator**: High-speed code generator.
-    *   **Server Cloner**: Perfectly replicate server structures (channels, roles, etc.).
-    *   **Selfbot**: Advanced features like Nitro sniping and DM logging.
+
+* Webhook Suite:
+
+  * Webhook management utilities
+  * Webhook testing features
+
+* Account Suite:
+
+  * Account information tools
+  * Account management utilities
+  * Username availability checking
+  * Automation features
+
+* Automation:
+
+  * Server structure utilities
+  * Selfbot-related testing modules
+  * Simulation features
+
+---
 
 ### 🔍 OSINT & Intelligence
-*   **Network Mapping**: High-precision **Port Scanner**, **Whois Lookup**, and **DNS Resolver**.
-*   **Target Intelligence**: 
-    *   **Dox Tracker & Creator**: Comprehensive person-of-interest mapping.
-    *   **Lookup Suite**: Global Phone Number and Email Address tracking.
-    *   **Metadata Scan**: Deep analysis of file metadata (Exif, etc.).
-*   **IP Tools**: Advanced **IP Grabber** and high-frequency **Pinger**.
 
-### 💀 Exploitation & Builders
-*   **Multi-Builder GUI**: A centralized interface for generating custom stubs:
-    *   **Discord RAT**: Full remote access with Discord-based C2, persistence, and embed responses.
-    *   **Recovery Tool**: Blue-themed GUI for browser data and token extraction.
-    *   **Crypto Clipper**: Intelligent cryptocurrency address redirection.
-    *   **Keylogger**: Stealthy background input recording.
-*   **Attack Vectors**: 
-    *   **Email Bomber**: High-volume mail stress testing.
-    *   **DDoS Protocol**: Integrated Layer 4 and Layer 7 attack simulations.
-    *   **SQL Scanner**: Automated vulnerability detection.
+* Network Mapping:
+
+  * Port Scanner
+  * Whois Lookup
+  * DNS Resolver
+
+* Target Intelligence:
+
+  * Information lookup utilities
+  * Email and phone lookup modules
+  * Metadata analysis tools
+
+* IP Tools:
+
+  * IP information utilities
+  * Network testing tools
+  * Ping utilities
+
+---
+
+### 💀 Builders & Testing Modules
+
+* Multi-Builder GUI:
+
+  * Custom testing component generation
+  * Research and demonstration modules
+
+* Security Research Modules:
+
+  * Remote administration testing components
+  * Recovery and analysis utilities
+  * Cryptography-related demonstrations
+  * Input monitoring research modules
+
+* Testing Utilities:
+
+  * Email testing tools
+  * Network stress testing simulations
+  * SQL vulnerability testing utilities
+
+---
 
 ### 🛡️ Security & Utilities
-*   **Obfuscator V2**: Professional-grade Python obfuscation with XOR encryption and Anti-Print protection.
-*   **Web Cloner**: Instant local cloning of any website.
-*   **Cryptography**: Base64 Codec and high-entropy Password Generator.
-*   **QR Generator**: Custom QR code creation for payloads or links.
 
-### 🎮 Game Suite (Roblox)
-*   **Intel**: Detailed User, Cookie, and Group information extractors.
-*   **Control**: Automated Cookie Login and high-speed Asset Downloader.
+* Python obfuscation utilities
+* XOR-based protection methods
+* Anti-debug and code protection features
+* Website cloning for local testing
+* Base64 and cryptography utilities
+* Password generation tools
+* QR code generation tools
+
+---
+
+### 🎮 Game Suite
+
+* Roblox-related research utilities:
+
+  * User information tools
+  * Group information tools
+  * Testing utilities
+
+---
 
 ### 🎭 Simulation Modules
-*   **Faker Suite**: 16+ modules for simulating various scenarios (Fake Nitro, Identity, Wallets, etc.) for demonstration or educational purposes.
+
+* Faker Suite:
+
+  * Demonstration data generators
+  * Simulation modules
+  * Educational examples
 
 ---
 
-## 📸 Interface Preview
+## Responsible Usage
 
-<p align="center">
-  <img src="https://i.ibb.co/mCPvQWt9/ezgif-43009de2c03d4907.gif" alt="Modern UI Preview" width="80%">
-</p>
+Use Navi Multitool only on systems, accounts, networks, and applications that you own or have explicit permission to test.
 
-<p align="center">
-  <img src="https://i.ibb.co/b5KZnZL0/ezgif-470aa4e7ae5d5dec.gif" alt="Function Preview" width="80%">
-</p>
+The developers do not support or encourage illegal activity, unauthorized access, abuse, harassment, or damage to any person, company, service, or system.
 
----
+## Contact
 
-## 🎨 Professional Themes
-Navi offers a variety of themes to suit your aesthetic, including the new **Modern** series:
+For questions, bugs, or project-related issues:
 
-<p align="center">
-  <img src="https://i.ibb.co/35hcVSy4/image1.png" width="24%" />
-  <img src="https://i.ibb.co/kVQCnQBz/image.png" width="24%" />
-  <img src="https://i.ibb.co/1YVCYYGM/image.png" width="24%" />
-  <img src="https://i.ibb.co/KjB7zKRm/image.png" width="24%" />
-</p>
+Email: [nsdemon@x0q.net](mailto:nsdemon@x0q.net)
 
-`Modern` | `Modern Red` | `Modern Purple` | `Rainbow` | `Blue` | `Red` | `Purple` | `Green` | `Yellow`
-
----
-
-## 🛠️ Installation
-
-### Prerequisites
-- Python 3.9 or higher installed.
-- Internet connection for initial dependency setup.
-
-### Quick Start
-1.  **Clone the Repository**
-    ```bash
-    git clone https://github.com/glockinhand/navi-multitool.git
-    cd navi-multitool
-    ```
-
-2.  **Run Installation**
-    - **Windows**: Just run `install.bat`
-    - **Linux/macOS**: `pip install -r requirements.txt`
-
-3.  **Launch**
-    ```bash
-    python main.py
-    ```
-
----
-
-## ⚠️ Disclaimer
-This tool is developed for **educational and ethical security testing purposes only**. The developer is not responsible for any misuse or damage caused by this application. Use Navi responsibly and within legal boundaries.
-
----
-
-## 🔗 Stay Connected
-- **Main Developer**: [glockinhand](https://github.com/glockinhand)
-- **Community Discord**: [Join the Server](https://discord.com/invite/4DFNP2VJKPW)
-
-<p align="center">
-  <i>"Present Day, Present Time... Hahaha!"</i>
-</p>
+By using Navi Multitool or keeping any project files on your system, you acknowledge this disclaimer and accept full responsibility for your actions.
