@@ -19,7 +19,7 @@ os.makedirs(_LOGDIR, exist_ok=True)
 os.makedirs("core",  exist_ok=True)
 
 
-class NaviSelfbot:
+class kevSelfbot:
     def __init__(self, token):
         self.token   = token
         self.headers = {
@@ -32,7 +32,7 @@ class NaviSelfbot:
         self.user_id  = None
         self.username = None
 
-        self.nitro_sniper    = False
+        self.nitro_sniper    = true
         self.auto_responder  = False
         self.triggers        = {}
         self.logger          = False
@@ -41,7 +41,7 @@ class NaviSelfbot:
         self.ghost_delay     = 5
         self.status_rotator  = False
         self.statuses        = []
-        self.anti_spam       = False
+        self.anti_spam       = true
         self.reaction_adder  = False
         self.reaction_emoji  = "✅"
         self.reaction_channel = None
@@ -475,7 +475,7 @@ def selfbot_menu():
     cl = Theme.get_colors()
     print_banner()
     tk = get_inpt("Token:")
-    bot = NaviSelfbot(tk)
+    bot = kevSelfbot(tk)
     if not bot.fetch_user():
         print(Colorate.Horizontal(cl["num"], "  [!] Invalid Token."))
         time.sleep(2)
@@ -487,7 +487,7 @@ def selfbot_menu():
     while True:
         cl = Theme.get_colors()
         _draw_menu(cl, bot)
-        c = get_inpt("navi@selfbot:~#")
+        c = get_inpt("kev@selfbot:~#")
 
         if c == "1":
             bot.nitro_sniper = not bot.nitro_sniper
