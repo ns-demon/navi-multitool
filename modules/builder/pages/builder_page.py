@@ -41,13 +41,13 @@ class BuildThread(QThread):
             )
             
             if success:
-                self.finished_signal.emit(True, "NAVI: build completed")
+                self.finished_signal.emit(True, "KEV: build completed")
             else:
-                self.finished_signal.emit(False, "NAVI: build failed")
+                self.finished_signal.emit(False, "KEV: build failed")
                 
         except Exception as e:
-            self.log(f"\nNAVI: error - {str(e)}")
-            self.finished_signal.emit(False, f"NAVI: build error")
+            self.log(f"\nKEV: error - {str(e)}")
+            self.finished_signal.emit(False, f"KEV: build error")
 
 
 class BuilderPage(QWidget):
@@ -153,7 +153,7 @@ class BuilderPage(QWidget):
     def start_build(self):
         filename = self.filename_input.text().strip()
         if not filename:
-            self.box = CustomMessageBox("NAVI", "error", "NAVI: enter file name")
+            self.box = CustomMessageBox("KEV", "error", "KEV: enter file name")
             self.box.show()
             return
             
@@ -164,7 +164,7 @@ class BuilderPage(QWidget):
         self.build_window = BuildLogBox(self)
         self.build_window.show()
 
-        self.build_window.add_log("NAVI")
+        self.build_window.add_log("KEV")
         self.build_window.add_log("")
         self.build_window.add_log(f"telegram: enabled")
         self.build_window.add_log(f"file: {filename}{filetype}")
